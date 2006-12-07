@@ -1,9 +1,9 @@
-Acceptance Test for OSELAS.Toolchain                           rsc, 20060926-1
+Acceptance Test for OSELAS.Toolchain                           rsc, 20061207-1
 ------------------------------------------------------------------------------
 
-Test Engineer: nnn
+Test Engineer: rsc
 
-[ ] check all ptxconfig files refer to the correct ptxdist version
-[ ] check if all PTXCONF_PROJECT entries in ptxconfig have the right
+[x] check all ptxconfig files refer to the correct ptxdist version
+[x] check if all PTXCONF_PROJECT entries in ptxconfig have the right
     version entry (OSELAS.Toolchain-X.Y.Z)
 
