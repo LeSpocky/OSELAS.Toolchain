@@ -6,4 +6,6 @@ Test Engineer: rsc
 [x] check all ptxconfig files refer to the correct ptxdist version
 [x] check if all PTXCONF_PROJECT entries in ptxconfig have the right
     version entry (OSELAS.Toolchain-X.Y.Z)
+[x] remove TODO from release
+[x] remove EXTERNAL from release
 
