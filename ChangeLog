@@ -13,3 +13,8 @@
 	added env var "libc_cv_386_tls=yes" to fool configure, we've working
 	i386 TLS support even on non x86 systems
 
+2007-02-11 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* Kconfig:
+	added BUILD_TOOLCHAIN option, with fixed value "yes". Needed to
+	work with ptxdist-0.10.6
