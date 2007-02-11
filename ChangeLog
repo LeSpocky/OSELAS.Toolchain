@@ -18,3 +18,13 @@
 	* Kconfig:
 	added BUILD_TOOLCHAIN option, with fixed value "yes". Needed to
 	work with ptxdist-0.10.6
+
+2007-02-11 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* ptxconfig/*.ptxconfig:
+	use ptxdist-0.10.6 and
+	version bump to OSELAS.Toolchain-1.0.1
+
+2007-02-11 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	Released OSELAS.Toolchain-1.0.1
