@@ -30,3 +30,15 @@
 2007-02-27 Marc Kleine-Budde <mkl@pengutronix.de>
 
 	* ptxconfigs, patches: upgraded to gcc-4.1.2 release
+
+2007-03-01 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* general: opened maintenance-only branch for 1.1
+
+2007-03-01 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* ptxconfigs: switch to ptxdist-0.10.6 and OSELAS.Toolchain-1.1.0
+
+2007-03-01 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* general: removed non release items
