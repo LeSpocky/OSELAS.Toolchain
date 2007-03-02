@@ -42,3 +42,7 @@
 2007-03-01 Marc Kleine-Budde <mkl@pengutronix.de>
 
 	* general: removed non release items
+
+2007-03-02 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* patches, ptxconfigs: removed gcc-4.1.1
