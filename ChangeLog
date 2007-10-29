@@ -1,3 +1,16 @@
+2007-10-29 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* ptxconfigs: changed to ptxdist 1.0
+
+2007-10-29 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* patches/glibc-2.3.6/generic/csu_Makefile-printf-fix.diff:
+	added fix for ubuntu's dash
+
+2007-10-29 Marc Kleine-Budde <mkl@pengutronix.de>
+
+	* ptxconfigs: removed gcc-4.1.1 and gcc-4.2-snapshots
+
 2006-12-11 Marc Kleine-Budde <mkl@pengutronix.de>
 
 	* general: opened maintenance-only branch for 1.0
