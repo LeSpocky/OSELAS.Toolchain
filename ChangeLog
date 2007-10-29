@@ -1,5 +1,10 @@
 2007-10-29 Marc Kleine-Budde <mkl@pengutronix.de>
 
+	* rules/cross-gcc-second.make: remove .la files,
+	gives problems when relocating toolchain
+
+2007-10-29 Marc Kleine-Budde <mkl@pengutronix.de>
+
 	* ptxconfigs: changed to ptxdist 1.0
 
 2007-10-29 Marc Kleine-Budde <mkl@pengutronix.de>
