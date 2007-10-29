@@ -50,9 +50,16 @@ Hi, Dan, This is a patch I applied to my glibc-2.3.2, then my softfloat
 toolchain can printf("%f\n",1.0). So you may have a try of this
 
 
-diff -uNrp glibc.old/sysdeps/arm/bits/endian.h glibc.new/sysdeps/arm/bits/endian.h
---- glibc.old/sysdeps/arm/bits/endian.h	1999-04-12 11:59:13.000000000 -0400
-+++ glibc.new/sysdeps/arm/bits/endian.h	2004-02-12 09:15:13.000000000 -0500
+---
+ sysdeps/arm/bits/endian.h |    5 ++
+ sysdeps/arm/gmp-mparam.h  |   12 ++++
+ sysdeps/arm/ieee754.h     |  115 ----------------------------------------------
+ 3 files changed, 15 insertions(+), 117 deletions(-)
+
+Index: glibc-2.3.6/sysdeps/arm/bits/endian.h
+===================================================================
+--- glibc-2.3.6.orig/sysdeps/arm/bits/endian.h
++++ glibc-2.3.6/sysdeps/arm/bits/endian.h
 @@ -9,4 +9,9 @@
  #else
  #define __BYTE_ORDER __LITTLE_ENDIAN
@@ -63,9 +70,10 @@ diff -uNrp glibc.old/sysdeps/arm/bits/endian.h glibc.new/sysdeps/arm/bits/endian
 +#else
  #define __FLOAT_WORD_ORDER __BIG_ENDIAN
 +#endif
-diff -uNrp glibc.old/sysdeps/arm/gmp-mparam.h glibc.new/sysdeps/arm/gmp-mparam.h
---- glibc.old/sysdeps/arm/gmp-mparam.h	2001-07-07 15:21:19.000000000 -0400
-+++ glibc.new/sysdeps/arm/gmp-mparam.h	2004-02-12 09:15:13.000000000 -0500
+Index: glibc-2.3.6/sysdeps/arm/gmp-mparam.h
+===================================================================
+--- glibc-2.3.6.orig/sysdeps/arm/gmp-mparam.h
++++ glibc-2.3.6/sysdeps/arm/gmp-mparam.h
 @@ -26,5 +26,13 @@ MA 02111-1307, USA. */
  #define BITS_PER_SHORTINT 16
  #define BITS_PER_CHAR 8
@@ -82,9 +90,10 @@ diff -uNrp glibc.old/sysdeps/arm/gmp-mparam.h glibc.new/sysdeps/arm/gmp-mparam.h
 +# define IEEE_DOUBLE_BIG_ENDIAN 0
 +# define IEEE_DOUBLE_MIXED_ENDIAN 1
 +#endif
-diff -uNrp glibc.old/sysdeps/arm/ieee754.h glibc.new/sysdeps/arm/ieee754.h
---- glibc.old/sysdeps/arm/ieee754.h	2001-07-07 15:21:19.000000000 -0400
-+++ glibc.new/sysdeps/arm/ieee754.h	1969-12-31 19:00:00.000000000 -0500
+Index: glibc-2.3.6/sysdeps/arm/ieee754.h
+===================================================================
+--- glibc-2.3.6.orig/sysdeps/arm/ieee754.h
++++ /dev/null
 @@ -1,115 +0,0 @@
 -/* Copyright (C) 1992, 1995, 1996, 1998 Free Software Foundation, Inc.
 -   This file is part of the GNU C Library.
@@ -201,5 +210,3 @@ diff -uNrp glibc.old/sysdeps/arm/ieee754.h glibc.new/sysdeps/arm/ieee754.h
 -__END_DECLS
 -
 -#endif /* ieee754.h */
-
-Signed-off-by: Robert P. J. Day <rpjday@mindspring.com>
