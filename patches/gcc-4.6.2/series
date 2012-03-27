@@ -2,6 +2,7 @@
 #tag:base
 #tag:upstream --start-number 1
 0001-Volatile-bitfields-vs.-inline-asm-memory-constraints.patch
+0002-Fix-compilation-with-host-gcc-4.7.patch
 #tag:OSELAS.toolchain --start-number 100
 0100-no-host-includes.patch
 0101-arm-softfloat.patch
@@ -16,4 +17,4 @@
 0301-flatten-switch-stmt-into-if-else-chain-for-Os.patch
 0302-libiberty-pic.patch
 0303-libstdc-pic.patch
-# 19cc4f8bfbc9cbec87de32579a9f88fd  - git-ptx-patches magic
+# e97cb1c7f0f224e7da137eeea46040a3  - git-ptx-patches magic
