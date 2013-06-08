@@ -73,6 +73,7 @@ GLIBC_PATH := PATH=$(CROSS_PATH)
 GLIBC_ENV := \
 	CC=$(CROSS_CC) \
 	BUILD_CC=$(HOSTCC) \
+	MAKEINFO=: \
 	ac_cv_sizeof_long_double=$(PTXCONF_SIZEOF_LONG_DOUBLE)
 
 
