@@ -49,6 +49,7 @@ GLIBC_HEADERS_PATH := PATH=$(CROSS_PATH)
 GLIBC_HEADERS_ENV  := \
 	$(HOST_ENV) \
 	CC="$${CC} $(PTXCONF_GLIBC_HEADERS_FAKE_CROSS)" \
+	BUILD_CC=$(HOSTCC) \
 	\
 	libc_cv_prog_as_gnu=yes \
 	libc_cv_prog_ld_gnu=yes \
