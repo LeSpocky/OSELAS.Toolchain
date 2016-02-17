@@ -14,6 +14,7 @@
 0011-malloc-Check-for-integer-overflow-in-valloc.patch
 0012-malloc-Check-for-integer-overflow-in-memalign.patch
 0013-Fix-stack-overflow-due-to-large-AF_INET6-requests.patch
+0014-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
 #tag:build-system --start-number 100
 0100-add-install-lib-all-target.patch
 0101-don-t-regen-docs-if-perl-is-not-found.patch
@@ -24,4 +25,4 @@
 #tag:linaro --start-number 400
 0400-optimized-string-functions-for-NEON-from-Linaro.patch
 0401-add-libc_hidden_builtin_def-for-all-cortex-functions.patch
-# c7c37d04f6d7c2fc5e7140d9570db200  - git-ptx-patches magic
+# ea0c83e1a81d0641b425347a9290bfb8  - git-ptx-patches magic
