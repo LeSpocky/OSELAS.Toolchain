@@ -7,6 +7,7 @@
 0004-CVE-2015-1472-wscanf-allocates-too-little-memory.patch
 0005-CVE-2014-8121-Do-not-close-NSS-files-database-during.patch
 0006-CVE-2015-1781-resolv-nss_dns-dns-host.c-buffer-overf.patch
+0007-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
 #tag:build-system --start-number 100
 0100-add-install-lib-all-target.patch
 0101-don-t-regen-docs-if-perl-is-not-found.patch
@@ -21,4 +22,4 @@
 0500-Hack-around-mips-args-to-host-gcc.patch
 #tag:open-glibc-bugs --start-number 600
 0600-ARM-fix-PI-futex-breakge-glibc-bug-18463.patch
-# 9b9561d3bd8d2a555c8bae5ece64e366  - git-ptx-patches magic
+# b6c7f4353c0ed843a60dc4001c7ade9d  - git-ptx-patches magic
