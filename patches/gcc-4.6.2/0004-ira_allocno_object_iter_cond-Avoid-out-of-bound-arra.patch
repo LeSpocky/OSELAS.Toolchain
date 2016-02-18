@@ -1,0 +1,36 @@
+From: rguenth <rguenth@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Thu, 19 Apr 2012 12:44:07 +0000
+Subject: [PATCH] ira_allocno_object_iter_cond: Avoid out-of-bound array
+ access.
+
+	2012-04-19  Richard Guenther  <rguenther@suse.de>
+
+	* ira-int.h (ira_allocno_object_iter_cond): Avoid out-of-bound
+	array access.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@186590 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ gcc/ira-int.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/gcc/ira-int.h b/gcc/ira-int.h
+index 049a07f..a58f0ca 100644
+--- a/gcc/ira-int.h
++++ b/gcc/ira-int.h
+@@ -1123,8 +1123,13 @@ static inline bool
+ ira_allocno_object_iter_cond (ira_allocno_object_iterator *i, ira_allocno_t a,
+ 			      ira_object_t *o)
+ {
+-  *o = ALLOCNO_OBJECT (a, i->n);
+-  return i->n++ < ALLOCNO_NUM_OBJECTS (a);
++  int n = i->n++;
++  if (n < ALLOCNO_NUM_OBJECTS (a))
++    {
++      *o = ALLOCNO_OBJECT (a, n);
++      return true;
++    }
++  return false;
+ }
+ 
+ /* Loop over all objects associated with allocno A.  In each

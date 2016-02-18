@@ -3,10 +3,12 @@
 #tag:upstream --start-number 1
 ../gcc-4.6.2/0002-Fix-compilation-with-host-gcc-4.7.patch
 ../gcc-4.6.2/0003-PR-tree-optimization-52445.patch
+../gcc-4.6.2/0004-ira_allocno_object_iter_cond-Avoid-out-of-bound-arra.patch
 #tag:OSELAS.toolchain --start-number 100
 ../gcc-4.6.2/0100-no-host-includes.patch
 ../gcc-4.6.2/0101-arm-softfloat.patch
 ../gcc-4.6.2/0102-fix-arith_adjacentmem-LDM-splitting-code.patch
+../gcc-4.6.2/0103-cfns-fix-mismatch-in-gnu_inline-attributes.patch
 #tag:uclibc --start-number 200
 ../gcc-4.6.2/0200-also-match-uclibc-when-checking-host-os.patch
 ../gcc-4.6.2/0201-missing-execinfo.h.patch
