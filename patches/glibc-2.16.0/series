@@ -10,4 +10,6 @@
 #tag:linaro --start-number 300
 0300-optimized-string-functions-for-NEON-from-Linaro.patch
 0301-add-libc_hidden_builtin_def-for-all-cortex-functions.patch
-# a4ec378a1364c1c28fb1ae34aab4f545  - git-ptx-patches magic
+#tag:upstream --start-number 400
+0400-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
+# 0f8571d21f1974f49d5199804b386b09  - git-ptx-patches magic
