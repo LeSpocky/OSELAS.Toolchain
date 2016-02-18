@@ -21,4 +21,6 @@
 0019-add-libc_hidden_builtin_def-for-all-cortex-functions.patch
 0020-revert-sunrpc-removal.patch
 0021-fix-libdl-crash.patch
-# 3609589c1fca6c85cdfb41d7b6bac0a2  - git-ptx-patches magic
+0022-__glibc_unlikely-New-macro-to-wrap-cases-where-__bui.patch
+0023-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
+# 76b9ca1dedff60a59910b3deee3a0b52  - git-ptx-patches magic
