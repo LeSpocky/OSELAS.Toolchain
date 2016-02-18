@@ -22,4 +22,5 @@
 0020-revert-sunrpc-removal.patch
 0021-fix-libdl-crash.patch
 0022-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
-# 28ea81b891761677d43c35bc360cfe60  - git-ptx-patches magic
+0023-Accept-make-versions-4.0-and-greater.patch
+# ebeac317b4d74035c98ddd3cfd3e7b79  - git-ptx-patches magic
