@@ -23,3 +23,6 @@
 # from upstream
 0015-Fix-libjava-cross-build-issue.patch
 0016-Fix-ICE-on-ARM.patch
+
+# fixes
+0018-cfns-fix-mismatch-in-gnu_inline-attributes.patch

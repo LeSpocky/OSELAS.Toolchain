@@ -22,3 +22,6 @@
 
 # reverted linaro patch
 0016-debian-patch-revert-issue1259.patch
+
+# fixes
+../gcc-4.5.2/0018-cfns-fix-mismatch-in-gnu_inline-attributes.patch
