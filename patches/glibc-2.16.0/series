@@ -12,4 +12,5 @@
 0301-add-libc_hidden_builtin_def-for-all-cortex-functions.patch
 #tag:upstream --start-number 400
 0400-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
-# 0f8571d21f1974f49d5199804b386b09  - git-ptx-patches magic
+0401-Accept-make-versions-4.0-and-greater.patch
+# 3ba483ceacec84f914f29da1edd6ac18  - git-ptx-patches magic
