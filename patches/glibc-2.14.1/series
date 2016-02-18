@@ -23,4 +23,5 @@
 0021-fix-libdl-crash.patch
 0022-__glibc_unlikely-New-macro-to-wrap-cases-where-__bui.patch
 0023-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch
-# 76b9ca1dedff60a59910b3deee3a0b52  - git-ptx-patches magic
+0024-Accept-make-versions-4.0-and-greater.patch
+# 43a15f65257a4355916838b463cc5be8  - git-ptx-patches magic
