@@ -21,3 +21,5 @@
 0021-pre20040117-pt_pax.patch
 0022-fpscr_values.patch
 0023-Fix-prelinking.patch
+0022-__glibc_unlikely-New-macro-to-wrap-cases-where-__bui.patch
+0023-CVE-2015-7547-getaddrinfo-stack-based-buffer-overflo.patch

@@ -1,0 +1,32 @@
+From: Siddhesh Poyarekar <siddhesh@redhat.com>
+Date: Thu, 18 Feb 2016 16:11:12 +0100
+Subject: [PATCH] __glibc_unlikely: New macro to wrap cases where
+ __builtin_expect is unavailable
+
+2012-06-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #14188]
+	* misc/sys/cdefs.h (__glibc_unlikely): New macro to wrap cases
+	where __builtin_expect is unavailable.
+---
+ misc/sys/cdefs.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/misc/sys/cdefs.h b/misc/sys/cdefs.h
+index c9495a4..e901888 100644
+--- a/misc/sys/cdefs.h
++++ b/misc/sys/cdefs.h
+@@ -350,6 +350,12 @@
+ # endif
+ #endif
+ 
++#if __GNUC__ >= 3
++# define __glibc_unlikely(cond) __builtin_expect((cond), 0)
++#else
++# define __glibc_unlikely(cond) (cond)
++#endif
++
+ #include <bits/wordsize.h>
+ 
+ #if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
