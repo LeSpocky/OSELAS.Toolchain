@@ -4,10 +4,12 @@
 0001-Volatile-bitfields-vs.-inline-asm-memory-constraints.patch
 0002-Fix-compilation-with-host-gcc-4.7.patch
 0003-PR-tree-optimization-52445.patch
+0004-ira_allocno_object_iter_cond-Avoid-out-of-bound-arra.patch
 #tag:OSELAS.toolchain --start-number 100
 0100-no-host-includes.patch
 0101-arm-softfloat.patch
 0102-fix-arith_adjacentmem-LDM-splitting-code.patch
+0103-cfns-fix-mismatch-in-gnu_inline-attributes.patch
 #tag:uclibc --start-number 200
 0200-also-match-uclibc-when-checking-host-os.patch
 0201-missing-execinfo.h.patch
