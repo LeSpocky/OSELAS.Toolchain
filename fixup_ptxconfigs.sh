@@ -160,6 +160,11 @@ fixup()
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-float=hard	--with-fpu=vfpv3-d16			--with-arch=armv7-a	--with-mode=thumb	--with-tune=cortex-a9"
 	    ;;
 
+	# hard, neon, arm
+	arm-v7aarm-linux-gnueabihf)
+	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-float=hard	--with-fpu=vfpv3-d16			--with-arch=armv7-a	--with-mode=arm		--with-tune=cortex-a9"
+	    ;;
+
 	# softfp, neon
 	arm-cortexa8-linux-gnueabi)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-float=softfp	--with-fpu=neon	--with-cpu=cortex-a8				--with-mode=thumb"
