@@ -26,6 +26,7 @@ GLIBC_SOURCE	:= $(SRCDIR)/$(GLIBC).$(GLIBC_SUFFIX)
 GLIBC_DIR	:= $(BUILDDIR_DEBUG)/$(GLIBC)
 GLIBC_BUILDDIR	:= $(BUILDDIR)/$(GLIBC)-build
 GLIBC_URL	:= \
+	https://ftp.gnu.org/gnu/glibc/$(GLIBC).$(GLIBC_SUFFIX) \
 	$(call ptx/mirror, GNU, glibc/$(GLIBC).$(GLIBC_SUFFIX)) \
 	ftp://sourceware.org/pub/glibc/snapshots/$(GLIBC).$(GLIBC_SUFFIX) \
 	http://www.pengutronix.de/software/ptxdist/temporary-src/glibc/$(GLIBC).$(GLIBC_SUFFIX)
