@@ -7,9 +7,12 @@ die() {
 
 # This script assumes to have CWD = toplevel of OSELAS.Toolchain
 test -f debian/changelog || die "debian/changelog not found"
-test "$(dpkg-vendor --query Vendor)" = "Debian" || die "This script only works on Debian"
+vendor="$(dpkg-vendor --query Vendor)"
+if [ "${vendor}" != "Debian" -a "${vendor}" != "Ubuntu" ]; then
+	die "This script only works on Debian"
+fi
 
-toolchain_version=$(dpkg-parsechangelog -SVersion | sed -e 's/-[^-]*$//')
+toolchain_version=$(dpkg-parsechangelog -SVersion | sed -e 's/-.*$//')
 newcontrol=$(mktemp debian/control.XXXXXXXXX)
 trap 'rm -v -- "$newcontrol"' INT QUIT EXIT
 
