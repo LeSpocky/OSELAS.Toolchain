@@ -15,16 +15,16 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 5 insertions(+)
 
 diff --git a/manual/Makefile b/manual/Makefile
-index c2756640a785..8b0b178152a5 100644
+index 4f76ee85d285..7fd1ee5251f4 100644
 --- a/manual/Makefile
 +++ b/manual/Makefile
-@@ -101,9 +101,14 @@ $(objpfx)dir-add.texi: xtract-typefun.awk $(texis-path)
- $(objpfx)libm-err.texi: $(objpfx)stamp-libm-err
- $(objpfx)stamp-libm-err: libm-err-tab.pl $(wildcard $(foreach dir,$(sysdirs),\
- 						     $(dir)/libm-test-ulps))
+@@ -102,9 +102,14 @@ $(objpfx)libm-err.texi: $(objpfx)stamp-libm-err
+ $(objpfx)stamp-libm-err: $(..)math/gen-libm-test.py \
+ 			 $(wildcard $(foreach dir,$(sysdirs),\
+ 						  $(dir)/libm-test-ulps))
 +ifneq ($(PERL),no)
  	pwd=`pwd`; \
- 	$(PERL) $< $$pwd/.. > $(objpfx)libm-err-tmp
+ 	$(PYTHON) $< -s $$pwd/.. -m $(objpfx)libm-err-tmp
  	$(move-if-change) $(objpfx)libm-err-tmp $(objpfx)libm-err.texi
 +else
 +	echo "Unable to rebuild math docs, no perl installed"
