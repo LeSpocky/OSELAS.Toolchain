@@ -12,7 +12,8 @@ if [ "${vendor}" != "Debian" -a "${vendor}" != "Ubuntu" ]; then
 	die "This script only works on Debian"
 fi
 
-toolchain_version=$(dpkg-parsechangelog -SVersion | sed -e 's/-.*$//')
+toolchain_path_version=$(dpkg-parsechangelog -SVersion | sed -e 's/-.*$//')
+toolchain_version="$(tr A-Z a-z <<< "${toolchain_path_version}")"
 newcontrol=$(mktemp debian/control.XXXXXXXXX)
 trap 'rm -v -- "$newcontrol"' INT QUIT EXIT
 
@@ -54,7 +55,7 @@ Depends: $pkg
 Description: Meta package depending on latest OSELAS Toolchain for ${gnutriplet}
 EOF
 
-	echo "/opt/OSELAS.Toolchain-${toolchain_version}/${gnutriplet}" > "debian/${pkg}.install"
+	echo "/opt/OSELAS.Toolchain-${toolchain_path_version}/${gnutriplet}" > "debian/${pkg}.install"
 done
 
 if ! cmp -s "$newcontrol" "debian/control"; then
