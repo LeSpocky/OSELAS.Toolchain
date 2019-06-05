@@ -77,9 +77,12 @@ source "workspace/rules/host-zlib.in"
 source "workspace/rules/host-libelf.in"
 source "rules/host-autotools-autoconf.in"
 source "rules/host-autotools-automake.in"
+source "rules/host-cmake.in"
 source "rules/host-chrpath.in"
 source "rules/host-m4.in"
+source "rules/host-ninja.in"
 source "rules/host-system-perl.in"
+source "rules/host-system-python3.in"
 
 comment "----------------------------------"
 
