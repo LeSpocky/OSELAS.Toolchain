@@ -1,0 +1,33 @@
+menuconfig CROSS_CLANG
+	tristate
+	select HOST_CMAKE
+	select CROSS_LLVM
+	prompt "clang                       "
+	help
+	  Clang project is a C, C++, Objective C and Objective C++
+	  front-end for the LLVM compiler. Its goal is to offer a
+	  replacement to the GNU Compiler Collection (GCC).
+
+if CROSS_CLANG
+
+config CROSS_CLANG_VERSION
+	string
+	prompt "clang version"
+	default "${PTXCONF_CROSS_LLVM_VERSION}"
+	help
+	  Specify the version of clang here.
+	  The default ${PTXCONF_CROSS_LLVM_VERSION} is usually correct.
+
+config CROSS_CLANG_MD5
+	string
+	prompt "clang source md5sum"
+
+config CROSS_CLANG_LICENSE
+	string
+	prompt "clang license"
+
+config CROSS_CLANG_LICENSE_FILES
+	string
+	prompt "clang license files"
+
+endif

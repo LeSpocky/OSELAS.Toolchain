@@ -64,6 +64,7 @@ source "workspace/rules/cross-elf2flt.in"
 source "workspace/rules/kernel-headers.in"
 source "workspace/rules/cross-gcc.in"
 source "workspace/rules/cross-llvm.in"
+source "workspace/rules/cross-clang.in"
 source "workspace/rules/cross-gdb.in"
 source "workspace/rules/cross-toolchain.in"
 source "workspace/rules/host-fake-makeinfo.in"
@@ -114,7 +115,8 @@ config PREFIX_JAVA
 
 config PREFIX_TCID
 	string	
-	default "gcc-${PTXCONF_CROSS_GCC_VERSION}${PTXCONF_PREFIX_JAVA}-glibc-${PTXCONF_GLIBC_VERSION}-binutils-${PTXCONF_CROSS_BINUTILS_VERSION}-kernel-${PTXCONF_KERNEL_HEADERS_VERSION}${PTXCONF_PREFIX_KERNEL}"	if LIBC_GLIBC
+	default "gcc-${PTXCONF_CROSS_GCC_VERSION}${PTXCONF_PREFIX_JAVA}-glibc-${PTXCONF_GLIBC_VERSION}-binutils-${PTXCONF_CROSS_BINUTILS_VERSION}-kernel-${PTXCONF_KERNEL_HEADERS_VERSION}${PTXCONF_PREFIX_KERNEL}"	if LIBC_GLIBC && !CROSS_CLANG
+	default "gcc-${PTXCONF_CROSS_GCC_VERSION}${PTXCONF_PREFIX_JAVA}-clang-${PTXCONF_CROSS_CLANG_VERSION}-glibc-${PTXCONF_GLIBC_VERSION}-binutils-${PTXCONF_CROSS_BINUTILS_VERSION}-kernel-${PTXCONF_KERNEL_HEADERS_VERSION}${PTXCONF_PREFIX_KERNEL}"	if LIBC_GLIBC && CROSS_CLANG
 	default "gcc-${PTXCONF_CROSS_GCC_VERSION}${PTXCONF_PREFIX_JAVA}-uclibc-${PTXCONF_UCLIBC_VERSION}-binutils-${PTXCONF_CROSS_BINUTILS_VERSION}-kernel-${PTXCONF_KERNEL_HEADERS_VERSION}${PTXCONF_PREFIX_KERNEL}"	if LIBC_UCLIBC
 	default "gcc-${PTXCONF_CROSS_GCC_VERSION}-newlib-${PTXCONF_NEWLIB_VERSION}-binutils-${PTXCONF_CROSS_BINUTILS_VERSION}"	if LIBC_NEWLIB
 	default "gcc-${PTXCONF_CROSS_GCC_VERSION}-libc-${PTXCONF_AVRLIB_VERSION}-binutils-${PTXCONF_CROSS_BINUTILS_VERSION}"	if LIBC_AVR
