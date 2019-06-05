@@ -1,0 +1,50 @@
+menuconfig CROSS_RUSTC
+	tristate
+	select CROSS_LLVM
+	prompt "rustc                       "
+	help
+	  FIXME
+
+if CROSS_RUSTC
+
+config CROSS_RUSTC_VERSION
+	string
+	prompt "rustc version"
+	help
+	  Specify the version of rustc here.
+
+config CROSS_RUSTC_MD5
+	string
+	prompt "rustc source md5sum"
+
+config CROSS_RUSTC_TARGET
+	string
+	default "${PTXCONF_GNU_TARGET}"
+	prompt "rust target triple"
+
+config CROSS_RUSTC_BUILD_VERSION
+	string
+	prompt "build version"
+	help
+	  version of the prebuilt rust compiler. It will be used to bootstrap
+	  the rust compiler.
+
+config CROSS_RUSTC_BUILD_DATE
+	string
+	prompt "build date"
+	help
+	  needed to download the prebuilt rust compiler.
+
+config CROSS_RUSTC_BUILD_STD_MD5
+	string
+	prompt "rust-std binary md5sum"
+
+config CROSS_RUSTC_BUILD_RUSTC_MD5
+	string
+	prompt "rustc binary md5sum"
+
+config CROSS_RUSTC_BUILD_CARGO_MD5
+	string
+	prompt "cargo binary md5sum"
+
+endif
