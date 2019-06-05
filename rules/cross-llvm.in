@@ -1,0 +1,31 @@
+menuconfig CROSS_LLVM
+	tristate
+	select HOST_CMAKE
+	select HOST_NINJA
+	select HOST_ZLIB
+	select CROSS_GCC
+	prompt "llvm                        "
+	help
+	  Low-Level Virtual Machine (LLVM)
+
+if CROSS_LLVM
+
+config CROSS_LLVM_VERSION
+	string
+	prompt "llvm version"
+	help
+	  Specify the version of llvm here.
+
+config CROSS_LLVM_MD5
+	string
+	prompt "llvm source md5sum"
+
+config CROSS_LLVM_LICENSE
+	string
+	prompt "LLVM license"
+
+config CROSS_LLVM_LICENSE_FILES
+	string
+	prompt "LLVM license files"
+
+endif
