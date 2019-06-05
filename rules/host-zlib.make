@@ -43,4 +43,6 @@ HOST_ZLIB_CONF_OPT	:= \
 	$(PTX_HOST_AUTOCONF) \
 	--static
 
+HOST_ZLIB_CFLAGS	:= -fPIC
+
 # vim: syntax=make
