@@ -18,7 +18,7 @@ Signed-off-by: Andreas Bießmann <andreas@biessmann.de>
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
-index f2d913e30ac0..56a23784f241 100644
+index c08221c42105..6197e9eaaafe 100644
 --- a/gcc/config/i386/linux64.h
 +++ b/gcc/config/i386/linux64.h
 @@ -27,8 +27,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
@@ -33,7 +33,7 @@ index f2d913e30ac0..56a23784f241 100644
  
  #undef MUSL_DYNAMIC_LINKER32
 diff --git a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
-index 8ea0faff369b..7640c9c68f08 100644
+index c686ab2f0d26..5439c47cc455 100644
 --- a/gcc/config/i386/t-linux64
 +++ b/gcc/config/i386/t-linux64
 @@ -33,6 +33,6 @@
