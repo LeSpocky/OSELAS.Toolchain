@@ -47,6 +47,9 @@ fixup()
 	    gcc*)
 		PTXCONF_CROSS_GCC_VERSION="${part##gcc-}"
 		;;
+	    clang*)
+		PTXCONF_CROSS_LLVM_VERSION="${part##clang-}"
+		;;
 	    glibc*)
 		PTXCONF_GLIBC_VERSION="${part##glibc-}"
 		;;
@@ -373,6 +376,15 @@ fixup()
 	8.2*|8.3*)
 	    PTXCONF_CROSS_GDB_LICENSE="GPL-2.0-or-later AND LGPL-2.0-or-later GPL-3.0-or-later AND LGPL-3.0-or-later"
 	    PTXCONF_CROSS_GDB_LICENSE_FILES="file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 file://COPYING3;md5=d32239bcb673463ab874e80d47fae504 file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6"
+	    ;;
+    esac
+
+    case "${PTXCONF_CROSS_LLVM_VERSION}" in
+	8.0.0)
+	    PTXCONF_CROSS_LLVM_LICENSE="BSD-3-Clause"
+	    PTXCONF_CROSS_LLVM_LICENSE_FILES="file://LICENSE.TXT;md5=c6b766a4e85dd28301eeed54a6684648"
+	    PTXCONF_CROSS_CLANG_LICENSE="BSD-3-Clause"
+	    PTXCONF_CROSS_CLANG_LICENSE_FILES="file://LICENSE.TXT;md5=9a0fe3a7846ba0ffc822a70d6f7f6903"
 	    ;;
     esac
 
