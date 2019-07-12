@@ -1,2 +1,4 @@
+## SECTION=hosttools_noprompt
+
 config HOST_FAKE_MAKEINFO
 	bool
