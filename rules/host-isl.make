@@ -29,8 +29,6 @@ HOST_ISL_LICENSE	:= MIT
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_ISL_DEVPKG	:= NO
-
 #
 # autoconf
 #

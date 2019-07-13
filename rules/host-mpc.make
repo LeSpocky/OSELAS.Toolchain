@@ -29,8 +29,6 @@ HOST_MPC_LICENSE	:= LGPL-3.0-or-later
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_MPC_DEVPKG	:= NO
-
 #
 # autoconf
 #

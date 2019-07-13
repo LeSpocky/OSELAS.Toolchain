@@ -29,8 +29,6 @@ HOST_EXPAT_LICENSE	:= MIT
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_EXPAT_DEVPKG	:= NO
-
 #
 # autoconf
 #

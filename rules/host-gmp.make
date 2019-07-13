@@ -36,8 +36,6 @@ HOST_GMP_LICENSE_FILES	:= \
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_GMP_DEVPKG	:= NO
-
 #
 # autoconf
 #

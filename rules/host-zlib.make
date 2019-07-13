@@ -33,8 +33,6 @@ HOST_ZLIB_LICENSE_FILES	:= file://README;md5=0ff45db88393c3152e458a047bba0ff1
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_ZLIB_DEVPKG	:= NO
-
 #
 # autoconf
 #

@@ -29,8 +29,6 @@ HOST_CLOOG_LICENSE	:= LGPL-2.1-or-later
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_CLOOG_DEVPKG	:= NO
-
 #
 # autoconf
 #

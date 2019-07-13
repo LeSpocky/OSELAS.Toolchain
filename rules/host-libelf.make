@@ -51,8 +51,6 @@ HOST_LIBELF_AUTOCONF := \
 	--with-lzma \
 	--without-biarch
 
-HOST_LIBELF_DEVPKG	:= NO
-
 ifdef PTXDIST_ICECC
 LIBELF_CFLAGS := -C
 endif

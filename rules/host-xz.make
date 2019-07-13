@@ -34,8 +34,6 @@ HOST_XZ_LICENSE_FILES := \
 # Prepare
 # ----------------------------------------------------------------------------
 
-HOST_XZ_DEVPKG		:= NO
-
 #
 # autoconf
 #
