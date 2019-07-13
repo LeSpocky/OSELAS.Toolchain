@@ -26,7 +26,7 @@ endif
 		| xargs -0 chrpath -k -d 2>/dev/null || true
 ifdef PTXCONF_TOOLCHAIN_CONFIG_SYSROOT
 #	# size compromise: compressed debug sections in static libraries are too large
-	find "$(PTXCONF_SYSROOT_CROSS)/sysroot-$(call remove_quotes,$(PTXCONF_GNU_TARGET))/usr/lib" \
+	find "$(PTXCONF_SYSROOT_TARGET)/usr/lib" \
 		-type f -name "*.a" -print0 \
 		| xargs -0 -n1 $(PTXCONF_SYSROOT_CROSS)/bin/$(PTXCONF_GNU_TARGET)-objcopy \
 			--preserve-dates --strip-debug --keep-file-symbols || true
