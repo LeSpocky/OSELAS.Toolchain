@@ -43,5 +43,12 @@ CROSS_ELF2FLT_CONF_OPT	:= \
 	--with-binutils-build-dir=$(CROSS_BINUTILS_BUILDDIR) \
 	--with-libbfd="$(CROSS_BINUTILS_BUILDDIR)/bfd/libbfd.a -lz -ldl"
 
+$(STATEDIR)/cross-elf2flt.install:
+	@$(call targetinfo)
+	@$(call world/install, CROSS_ELF2FLT)
+	@for bin in $(CROSS_ELF2FLT_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/*; do \
+		ln -vsf ../../bin/$(COMPILER_PREFIX)$$(basename $${bin}) $${bin} || break; \
+	done
+	@$(call touch)
 
 # vim: syntax=make
