@@ -119,7 +119,7 @@ config PREFIX_CROSS
 
 config SYSROOT_CROSS
 	string
-	default "${PTXCONF_DESTDIR}${PTXCONF_PREFIX_CROSS}"
+	default "${PTXCONF_DESTDIR}"
 
 config PREFIX_TARGET
 	string
