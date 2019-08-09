@@ -30,8 +30,6 @@ CROSS_LLVM_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_CROSS_LLVM_LICENSE_FI
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_LLVM_DEVPKG	:= NO
-
 CROSS_LLVM_HOST_ARCH	:= X86
 
 ifdef PTXCONF_ARCH_ARM
@@ -85,13 +83,6 @@ CROSS_LLVM_CONF_OPT	:= \
 	-DLLVM_TARGETS_TO_BUILD="$(subst $(space),;,$(CROSS_LLVM_TARGETS_TO_BUILD))" \
 	-DLLVM_TARGET_ARCH=host \
 	-DLLVM_USE_PERF=ON
-
-# ----------------------------------------------------------------------------
-# Install
-# ----------------------------------------------------------------------------
-
-CROSS_LLVM_MAKE_ENV := \
-	DESTDIR=$(PTXCONF_DESTDIR)
 
 CROSS_LLVM_LDFLAGS	:= \
 	-Wl,-rpath,$$ORIGIN/../lib
