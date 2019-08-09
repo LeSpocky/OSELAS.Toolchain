@@ -33,8 +33,6 @@ CROSS_GDB_URL		:= \
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_GDB_DEVPKG := NO
-
 CROSS_GDB_CONF_ENV	:= \
 	$(HOST_CROSS_ENV) \
 	CFLAGS="-ggdb3 -O2" \
@@ -58,9 +56,5 @@ CROSS_GDB_CONF_OPT += --without-python
 else
 CROSS_GDB_CONF_OPT += --with-python=python3
 endif
-
-CROSS_GDB_INSTALL_OPT := \
-	DESTDIR=$(PTXCONF_DESTDIR) \
-	install
 
 # vim: syntax=make
