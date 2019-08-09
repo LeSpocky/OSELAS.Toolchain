@@ -35,8 +35,6 @@ CROSS_BINUTILS_URL	:= \
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_BINUTILS_DEVPKG	:= NO
-
 CROSS_BINUTILS_CONF_ENV	:= \
 	$(HOST_CROSS_ENV) \
 	CFLAGS="-ggdb3 -O2" \
@@ -63,13 +61,15 @@ CROSS_BINUTILS_CONF_OPT		:= \
 # Install
 # ----------------------------------------------------------------------------
 
-CROSS_BINUTILS_INSTALL_OPT := \
-	DESTDIR=$(PTXCONF_DESTDIR) \
-	install
-
 $(STATEDIR)/cross-binutils.install:
 	@$(call targetinfo)
 	@$(call world/install, CROSS_BINUTILS)
+ifdef PTXCONF_CROSS_BINUTILS_LD_REAL
+	mv -v $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)ld \
+		$(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)ld.real
+	mv -v $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/ld \
+		$(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/ld.real
+endif
 
 	mkdir -p "$(CROSS_GCC_FIRST_PREFIX)/$(PTXCONF_GNU_TARGET)/bin"
 	for file in \

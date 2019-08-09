@@ -27,4 +27,7 @@ config CROSS_BINUTILS_LICENSE_FILES
 	string
 	prompt "binutils license files"
 
+config CROSS_BINUTILS_LD_REAL
+	bool
+
 endif
