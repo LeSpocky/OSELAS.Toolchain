@@ -53,8 +53,8 @@ CROSS_GCC_FIRST_CONF_OPT	 = \
 	--disable-shared \
 	--enable-languages=c \
 	\
-	--with-ld=$(PTXCONF_SYSROOT_CROSS)/bin/$(PTXCONF_GNU_TARGET)-ld \
-	--with-as=$(PTXCONF_SYSROOT_CROSS)/bin/$(PTXCONF_GNU_TARGET)-as \
+	--with-ld=$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin/$(PTXCONF_GNU_TARGET)-ld \
+	--with-as=$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin/$(PTXCONF_GNU_TARGET)-as \
 	--disable-checking \
 	\
 	--disable-libmudflap \

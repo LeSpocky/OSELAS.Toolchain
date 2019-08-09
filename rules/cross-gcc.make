@@ -61,7 +61,6 @@ endif
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_GCC_DEVPKG	:= NO
 CROSS_GCC_CONF_ENV	:= \
 	$(HOST_CROSS_ENV) \
 	CFLAGS="-ggdb3 -O2" \
@@ -156,10 +155,6 @@ $(STATEDIR)/cross-gcc.prepare:
 # Install
 # ----------------------------------------------------------------------------
 
-CROSS_GCC_INSTALL_OPT := \
-	DESTDIR=$(PTXCONF_DESTDIR) \
-	install
-
 $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 	@$(call targetinfo)
 	@$(call world/install, CROSS_GCC)
@@ -170,8 +165,9 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 		pkg_license_target_pattern=$(PTXCONF_CROSS_GCC_GCCLIBS_LICENSES) \
 		ptxd_make_world_copy_license
 
-	@cd "$(PTXCONF_SYSROOT_CROSS)/$(PTX_TOUPLE_TARGET)/lib"; \
-	dst="$(SYSROOT)/usr/lib"; \
+	@cd "$(CROSS_GCC_PKGDIR)/$(PTX_TOUPLE_TARGET)/lib"; \
+	dst="$(CROSS_GCC_PKGDIR)/sysroot-$(PTXCONF_GNU_TARGET)/usr/lib"; \
+	mkdir -p "$${dst}" &&  \
 	rel="$$($(ptx/abs2rel) "$${dst}" "$${PWD}")" && \
 	for file in \
 		libg2c.*so* \
@@ -194,10 +190,10 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 		fi || exit 1; \
 	done
 
-	@find $(PTXCONF_SYSROOT_CROSS) -name "*.la" -print0 | xargs -0 rm -v -f
+	@find $(CROSS_GCC_PKGDIR) -name "*.la" -print0 | xargs -0 rm -v -f
 ifneq ($(call remove_quotes,$(PTXCONF_DESTDIR)),)
 	sed -i -e 's;$(call remove_quotes,$(PTXCONF_DESTDIR));;' \
-		$(PTXCONF_SYSROOT_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf
+		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf
 endif
 
 	@$(call touch)
