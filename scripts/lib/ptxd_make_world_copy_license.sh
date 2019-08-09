@@ -9,11 +9,17 @@
 #
 
 ptxd_make_world_copy_license() {
+    local license_dir license_url name
     ptxd_make_world_license_init || return
 
-    local license_dir="$(ptxd_get_ptxconf PTXCONF_SYSROOT_CROSS)/share/compliance"
-    local license_url="file://\$(PTXDIST_PLATFORMDIR)/selected_toolchain/../share/compliance"
-    local name="${pkg_label#host-}"
+    local ptxconf_prefix="$(ptxd_get_ptxconf PTXCONF_PREFIX_CROSS)"
+    if [ "${pkg_type}" = "target" ]; then
+	license_dir="${PTXDIST_SYSROOT_CROSS}${ptxconf_prefix}/share/compliance"
+    else
+	license_dir="${pkg_pkg_dir}${ptxconf_prefix}/share/compliance"
+    fi
+    license_url="file://\$(PTXDIST_PLATFORMDIR)/selected_toolchain/../share/compliance"
+    name="${pkg_label#host-}"
     name="${name#cross-}"
     pkg_license_target="${pkg_license_target:-${pkg_label}}"
     pkg_license_target_license="${pkg_license_target_license:-${pkg_license}}"
