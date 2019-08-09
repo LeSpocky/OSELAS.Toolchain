@@ -30,8 +30,6 @@ CROSS_CLANG_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_CROSS_CLANG_LICENSE_
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_CLANG_DEVPKG	:= NO
-
 #
 # autoconf
 #
@@ -53,9 +51,6 @@ CROSS_CLANG_LDFLAGS	:= \
 # ----------------------------------------------------------------------------
 # Install
 # ----------------------------------------------------------------------------
-
-CROSS_CLANG_MAKE_ENV := \
-	DESTDIR=$(PTXCONF_DESTDIR)
 
 CROSS_CLANG_CROSS_TOOLS := \
 	clang \
@@ -87,13 +82,13 @@ chmod +x '$(2)'
 endef
 define ptx/cross-clang-wrapper
 $(call ptx/cross-clang-wrapper-impl,$(strip $(1)),$(strip \
-	$(PTXCONF_SYSROOT_CROSS)/bin/$(PTXCONF_GNU_TARGET)-$(tool)))
+	$(CROSS_CLANG_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(PTXCONF_GNU_TARGET)-$(tool)))
 endef
 
 $(STATEDIR)/cross-clang.install:
 	@$(call targetinfo)
 	@$(call world/install, CROSS_CLANG)
-	@echo "flags='$(CROSS_CLANG_TARGET_EXTRA)'" > $(CROSS_CLANG_PKGDIR)/bin/.$(PTXCONF_GNU_TARGET).flags
+	@echo "flags='$(CROSS_CLANG_TARGET_EXTRA)'" > $(CROSS_CLANG_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/.$(PTXCONF_GNU_TARGET).flags
 	@$(foreach tool,$(CROSS_CLANG_CROSS_TOOLS), \
 		$(call ptx/cross-clang-wrapper,$(tool)))
 	@$(call touch)
