@@ -31,8 +31,6 @@ CROSS_ELF2FLT_LICENSE_FILES := \
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_ELF2FLT_DEVPKG	:= NO
-
 #
 # autoconf
 #
@@ -45,8 +43,5 @@ CROSS_ELF2FLT_CONF_OPT	:= \
 	--with-binutils-build-dir=$(CROSS_BINUTILS_BUILDDIR) \
 	--with-libbfd="$(CROSS_BINUTILS_BUILDDIR)/bfd/libbfd.a -lz -ldl"
 
-CROSS_ELF2FLT_INSTALL_OPT := \
-	prefix=$(PTXCONF_SYSROOT_CROSS) \
-	install
 
 # vim: syntax=make

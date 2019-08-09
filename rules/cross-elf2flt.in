@@ -3,6 +3,7 @@
 config CROSS_ELF2FLT
 	tristate
 	select CROSS_BINUTILS
+	select CROSS_BINUTILS_LD_REAL
 	prompt "elf2flt"
 	help
 	  f2flt with PIC, ZFLAT and full reloc support. Currently supported
