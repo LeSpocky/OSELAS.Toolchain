@@ -64,12 +64,19 @@ CROSS_BINUTILS_CONF_OPT		:= \
 $(STATEDIR)/cross-binutils.install:
 	@$(call targetinfo)
 	@$(call world/install, CROSS_BINUTILS)
+#	# this link first in case it is moved to $(COMPILER_PREFIX)ld.real
+	@ln -vsf $(COMPILER_PREFIX)ld.bfd \
+		$(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)ld
 ifdef PTXCONF_CROSS_BINUTILS_LD_REAL
 	mv -v $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)ld \
 		$(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)ld.real
 	mv -v $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/ld \
 		$(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/ld.real
 endif
+#	# these links last to ensure that ld.real points to $(COMPILER_PREFIX)ld.real
+	@for bin in $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/*; do \
+		ln -vsf ../../bin/$(COMPILER_PREFIX)$$(basename $${bin}) $${bin} || break; \
+	done
 
 	mkdir -p "$(CROSS_GCC_FIRST_PREFIX)/$(PTXCONF_GNU_TARGET)/bin"
 	for file in \
