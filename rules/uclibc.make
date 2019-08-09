@@ -53,14 +53,17 @@ $(STATEDIR)/uclibc.prepare: $(UCLIBC_CONFIG)
 	@$(call world/kconfig, UCLIBC, oldconfig)
 	@$(call touch)
 
-UCLIBC_MAKE_OPT		:= \
+UCLIBC_COMMON_OPT := \
 	CROSS=$(COMPILER_PREFIX) \
 	HOSTCC="$(HOSTCC)" \
 	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(SYSROOT) \
 	KERNEL_HEADERS=$(SYSROOT)/usr/include \
 	RUNTIME_PREFIX=/ \
 	SHARED_LIB_LOADER_PREFIX=/lib
+
+UCLIBC_MAKE_OPT		:= \
+	$(UCLIBC_COMMON_OPT) \
+	PREFIX=$(UCLIBC_PKGDIR)
 
 UCLIBC_INSTALL_OPT	:= \
 	$(UCLIBC_MAKE_OPT) \

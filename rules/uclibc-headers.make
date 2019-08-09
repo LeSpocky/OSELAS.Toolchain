@@ -50,7 +50,8 @@ $(STATEDIR)/uclibc-headers.compile:
 # ----------------------------------------------------------------------------
 
 UCLIBC_HEADERS_INSTALL_OPT = \
-	$(UCLIBC_MAKE_OPT) \
+	$(UCLIBC_COMMON_OPT) \
+	PREFIX=$(UCLIBC_HEADERS_PKGDIR) \
 	CPU_CFLAGS=$(PTXCONF_UCLIBC_HEADERS_FAKE_CROSS) \
 	CC="$(HOSTCC)" \
 	install_headers
