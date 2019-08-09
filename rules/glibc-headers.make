@@ -24,6 +24,7 @@ GLIBC_HEADERS		:= glibc-$(GLIBC_HEADERS_VERSION)
 GLIBC_HEADERS_SUFFIX	:= tar.bz2
 GLIBC_HEADERS_SOURCE	:= $(SRCDIR)/$(GLIBC_HEADERS).$(GLIBC_HEADERS_SUFFIX)
 GLIBC_HEADERS_DIR	:= $(BUILDDIR)/glibc-headers-$(GLIBC_HEADERS_VERSION)
+GLIBC_HEADERS_PKGDIR	:= $(PKGDIR)/glibc-headers-$(GLIBC_HEADERS_VERSION)
 GLIBC_HEADERS_BUILDDIR	:= $(GLIBC_HEADERS_DIR)-build
 GLIBC_HEADERS_URL	 = $(GLIBC_URL)
 GLIBC_HEADERS_BUILD_OOT	:= YES
@@ -46,8 +47,8 @@ GLIBC_HEADERS_ENV  := \
 	\
 	libc_cv_prog_as_gnu=yes \
 	libc_cv_prog_ld_gnu=yes \
-	ac_cv_prog_AS="$(PTXCONF_SYSROOT_CROSS)/bin/$(COMPILER_PREFIX)as" \
-	ac_cv_prog_LD="$(PTXCONF_SYSROOT_CROSS)/bin/$(COMPILER_PREFIX)ld.bfd" \
+	ac_cv_prog_AS="$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)as" \
+	ac_cv_prog_LD="$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)ld.bfd" \
 	\
 	libc_cv_asm_cfi_directive_sections=yes \
 	libc_cv_asm_cfi_directives=yes \
@@ -119,18 +120,19 @@ $(STATEDIR)/glibc-headers.compile:
 # Install
 # ----------------------------------------------------------------------------
 
-GLIBC_HEADERS_INSTALL_OPT := \
+GLIBC_HEADERS_INSTALL_OPT	:= \
 	cross_compiling=yes \
-	install_root=$(SYSROOT) \
 	install-headers
 
 $(STATEDIR)/glibc-headers.install:
 	@$(call targetinfo)
 	@$(call world/install, GLIBC_HEADERS)
-	@mkdir -vp $(SYSROOT)/usr/include/gnu
-	touch $(SYSROOT)/usr/include/gnu/stubs.h
-	@cp -v $(GLIBC_HEADERS_DIR)/include/features.h $(SYSROOT)/usr/include/features.h
-	@cp -v $(GLIBC_HEADERS_BUILDDIR)/bits/stdio_lim.h $(SYSROOT)/usr/include/bits/stdio_lim.h
+	@install -vd -m 755 $(GLIBC_HEADERS_PKGDIR)/usr/include/gnu
+	touch $(GLIBC_HEADERS_PKGDIR)/usr/include/gnu/stubs.h
+	@install -vD -m 644 $(GLIBC_HEADERS_DIR)/include/features.h \
+		$(GLIBC_HEADERS_PKGDIR)/usr/include/features.h
+	@install -vD -m 644  $(GLIBC_HEADERS_BUILDDIR)/bits/stdio_lim.h \
+		$(GLIBC_HEADERS_PKGDIR)/usr/include/bits/stdio_lim.h
 	@$(call touch)
 
 # vim: syntax=make

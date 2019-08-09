@@ -49,8 +49,6 @@ GLIBC_ENV := \
 	ac_cv_sizeof_long_double=$(PTXCONF_SIZEOF_LONG_DOUBLE)
 
 
-GLIBC_MAKEVARS := AUTOCONF=no
-
 #
 # autoconf
 #
@@ -86,21 +84,19 @@ GLIBC_CONF_OPT	:= \
 
 $(STATEDIR)/glibc.install: $(STATEDIR)/glibc.report
 	@$(call targetinfo)
-	cd $(GLIBC_BUILDDIR) && \
-		$(GLIBC_PATH) $(MAKE) $(GLIBC_MAKEVARS) \
-		install_root=$(SYSROOT) install
+	@$(call world/install, GLIBC)
 
 	@$(call world/env, GLIBC) ptxd_make_world_copy_license
 #
 # Fix a bug when linking statically
 # see: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=76451
 #
-	if [ -e "$(SYSROOT)/usr/lib/libnss_files.a" ]; then \
-		mv -- "$(SYSROOT)/usr/lib/libc.a" "$(SYSROOT)/usr/lib/libc_ns.a" && \
-		echo '/* GNU ld script'											>  "$(SYSROOT)/usr/lib/libc.a" && \
-		echo '   Use the static library, but some functions are in other strange'				>> "$(SYSROOT)/usr/lib/libc.a" && \
-		echo '   libraries :-( So try them secondarily. */'							>> "$(SYSROOT)/usr/lib/libc.a" && \
-		echo 'GROUP ( /usr/lib/libc_ns.a /usr/lib/libnss_files.a /usr/lib/libnss_dns.a /usr/lib/libresolv.a )'	>> "$(SYSROOT)/usr/lib/libc.a" ; \
+	if [ -e "$(GLIBC_PKGDIR)/usr/lib/libnss_files.a" ]; then \
+		mv -- "$(GLIBC_PKGDIR)/usr/lib/libc.a" "$(GLIBC_PKGDIR)/usr/lib/libc_ns.a" && \
+		echo '/* GNU ld script'											>  "$(GLIBC_PKGDIR)/usr/lib/libc.a" && \
+		echo '   Use the static library, but some functions are in other strange'				>> "$(GLIBC_PKGDIR)/usr/lib/libc.a" && \
+		echo '   libraries :-( So try them secondarily. */'							>> "$(GLIBC_PKGDIR)/usr/lib/libc.a" && \
+		echo 'GROUP ( /usr/lib/libc_ns.a /usr/lib/libnss_files.a /usr/lib/libnss_dns.a /usr/lib/libresolv.a )'	>> "$(GLIBC_PKGDIR)/usr/lib/libc.a" ; \
 	fi
 
 	@$(call touch)
