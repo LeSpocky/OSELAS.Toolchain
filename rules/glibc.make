@@ -84,9 +84,6 @@ GLIBC_CONF_OPT	:= \
 # Install
 # ----------------------------------------------------------------------------
 
-GLIBC_COMPLIANCE := $(PTXCONF_SYSROOT_CROSS)/share/compliance/glibc
-
-
 $(STATEDIR)/glibc.install: $(STATEDIR)/glibc.report
 	@$(call targetinfo)
 	cd $(GLIBC_BUILDDIR) && \
