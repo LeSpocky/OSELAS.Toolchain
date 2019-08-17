@@ -84,6 +84,8 @@ ifdef PTXCONF_KERNEL_HEADERS_SANITIZED
 	@$(KERNEL_HEADERS_ENV) $(KERNEL_HEADERS_PATH) \
 		$(MAKE) -C $(KERNEL_HEADERS_DIR) $(KERNEL_HEADERS_MAKEVARS) \
 		headers_install INSTALL_HDR_PATH=$(KERNEL_HEADERS_PKGDIR)/usr
+	@find $(KERNEL_HEADERS_PKGDIR) -type f \
+		\( -name .install -o -name ..install.cmd \) -delete
 else
 	mkdir -p $(KERNEL_HEADERS_PKGDIR)/usr/include/asm
 	cp -r $(KERNEL_HEADERS_DIR)/include/linux $(KERNEL_HEADERS_PKGDIR)/usr/include
