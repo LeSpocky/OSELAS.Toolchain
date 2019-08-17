@@ -76,7 +76,7 @@ $(STATEDIR)/cross-ecj.compile:
 $(STATEDIR)/cross-ecj.install:
 	@$(call targetinfo)
 	if [ \! -x "$$(which $(GNU_BUILD)-gcj)" ]; then \
-		ln -sf $$(which gcj) $(PTXCONF_SYSROOT_HOST)/bin/$(GNU_BUILD)-gcj; \
+		ln -sf $$(which gcj) $(PTXDIST_SYSROOT_HOST)/bin/$(GNU_BUILD)-gcj; \
 	fi
 	@$(call touch)
 

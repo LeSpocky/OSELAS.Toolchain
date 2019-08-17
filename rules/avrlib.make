@@ -58,7 +58,7 @@ AVRLIB_ENV 	:= \
 # autoconf
 #
 AVRLIB_AUTOCONF := \
-	--prefix=$(PTXCONF_SYSROOT_TARGET) \
+	--prefix=$(PTXDIST_SYSROOT_TARGET) \
 	--host=$(PTXCONF_GNU_TARGET) \
 	--target=$(PTXCONF_GNU_TARGET)
 
