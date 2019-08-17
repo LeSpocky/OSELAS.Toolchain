@@ -165,6 +165,10 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 		pkg_license_target_pattern=$(PTXCONF_CROSS_GCC_GCCLIBS_LICENSES) \
 		ptxd_make_world_copy_license
 
+	@ln -vsf $(COMPILER_PREFIX)c++ \
+		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)g++
+	@ln -vsf $(COMPILER_PREFIX)gcc-$(CROSS_GCC_VERSION) \
+		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)gcc
 
 	@find $(CROSS_GCC_PKGDIR) -name "*.la" -print0 | xargs -0 rm -v -f
 ifneq ($(call remove_quotes,$(PTXCONF_DESTDIR)),)
