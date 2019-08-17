@@ -165,30 +165,6 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 		pkg_license_target_pattern=$(PTXCONF_CROSS_GCC_GCCLIBS_LICENSES) \
 		ptxd_make_world_copy_license
 
-	@cd "$(CROSS_GCC_PKGDIR)/$(PTX_TOUPLE_TARGET)/lib"; \
-	dst="$(CROSS_GCC_PKGDIR)/sysroot-$(PTXCONF_GNU_TARGET)/usr/lib"; \
-	mkdir -p "$${dst}" &&  \
-	rel="$$($(ptx/abs2rel) "$${dst}" "$${PWD}")" && \
-	for file in \
-		libg2c.*so* \
-		libgcc_s.*so* \
-		libgfortran.*so* \
-		libgomp.*so* \
-		libmudflap.*so* \
-		libmudflapth.*so* \
-		libssp.*so* \
-		libstdc++.*so* \
-		; do \
-		[ \! -e "$${file}" ] && continue; \
-		\
-		dst_file="$${dst}/$${file}"; \
-		rel_file="$${rel}/$${file}"; \
-		if [ -L "$${file}" ]; then \
-			cp -vdR "$${file}" "$${dst_file}"; \
-		else \
-			ln -vfs "$${rel_file}" "$${dst_file}"; \
-		fi || exit 1; \
-	done
 
 	@find $(CROSS_GCC_PKGDIR) -name "*.la" -print0 | xargs -0 rm -v -f
 ifneq ($(call remove_quotes,$(PTXCONF_DESTDIR)),)
