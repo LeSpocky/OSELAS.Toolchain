@@ -83,12 +83,12 @@ $(STATEDIR)/kernel-headers.install:
 ifdef PTXCONF_KERNEL_HEADERS_SANITIZED
 	@$(KERNEL_HEADERS_ENV) $(KERNEL_HEADERS_PATH) \
 		$(MAKE) -C $(KERNEL_HEADERS_DIR) $(KERNEL_HEADERS_MAKEVARS) \
-		headers_install INSTALL_HDR_PATH=$(SYSROOT)/usr
+		headers_install INSTALL_HDR_PATH=$(KERNEL_HEADERS_PKGDIR)/usr
 else
-	mkdir -p $(SYSROOT)/usr/include/asm
-	cp -r $(KERNEL_HEADERS_DIR)/include/linux $(SYSROOT)/usr/include
-	cp -r $(KERNEL_HEADERS_DIR)/include/asm/* $(SYSROOT)/usr/include/asm
-	cp -r $(KERNEL_HEADERS_DIR)/include/asm-generic $(SYSROOT)/usr/include
+	mkdir -p $(KERNEL_HEADERS_PKGDIR)/usr/include/asm
+	cp -r $(KERNEL_HEADERS_DIR)/include/linux $(KERNEL_HEADERS_PKGDIR)/usr/include
+	cp -r $(KERNEL_HEADERS_DIR)/include/asm/* $(KERNEL_HEADERS_PKGDIR)/usr/include/asm
+	cp -r $(KERNEL_HEADERS_DIR)/include/asm-generic $(KERNEL_HEADERS_PKGDIR)/usr/include
 endif
 
 	@$(call touch)
