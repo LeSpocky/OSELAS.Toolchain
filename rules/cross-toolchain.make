@@ -19,18 +19,12 @@ CROSS_TOOLCHAIN_LICENSE := ignore
 # Install
 # ----------------------------------------------------------------------------
 
+CROSS_TOOLCHAIN_PTXCONFIG := \
+	$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin/ptxconfig
+
 $(STATEDIR)/cross-toolchain.install:
 	@$(call targetinfo)
-	@if [ -e "${PTXCONF_SYSROOT_CROSS}/bin/ptxconfig" ]; then \
-		rm -rf "${PTXCONF_SYSROOT_CROSS}/bin/ptxconfig"; \
-	fi
-	@cp ${PTXDIST_PTXCONFIG} ${PTXCONF_SYSROOT_CROSS}/bin/ptxconfig
-
-	@if [ -e "$(STATEDIR)/toolchain-install-dir" ]; then \
-		rm -rf "$(STATEDIR)/toolchain-install-dir"; \
-	fi
-	@ln -s ${PTXCONF_SYSROOT_CROSS} $(STATEDIR)/toolchain-install-dir
-
+	@install -vD -m644 $(PTXDIST_PTXCONFIG) $(CROSS_TOOLCHAIN_PTXCONFIG)
 	@$(call touch)
 
 # vim: syntax=make
