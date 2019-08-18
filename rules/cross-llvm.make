@@ -20,7 +20,9 @@ CROSS_LLVM_VERSION		:= $(call remove_quotes,$(PTXCONF_CROSS_LLVM_VERSION))
 CROSS_LLVM_MD5			:= $(call remove_quotes,$(PTXCONF_CROSS_LLVM_MD5))
 CROSS_LLVM			:= llvm-$(CROSS_LLVM_VERSION)
 CROSS_LLVM_SUFFIX		:= src.tar.xz
-CROSS_LLVM_URL			:= https://releases.llvm.org/$(CROSS_LLVM_VERSION)/$(CROSS_LLVM).$(CROSS_LLVM_SUFFIX)
+CROSS_LLVM_URL			:= \
+	https://releases.llvm.org/$(CROSS_LLVM_VERSION)/$(CROSS_LLVM).$(CROSS_LLVM_SUFFIX) \
+	https://github.com/llvm/llvm-project/releases/download/llvmorg-$(CROSS_LLVM_VERSION)/$(CROSS_LLVM).$(CROSS_LLVM_SUFFIX)
 CROSS_LLVM_SOURCE		:= $(SRCDIR)/$(CROSS_LLVM).$(CROSS_LLVM_SUFFIX)
 CROSS_LLVM_DIR			:= $(CROSS_BUILDDIR)/$(CROSS_LLVM)
 CROSS_LLVM_LICENSE		:= $(call remove_quotes,$(PTXCONF_CROSS_LLVM_LICENSE))
