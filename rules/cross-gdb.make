@@ -25,7 +25,7 @@ CROSS_GDB_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_CROSS_GDB_LICENSE_FILE
 
 CROSS_GDB_URL		:= \
 	$(call ptx/mirror, GNU, gdb/$(CROSS_GDB).$(CROSS_GDB_SUFFIX)) \
-	ftp://sourceware.org/pub/gdb/snapshots/current/$(CROSS_GDB).$(CROSS_GDB_SUFFIX)
+	https://sourceware.org/pub/gdb/snapshots/current/$(CROSS_GDB).$(CROSS_GDB_SUFFIX)
 
 # ----------------------------------------------------------------------------
 # Prepare
