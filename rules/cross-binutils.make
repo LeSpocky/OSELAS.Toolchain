@@ -26,7 +26,7 @@ CROSS_BINUTILS_LICENSE_FILES := $(call remove_quotes,$(PTXCONF_CROSS_BINUTILS_LI
 
 CROSS_BINUTILS_URL	:= \
 	$(call ptx/mirror, GNU, binutils/$(CROSS_BINUTILS).$(CROSS_BINUTILS_SUFFIX)) \
-	ftp://sources.redhat.com/pub/binutils/snapshots/$(CROSS_BINUTILS).$(CROSS_BINUTILS_SUFFIX) \
+	https://www.sourceware.org/pub/binutils/snapshots/$(CROSS_BINUTILS).$(CROSS_BINUTILS_SUFFIX) \
 	http://www.kernel.org/pub/linux/devel/binutils/$(CROSS_BINUTILS).$(CROSS_BINUTILS_SUFFIX)
 
 # ----------------------------------------------------------------------------
