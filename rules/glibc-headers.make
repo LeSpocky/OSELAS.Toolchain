@@ -45,6 +45,7 @@ GLIBC_HEADERS_ENV  := \
 	$(HOST_ENV) \
 	CC="gcc $(PTXCONF_GLIBC_HEADERS_FAKE_CROSS)" \
 	\
+	libc_cv_compiler_ok=yes \
 	libc_cv_prog_as_gnu=yes \
 	libc_cv_prog_ld_gnu=yes \
 	ac_cv_prog_AS="$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)as" \
