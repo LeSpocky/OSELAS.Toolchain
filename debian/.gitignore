@@ -8,3 +8,4 @@
 /oselas.toolchain-20*-*.substvars
 /oselas.toolchain-20*/
 /ptxdistrc
+/excludes

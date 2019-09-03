@@ -28,18 +28,19 @@ override_dh_auto_build: debian/ptxdistrc
 	$(PTXDIST_ENV) make -f build_all_v2.mk ARG="-j -q go" PTXDIST="$(PTXDIST)" $(TOOLCHAINS)
 
 override_dh_auto_install-arch:
-	mkdir -p $(CURDIR)/debian/tmp
 	rm -rf $(CURDIR)/debian/tmp/opt
-	cp -a inst/opt $(CURDIR)/debian/tmp/
+	mkdir -p $(CURDIR)/debian/tmp/opt
+	cp -a platform-*/sysroot-cross/opt/* $(CURDIR)/debian/tmp/opt/
+	echo -Xsysroot- > $(CURDIR)/debian/excludes
+	ls -d $(CURDIR)/debian/tmp/opt/OSELAS.Toolchain-*/*/*/*/lib \
+		$(CURDIR)/debian/tmp/opt/OSELAS.Toolchain-*/*/*/lib/gcc/*/* \
+		| sed 's;$(CURDIR)/debian/tmp;-X;' >> $(CURDIR)/debian/excludes
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf gstate platform-* inst/
+	rm -rf gstate platform-*
 
-EXCLUDES = \
-	-Xsysroot- \
-	$(foreach d,$(wildcard inst/opt/OSELAS.Toolchain-*/*/*/*/lib),-X$(subst inst,,$(d))) \
-	$(foreach d,$(wildcard inst/opt/OSELAS.Toolchain-*/*/*/lib/gcc/*/*),-X$(subst inst,,$(d)))
+EXCLUDES = $(shell cat $(CURDIR)/debian/excludes)
 
 # don't change the permissions of target files
 # the dynamic linker and glibc must remain executable

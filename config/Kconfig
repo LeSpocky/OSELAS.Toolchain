@@ -80,10 +80,6 @@ source "workspace/rules/toolchain.in"
 
 menu "misc                        "
 
-config DESTDIR
-	string
-	default "${PTX_AUTOBUILD_DESTDIR}"
-
 config PREFIX
 	string
 	prompt "prefix for installation"
@@ -119,7 +115,7 @@ config PREFIX_CROSS
 
 config SYSROOT_CROSS
 	string
-	default "${PTXCONF_DESTDIR}"
+	default "${PTXDIST_PLATFORMDIR}/sysroot-cross"
 
 config PREFIX_TARGET
 	string
@@ -128,7 +124,7 @@ config PREFIX_TARGET
 
 config SYSROOT_TARGET
 	string
-	default "${PTXCONF_DESTDIR}${PTXCONF_PREFIX_TARGET}"
+	default "${PTXCONF_SYSROOT_CROSS}${PTXCONF_PREFIX_TARGET}"
 
 config PLATFORM
 	string

@@ -11,9 +11,6 @@ SHELL		:= /bin/bash
 #
 # config
 #
-PTX_AUTOBUILD_DESTDIR	:= ${PWD}/inst
-export PTX_AUTOBUILD_DESTDIR
-
 BENICE			:= true
 
 PTXDIST			:= ./p --force
