@@ -169,8 +169,8 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/$(COMPILER_PREFIX)gcc
 
 	@find $(CROSS_GCC_PKGDIR) -name "*.la" -print0 | xargs -0 rm -v -f
-ifneq ($(call remove_quotes,$(PTXCONF_DESTDIR)),)
-	sed -i -e 's;$(call remove_quotes,$(PTXCONF_DESTDIR));;' \
+ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
+	sed -i -e 's;$(call remove_quotes,$(PTXDIST_SYSROOT_CROSS));;' \
 		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf
 endif
 

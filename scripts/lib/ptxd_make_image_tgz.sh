@@ -11,7 +11,7 @@ ptxd_make_image_tgz() {
     ptxd_make_image_init || return
 
     local prefix_cross="$(ptxd_get_ptxconf PTXCONF_PREFIX_CROSS)"
-    local src="${PTX_AUTOBUILD_DESTDIR}${prefix_cross}"
+    local src="${PTXDIST_SYSROOT_CROSS}${prefix_cross}"
     local dst="${pkg_dir}/$(dirname ${prefix_cross})"
     local sysroot="${pkg_dir}${prefix_cross}"
     local -a host_dirs=( \

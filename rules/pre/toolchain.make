@@ -49,7 +49,7 @@ PTXDIST_HOST_LDFLAGS				:= -L${PTXDIST_PATH_SYSROOT_HOST_PREFIX}/lib
 
 ifndef PTXCONF_TOOLCHAIN_DEBUG
 TOOLCHAIN_CROSS_DEBUG_MAP := \
-	$(call remove_quotes,$(PTXCONF_DESTDIR))= \
+	$(call remove_quotes,$(PTXDIST_SYSROOT_CROSS))= \
 	$(PTXDIST_WORKSPACE)/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform-
 
 TOOLCHAIN_CROSS_DEBUG_MAP_FLAGS := \
