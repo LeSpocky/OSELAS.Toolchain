@@ -1,11 +1,9 @@
-logfile
-p
-dist
+/p
+/dist
+/selected_ptxconfig
 
-selected_ptxconfig
-
-platform-*
-ptxconfigs/*.old
+/platform-*
+/ptxconfigs/*.old
 
 *.orig
 *.swp
