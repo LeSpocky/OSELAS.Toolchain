@@ -24,7 +24,7 @@ Priority: optional
 Maintainer: PTXdist Devevelopers <ptxdist@pengutronix.de>
 Homepage: https://www.pengutronix.de/software/toolchain.html
 Bugs: mailto:bugs@pengutronix.de
-Build-Depends: debhelper (>= 9), libncurses-dev, python3-dev | python3.7-dev, bison, flex
+Build-Depends: debhelper (>= 9), libncurses-dev, python3-dev | python3.8-dev, bison, flex
 EOF
 
 if [ $# -gt 0 ]; then
