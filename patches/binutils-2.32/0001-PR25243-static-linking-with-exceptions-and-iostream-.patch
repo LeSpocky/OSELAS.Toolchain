@@ -1,0 +1,165 @@
+From: Alan Modra <amodra@gmail.com>
+Date: Thu, 5 Dec 2019 16:40:02 +1030
+Subject: [PATCH] PR25243, static linking with exceptions and iostream is
+ broken on ARM
+
+	PR 25243
+	* emulparams/armelf.sh (OTHER_READONLY_SECTIONS): Move definition
+	of __exidx_start and __exidx_end into ARM.exidx.
+	* emulparams/armelf_linux_eabi.sh (OTHER_READONLY_SECTIONS): Likewise.
+	* emulparams/armsymbian.sh (OTHER_READONLY_SECTIONS): Similarly.
+	* emulparams/elf32_tic6x_le.sh (OTHER_READONLY_SECTIONS): Similarly.
+	* emulparams/armelf_fuchsia.sh: Source armelf_linux_eabi.sh,
+	just redefining TEXT_START_ADDR.
+	* emulparams/armelf_linux_fdpiceabi.sh: Source armelf_linux_eabi.sh,
+	adding to OTHER_READONLY_SECTIONS.
+---
+ ld/emulparams/armelf.sh                 |  9 ++++++---
+ ld/emulparams/armelf_fuchsia.sh         | 31 +------------------------------
+ ld/emulparams/armelf_linux_eabi.sh      | 10 ++++++----
+ ld/emulparams/armelf_linux_fdpiceabi.sh |  9 ++-------
+ ld/emulparams/armsymbian.sh             | 13 ++++++++-----
+ ld/emulparams/elf32_tic6x_le.sh         |  9 ++++++---
+ 6 files changed, 29 insertions(+), 52 deletions(-)
+
+diff --git a/ld/emulparams/armelf.sh b/ld/emulparams/armelf.sh
+index 272a8bc5d03c..db403914f428 100644
+--- a/ld/emulparams/armelf.sh
++++ b/ld/emulparams/armelf.sh
+@@ -14,9 +14,12 @@ OTHER_SECTIONS='.note.gnu.arm.ident 0 : { KEEP (*(.note.gnu.arm.ident)) }'
+ ATTRS_SECTIONS='.ARM.attributes 0 : { KEEP (*(.ARM.attributes)) KEEP (*(.gnu.attributes)) }'
+ OTHER_READONLY_SECTIONS="
+   .ARM.extab ${RELOCATING-0} : { *(.ARM.extab${RELOCATING+* .gnu.linkonce.armextab.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_start = .); }
+-  .ARM.exidx ${RELOCATING-0} : { *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_end = .); }"
++  .ARM.exidx ${RELOCATING-0} :
++    {
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_start = .);}
++      *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*})
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_end = .);}
++    }"
+ 
+ DATA_START_SYMBOLS="${CREATE_SHLIB+PROVIDE (}__data_start = .${CREATE_SHLIB+)};"
+ 
+diff --git a/ld/emulparams/armelf_fuchsia.sh b/ld/emulparams/armelf_fuchsia.sh
+index 36392f1163bf..143201d05ad4 100644
+--- a/ld/emulparams/armelf_fuchsia.sh
++++ b/ld/emulparams/armelf_fuchsia.sh
+@@ -1,32 +1,3 @@
+-ARCH=arm
+-SCRIPT_NAME=elf
+-OUTPUT_FORMAT="elf32-littlearm"
+-BIG_OUTPUT_FORMAT="elf32-bigarm"
+-LITTLE_OUTPUT_FORMAT="elf32-littlearm"
+-MAXPAGESIZE="CONSTANT (MAXPAGESIZE)"
+-COMMONPAGESIZE="CONSTANT (COMMONPAGESIZE)"
+-TEMPLATE_NAME=elf32
+-EXTRA_EM_FILE=armelf
+-GENERATE_SHLIB_SCRIPT=yes
+-GENERATE_PIE_SCRIPT=yes
+-
+-DATA_START_SYMBOLS='PROVIDE (__data_start = .);';
+-OTHER_TEXT_SECTIONS='*(.glue_7t) *(.glue_7) *(.vfp11_veneer) *(.v4_bx)'
+-OTHER_BSS_SYMBOLS="${CREATE_SHLIB+PROVIDE (}__bss_start__ = .${CREATE_SHLIB+)};"
+-OTHER_BSS_END_SYMBOLS="${CREATE_SHLIB+PROVIDE (}_bss_end__ = .${CREATE_SHLIB+)}; ${CREATE_SHLIB+PROVIDE (}__bss_end__ = .${CREATE_SHLIB+)};"
+-OTHER_END_SYMBOLS="${CREATE_SHLIB+PROVIDE (}__end__ = .${CREATE_SHLIB+)};"
+-OTHER_SECTIONS='.note.gnu.arm.ident 0 : { KEEP (*(.note.gnu.arm.ident)) }'
++. ${srcdir}/emulparams/armelf_linux_eabi.sh
+ 
+ TEXT_START_ADDR=0x00001000
+-TARGET2_TYPE=got-rel
+-
+-# ARM does not support .s* sections.
+-NO_SMALL_DATA=yes
+-
+-# Use the ARM ABI-compliant exception-handling sections.
+-OTHER_READONLY_SECTIONS="
+-  .ARM.extab ${RELOCATING-0} : { *(.ARM.extab${RELOCATING+* .gnu.linkonce.armextab.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_start = .); }
+-  .ARM.exidx ${RELOCATING-0} : { *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_end = .); }"
+-
+diff --git a/ld/emulparams/armelf_linux_eabi.sh b/ld/emulparams/armelf_linux_eabi.sh
+index 5b0c6b88695e..3adcc0e5bcbf 100644
+--- a/ld/emulparams/armelf_linux_eabi.sh
++++ b/ld/emulparams/armelf_linux_eabi.sh
+@@ -3,7 +3,9 @@
+ # Use the ARM ABI-compliant exception-handling sections.
+ OTHER_READONLY_SECTIONS="
+   .ARM.extab ${RELOCATING-0} : { *(.ARM.extab${RELOCATING+* .gnu.linkonce.armextab.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_start = .); }
+-  .ARM.exidx ${RELOCATING-0} : { *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_end = .); }"
+-
++  .ARM.exidx ${RELOCATING-0} :
++    {
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_start = .);}
++      *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*})
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_end = .);}
++    }"
+diff --git a/ld/emulparams/armelf_linux_fdpiceabi.sh b/ld/emulparams/armelf_linux_fdpiceabi.sh
+index aa604aaadf47..4bad490136cb 100644
+--- a/ld/emulparams/armelf_linux_fdpiceabi.sh
++++ b/ld/emulparams/armelf_linux_fdpiceabi.sh
+@@ -1,15 +1,10 @@
+-. ${srcdir}/emulparams/armelf_linux.sh
++. ${srcdir}/emulparams/armelf_linux_eabi.sh
+ 
+ OUTPUT_FORMAT="elf32-littlearm-fdpic"
+ BIG_OUTPUT_FORMAT="elf32-bigarm-fdpic"
+ LITTLE_OUTPUT_FORMAT="elf32-littlearm-fdpic"
+ 
+-# Use the ARM ABI-compliant exception-handling sections.
+-OTHER_READONLY_SECTIONS="
+-  .ARM.extab ${RELOCATING-0} : { *(.ARM.extab${RELOCATING+* .gnu.linkonce.armextab.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_start = .); }
+-  .ARM.exidx ${RELOCATING-0} : { *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_end = .); }
++OTHER_READONLY_SECTIONS="${OTHER_READONLY_SECTIONS}
+   .rofixup : {
+ 	${RELOCATING+__ROFIXUP_LIST__ = .;}
+ 	*(.rofixup)
+diff --git a/ld/emulparams/armsymbian.sh b/ld/emulparams/armsymbian.sh
+index f852702f199d..e17a2e8183f2 100644
+--- a/ld/emulparams/armsymbian.sh
++++ b/ld/emulparams/armsymbian.sh
+@@ -13,10 +13,13 @@ EMBEDDED=yes
+ # .ARM.exidx$${Base,Limit} symbols.
+ OTHER_READONLY_SECTIONS="
+   .ARM.extab ${RELOCATING-0} : { *(.ARM.extab${RELOCATING+* .gnu.linkonce.armextab.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (.ARM.exidx\$\$Base = .); }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_start = .); }
+-  .ARM.exidx ${RELOCATING-0} : { *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_end = .); }
+-  ${RELOCATING+ PROVIDE_HIDDEN (.ARM.exidx\$\$Limit = .); }"
++  .ARM.exidx ${RELOCATING-0} :
++    {
++      ${RELOCATING+PROVIDE_HIDDEN (.ARM.exidx\$\$Base = .);}
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_start = .);}
++      *(.ARM.exidx${RELOCATING+* .gnu.linkonce.armexidx.*})
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_end = .);}
++      ${RELOCATING+PROVIDE_HIDDEN (.ARM.exidx\$\$Limit = .);}
++    }"
+ 
+ MAXPAGESIZE="CONSTANT (MAXPAGESIZE)"
+diff --git a/ld/emulparams/elf32_tic6x_le.sh b/ld/emulparams/elf32_tic6x_le.sh
+index 62ea9eb920f1..2fcf2762b09c 100644
+--- a/ld/emulparams/elf32_tic6x_le.sh
++++ b/ld/emulparams/elf32_tic6x_le.sh
+@@ -32,9 +32,12 @@ SBSS_NAME="bss"
+ BSS_NAME="far"
+ OTHER_READONLY_SECTIONS="
+   .c6xabi.extab ${RELOCATING-0} : { *(.c6xabi.extab${RELOCATING+* .gnu.linkonce.c6xabiextab.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_start = .); }
+-  .c6xabi.exidx ${RELOCATING-0} : { *(.c6xabi.exidx${RELOCATING+* .gnu.linkonce.c6xabiexidx.*}) }
+-  ${RELOCATING+ PROVIDE_HIDDEN (__exidx_end = .); }"
++  .c6xabi.exidx ${RELOCATING-0} :
++    {
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_start = .);}
++      *(.c6xabi.exidx${RELOCATING+* .gnu.linkonce.c6xabiexidx.*})
++      ${RELOCATING+PROVIDE_HIDDEN (__exidx_end = .);}
++    }"
+ OTHER_SDATA_SECTIONS=".rodata ${RELOCATING-0} : { *(.rodata${RELOCATING+ .rodata.*}) }"
+ OTHER_READONLY_RELOC_SECTIONS="
+   .rel.rodata   ${RELOCATING-0} : { *(.rel.rodata${RELOCATING+ .rel.rodata.*}) }

@@ -13,7 +13,7 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 4 insertions(+)
 
 diff --git a/ld/emultempl/elf32.em b/ld/emultempl/elf32.em
-index 1ad9d6b6fa81..d9b3d26b49f9 100644
+index f4f7ad6b4e11..e2fa69d95e9e 100644
 --- a/ld/emultempl/elf32.em
 +++ b/ld/emultempl/elf32.em
 @@ -1471,6 +1471,8 @@ fragment <<EOF
@@ -25,7 +25,7 @@ index 1ad9d6b6fa81..d9b3d26b49f9 100644
  	      if (path
  		  && gld${EMULATION_NAME}_search_needed (path, &n, force))
  		break;
-@@ -1751,6 +1753,8 @@ gld${EMULATION_NAME}_before_allocation (void)
+@@ -1746,6 +1748,8 @@ gld${EMULATION_NAME}_before_allocation (void)
    rpath = command_line.rpath;
    if (rpath == NULL)
      rpath = (const char *) getenv ("LD_RUN_PATH");
