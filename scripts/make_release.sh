@@ -74,6 +74,11 @@ if grep -q UNRELEASED debian/changelog; then
 	exit 1
 fi
 
+if [ "${1}" == "--test" ]; then
+	echo "test mode: all checks ok -- stopping"
+	exit
+fi
+
 tmp="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 log="${tmp}/log"
 
