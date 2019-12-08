@@ -74,6 +74,12 @@ if grep -q UNRELEASED debian/changelog; then
 	exit 1
 fi
 
+debian_release="$(sed -n '1s/.*(\(.*\)-.*).*/\1/p' debian/changelog)"
+if [ "${release#${v}}" != "${debian_release}" ]; then
+	echo "release version from the debian/changelog (${debian_release}) does not match '${release#${v}}'" >&2
+	exit 1
+fi
+
 if [ "${1}" == "--test" ]; then
 	echo "test mode: all checks ok -- stopping"
 	exit
