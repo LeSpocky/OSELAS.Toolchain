@@ -131,6 +131,20 @@ config CROSS_GCC_LANG_JAVA
 	  As GCC is a compiler collection, it can support various languages.
 	  Select this for Java support
 
+config CROSS_GCC_LANG_OBJC
+	bool
+	prompt "Objective-C"
+	help
+	  As GCC is a compiler collection, it can support various languages.
+	  Select this for Objective-C support
+
+config CROSS_GCC_LANG_OBJCXX
+	bool
+	prompt "Objective-C++"
+	help
+	  As GCC is a compiler collection, it can support various languages.
+	  Select this for Objective-C++ support
+
 source "workspace/rules/cross-ecj.in"
 
 endif
