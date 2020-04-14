@@ -87,7 +87,7 @@ endif
 		ranlib \
 		strip \
 		; do \
-		ln -sf "../../../$(PTXCONF_GNU_TARGET)/bin/$$file" \
+		ln -sf "$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/$$file" \
 			"$(CROSS_GCC_FIRST_PREFIX)/$(PTXCONF_GNU_TARGET)/bin/$$file"; \
 	done
 
