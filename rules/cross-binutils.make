@@ -75,7 +75,11 @@ endif
 	@for bin in $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/*; do \
 		ln -vsf ../../bin/$(COMPILER_PREFIX)$$(basename $${bin}) $${bin} || break; \
 	done
+	@$(call touch)
 
+$(STATEDIR)/cross-binutils.install.post:
+	@$(call targetinfo)
+	@$(call world/install.post, CROSS_BINUTILS)
 	mkdir -p "$(CROSS_GCC_FIRST_PREFIX)/$(PTXCONF_GNU_TARGET)/bin"
 	for file in \
 		ar \
