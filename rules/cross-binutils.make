@@ -59,7 +59,7 @@ CROSS_BINUTILS_CONF_OPT		:= \
 # Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/cross-binutils.install:
+$(STATEDIR)/cross-binutils.install: $(STATEDIR)/cross-binutils.report
 	@$(call targetinfo)
 	@$(call world/install, CROSS_BINUTILS)
 #	# this link first in case it is moved to $(COMPILER_PREFIX)ld.real
@@ -75,6 +75,13 @@ endif
 	@for bin in $(CROSS_BINUTILS_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/bin/*; do \
 		ln -vsf ../../bin/$(COMPILER_PREFIX)$$(basename $${bin}) $${bin} || break; \
 	done
+
+	@$(call world/env, CROSS_BINUTILS) \
+		pkg_license_target=binutils \
+		pkg_license_target_license=$(PTXCONF_CROSS_BINUTILS_LICENSE) \
+		pkg_license_target_pattern=$(PTXCONF_CROSS_BINUTILS_LICENSES) \
+		ptxd_make_world_copy_license
+
 	@$(call touch)
 
 $(STATEDIR)/cross-binutils.install.post:
