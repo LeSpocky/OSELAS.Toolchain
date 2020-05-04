@@ -230,6 +230,8 @@ config CROSS_GCC_THREADS
 config CROSS_GCC_FIRST
 	bool
 	select CROSS_BINUTILS
+	# without this there is no $(COMPILER_PREFIX)ld
+	select CROSS_ELF2FLT	if UCLIBC
 	select LIBC_HEADERS
 	select HOST_GMP		if CROSS_GCC_43
 	select HOST_MPFR	if CROSS_GCC_43
