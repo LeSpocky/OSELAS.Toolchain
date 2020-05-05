@@ -14,8 +14,8 @@ HOST_PACKAGES-$(PTXCONF_HOST_XZ) += host-xz
 #
 # Paths and names
 #
-HOST_XZ_VERSION	:= 5.2.4
-HOST_XZ_MD5	:= b3264b15ab1db04c8c428dc81838d4eb
+HOST_XZ_VERSION	:= 5.2.5
+HOST_XZ_MD5	:= 33ab3ef79aa1146b83b778210e7b0a54
 HOST_XZ		:= xz-$(HOST_XZ_VERSION)
 HOST_XZ_SUFFIX	:= tar.bz2
 HOST_XZ_URL	:= http://tukaani.org/xz/$(HOST_XZ).$(HOST_XZ_SUFFIX)
