@@ -1,10 +1,12 @@
 config LIBC_HEADERS
 	bool
+	select VIRTUAL
 	select GLIBC_HEADERS		if LIBC_GLIBC
 	select UCLIBC_HEADERS		if LIBC_UCLIBC
 
 config LIBC_FIRST
 	bool
+	select VIRTUAL
 	select CROSS_GCC_FIRST
 	
 	select GLIBC_FIRST		if LIBC_GLIBC
@@ -15,6 +17,7 @@ config LIBC_FIRST
 config LIBC
 	bool
 	default y
+	select VIRTUAL
 	select CROSS_GCC
 	select GLIBC			if LIBC_GLIBC
 
