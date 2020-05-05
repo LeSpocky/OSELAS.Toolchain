@@ -14,8 +14,8 @@ HOST_PACKAGES-$(PTXCONF_HOST_LIBELF) += host-libelf
 #
 # Paths and names
 #
-HOST_LIBELF_VERSION	:= 0.176
-HOST_LIBELF_MD5		:= 077e4f49320cad82bf17a997068b1db9
+HOST_LIBELF_VERSION	:= 0.179
+HOST_LIBELF_MD5		:= 8ee56b371b5a7ea081284c44e5164600
 HOST_LIBELF		:= elfutils-$(HOST_LIBELF_VERSION)
 HOST_LIBELF_SUFFIX	:= tar.bz2
 HOST_LIBELF_URL		:= https://sourceware.org/elfutils/ftp/$(HOST_LIBELF_VERSION)/$(HOST_LIBELF).$(HOST_LIBELF_SUFFIX)
@@ -39,11 +39,13 @@ HOST_LIBELF_AUTOCONF := \
 	--disable-gcov \
 	--disable-sanitize-undefined \
 	--disable-valgrind \
+	--disable-valgrind-annotations \
+	--disable-install-elfh \
 	--disable-tests-rpath \
-	--enable-libebl-subdir=elfutils \
 	--enable-textrelcheck \
 	--enable-symbol-versioning \
 	--disable-nls \
+	--disable-debuginfod \
 	--with-zlib \
 	--without-bzlib \
 	--with-lzma \
