@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if grep -q -- --compression "${PTXDIST_ICECC_CREATE_ENV_REAL}"; then
+	args=( --compression none )
+fi
+
+"${PTXDIST_ICECC_CREATE_ENV_REAL}" "${@}" "${args[@]}" || exit
+
+ptxd_get_path *.tar*
+env="${ptxd_reply}"
+mkdir tmp
+cd tmp
+tar xf "../${env}"
+
+find -type f | xargs strip
+
+tar -ch --numeric-owner -zvf "../${env//.*}.tar.gz" *
+
+cd ..
+rm -rf tmp
+if [ "${env}" != "${env//.*}.tar.gz" ]; then
+	rm "${env}"
+fi

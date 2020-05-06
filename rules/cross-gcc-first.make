@@ -31,7 +31,7 @@ CROSS_GCC_FIRST_LICENSE		:= ignore
 # Prepare
 # ----------------------------------------------------------------------------
 
-CROSS_GCC_FIRST_ENV	:= \
+CROSS_GCC_FIRST_CONF_ENV	:= \
 	$(HOST_ENV) \
 	CFLAGS="-g0 -O2" \
 	CXXFLAGS="-g0 -O2" \
@@ -60,6 +60,11 @@ CROSS_GCC_FIRST_CONF_OPT	 = \
 	--disable-libatomic \
 	--with-system-zlib
 
+ifdef PTXDIST_ICECC
+CROSS_GCC_FIRST_MAKE_ENV := \
+	STAGE_CC_WRAPPER=icerun
+endif
+
 # ----------------------------------------------------------------------------
 # Install
 # ----------------------------------------------------------------------------
@@ -76,7 +81,7 @@ $(STATEDIR)/cross-gcc-first.install:
 	ln -sfv libgcc.a `$(CROSS_GCC_FIRST_PREFIX)/bin/$(PTXCONF_GNU_TARGET)-gcc \
 		-print-libgcc-file-name | \
 		sed 's/libgcc/&_s/'`
-
+	@ptxd_make_setup_target_compiler $(CROSS_GCC_FIRST_PREFIX)/bin
 	@$(call touch)
 
 # vim: syntax=make

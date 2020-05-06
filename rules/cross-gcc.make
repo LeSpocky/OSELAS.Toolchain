@@ -149,6 +149,11 @@ $(STATEDIR)/cross-gcc.prepare:
 # Compile
 # ----------------------------------------------------------------------------
 
+ifdef PTXDIST_ICECC
+CROSS_GCC_MAKE_ENV := \
+	STAGE_CC_WRAPPER=icerun
+endif
+
 CROSS_GCC_MAKE_OPT := \
 	build_tooldir=$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET) \
 	all
@@ -178,7 +183,12 @@ ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
 		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf \
 		$(wildcard $(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/bits/statx.h)
 endif
+	@$(call touch)
 
+$(STATEDIR)/cross-gcc.install.post:
+	@$(call targetinfo)
+	@$(call world/install.post, CROSS_GCC)
+	@ptxd_make_setup_target_compiler $(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin
 	@$(call touch)
 
 # vim: syntax=make
