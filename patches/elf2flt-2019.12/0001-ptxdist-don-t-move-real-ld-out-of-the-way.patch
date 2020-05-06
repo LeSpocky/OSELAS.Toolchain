@@ -10,10 +10,10 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 4 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index a6feea67594d..6fae4dcc0209 100644
+index 52b3347d7f43..be2561fdabad 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -112,10 +112,6 @@ install:
+@@ -110,10 +110,6 @@ install:
  	$(INSTALL) -m 755 $(PROG_FLTHDR) $(DESTDIR)$(target_bindir)/$(PROG_FLTHDR)
  	$(INSTALL) -m 755 $(PROG_ELF2FLT) $(DESTDIR)$(bindir)/$(TARGET)-$(PROG_ELF2FLT)
  	$(INSTALL) -m 755 $(PROG_ELF2FLT) $(DESTDIR)$(target_bindir)/$(PROG_ELF2FLT)
