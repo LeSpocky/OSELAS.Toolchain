@@ -145,7 +145,8 @@ CROSS_GCC_CONF_OPT	:= \
 $(STATEDIR)/cross-gcc.prepare:
 	@$(call targetinfo)
 	@$(call world/prepare, CROSS_GCC)
-	sed -i -e '/TOPLEVEL_CONFIGURE_ARGUMENTS/s;$(PTXDIST_WORKSPACE);WORKSPACE;g' \
+	sed -i -e '/TOPLEVEL_CONFIGURE_ARGUMENTS/s;$(PTXDIST_WORKSPACE);$(PTXCONF_PROJECT);g' \
+		-e '/TOPLEVEL_CONFIGURE_ARGUMENTS/s;$(call ptx/sh, realpath $(PTXDIST_WORKSPACE));$(PTXCONF_PROJECT);g' \
 		$(CROSS_GCC_BUILDDIR)/Makefile
 	@$(call touch)
 
@@ -172,6 +173,7 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
 	sed -i -e 's;$(call remove_quotes,$(PTXDIST_SYSROOT_CROSS));;' \
 		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf
+		$(wildcard $(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/bits/statx.h)
 endif
 
 	@$(call touch)
