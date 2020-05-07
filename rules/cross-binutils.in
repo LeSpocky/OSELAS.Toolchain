@@ -15,6 +15,14 @@ config CROSS_BINUTILS_VERSION
 	help
 	  Specify the binutils version here.
 
+config CROSS_BINUTILS_DL_VERSION
+	string
+	prompt "binutils download version"
+	default "${PTXCONF_CROSS_BINUTILS_VERSION}"
+	help
+	  The version of the downloaded archive. Can be used for stable
+	  branch snapshots.
+
 config CROSS_BINUTILS_MD5
 	string
 	prompt "binutils source md5sum"
