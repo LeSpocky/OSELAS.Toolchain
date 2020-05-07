@@ -16,18 +16,20 @@ PACKAGES-$(PTXCONF_GLIBC) += glibc
 #
 # Paths and names
 #
-GLIBC_VERSION	:= $(call remove_quotes,$(PTXCONF_GLIBC_VERSION))
-GLIBC_MD5	:= $(call remove_quotes,$(PTXCONF_GLIBC_MD5))
-GLIBC		:= glibc-$(GLIBC_VERSION)
-GLIBC_SUFFIX	:= tar.bz2
-GLIBC_SOURCE	:= $(SRCDIR)/$(GLIBC).$(GLIBC_SUFFIX)
-GLIBC_DIR	:= $(BUILDDIR_DEBUG)/$(GLIBC)
-GLIBC_BUILDDIR	:= $(BUILDDIR)/$(GLIBC)-build
-GLIBC_URL	:= \
+GLIBC_VERSION		:= $(call remove_quotes,$(PTXCONF_GLIBC_VERSION))
+GLIBC_DL_VERSION	:= $(call remove_quotes,$(PTXCONF_GLIBC_DL_VERSION))
+GLIBC_MD5		:= $(call remove_quotes,$(PTXCONF_GLIBC_MD5))
+GLIBC			:= glibc-$(GLIBC_DL_VERSION)
+GLIBC_SUFFIX		:= tar.gz
+GLIBC_SOURCE		:= $(SRCDIR)/$(GLIBC).$(GLIBC_SUFFIX)
+GLIBC_DIR		:= $(BUILDDIR_DEBUG)/$(GLIBC)
+GLIBC_BUILDDIR		:= $(BUILDDIR)/$(GLIBC)-build
+GLIBC_URL		:= \
 	$(call ptx/mirror, GNU, glibc/$(GLIBC).$(GLIBC_SUFFIX)) \
+	https://repo.or.cz/glibc.git/snapshot/$(GLIBC).$(GLIBC_SUFFIX) \
 	http://www.pengutronix.de/software/ptxdist/temporary-src/glibc/$(GLIBC).$(GLIBC_SUFFIX)
-GLIBC_LICENSE	:= $(call remove_quotes,$(PTXCONF_GLIBC_LICENSE))
-GLIBC_LICENSE_FILES := $(call remove_quotes,$(PTXCONF_GLIBC_LICENSE_FILES))
+GLIBC_LICENSE		:= $(call remove_quotes,$(PTXCONF_GLIBC_LICENSE))
+GLIBC_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_GLIBC_LICENSE_FILES))
 
 # ----------------------------------------------------------------------------
 # Prepare

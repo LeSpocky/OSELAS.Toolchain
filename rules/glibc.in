@@ -40,6 +40,14 @@ config GLIBC_VERSION
 	  Specify the glibc version here.
 	  Leave empty for glibc trunk snapshots and enter a timestamp below.
 
+config GLIBC_DL_VERSION
+	string
+	prompt "glibc download version"
+	default "${PTXCONF_GLIBC_VERSION}"
+	help
+	  The version of the downloaded archive. Can be used for stable
+	  branch snapshots.
+
 config GLIBC_MD5
 	string
 	prompt "glibc source md5sum"
