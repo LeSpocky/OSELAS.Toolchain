@@ -165,7 +165,7 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 	@find $(CROSS_GCC_PKGDIR) -name "*.la" -print0 | xargs -0 rm -v -f
 ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
 	sed -i -e 's;$(call remove_quotes,$(PTXDIST_SYSROOT_CROSS));;' \
-		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf
+		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf \
 		$(wildcard $(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/bits/statx.h)
 endif
 
