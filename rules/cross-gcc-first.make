@@ -33,6 +33,8 @@ CROSS_GCC_FIRST_LICENSE		:= ignore
 
 CROSS_GCC_FIRST_ENV	:= \
 	$(HOST_ENV) \
+	CFLAGS="-g0 -O2" \
+	CXXFLAGS="-g0 -O2" \
 	MAKEINFO=: \
 	enable_libmpx=no
 
