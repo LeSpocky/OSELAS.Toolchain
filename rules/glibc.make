@@ -40,7 +40,7 @@ GLIBC_ENV := \
 	CC="$(CROSS_CC) -fuse-ld=bfd" \
 	BUILD_CC=$(HOSTCC) \
 	MAKEINFO=: \
-	$(GLIBC_FLAGS_ENV) \
+	$(GLIBC_DEBUG_FLAGS_ENV) \
 	\
 	libc_cv_slibdir='/lib' \
 	\

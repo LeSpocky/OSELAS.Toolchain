@@ -37,7 +37,6 @@ GLIBC_FIRST_ENV := \
 	CC="$(CROSS_CC) -fuse-ld=bfd" \
 	CXX=false \
 	BUILD_CC=$(HOSTCC) \
-	$(GLIBC_FLAGS_ENV) \
 	\
 	libc_cv_c_cleanup=yes \
 	libc_cv_forced_unwind=yes \
