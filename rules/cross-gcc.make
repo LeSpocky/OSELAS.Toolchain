@@ -148,8 +148,11 @@ $(STATEDIR)/cross-gcc.prepare:
 # Compile
 # ----------------------------------------------------------------------------
 
-ifdef PTXDIST_ICECC
 CROSS_GCC_MAKE_ENV := \
+	with_zstd=no
+
+ifdef PTXDIST_ICECC
+CROSS_GCC_MAKE_ENV += \
 	STAGE_CC_WRAPPER=icerun
 endif
 

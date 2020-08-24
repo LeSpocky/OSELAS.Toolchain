@@ -60,8 +60,11 @@ CROSS_GCC_FIRST_CONF_OPT	 = \
 	--disable-libatomic \
 	--with-system-zlib
 
-ifdef PTXDIST_ICECC
 CROSS_GCC_FIRST_MAKE_ENV := \
+	with_zstd=no
+
+ifdef PTXDIST_ICECC
+CROSS_GCC_FIRST_MAKE_ENV += \
 	STAGE_CC_WRAPPER=icerun
 endif
 
