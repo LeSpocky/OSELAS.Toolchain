@@ -89,7 +89,6 @@ CROSS_GCC_AUTOCONF_COMMON := \
 	$(call ptx/ifdef,PTXCONF_HOST_GMP,--with-gmp) \
 	$(call ptx/ifdef,PTXCONF_HOST_MPFR,--with-mpfr) \
 	$(call ptx/ifdef,PTXCONF_HOST_MPC,--with-mpc) \
-	$(call ptx/ifdef,PTXCONF_HOST_CLOOG,--with-cloog) \
 	$(call ptx/ifdef,PTXCONF_HOST_ISL,--with-isl)
 
 ifndef PTXCONF_TOOLCHAIN_DEBUG
