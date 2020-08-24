@@ -106,13 +106,8 @@ $(STATEDIR)/glibc-headers.prepare:
 # Compile
 # ----------------------------------------------------------------------------
 
-GLIBC_HEADERS_MAKE_OPT	:= sysdeps/gnu/errlist.c
-
 $(STATEDIR)/glibc-headers.compile:
 	@$(call targetinfo)
-	@$(call world/compile, GLIBC_HEADERS)
-	@mkdir -vp $(GLIBC_HEADERS_BUILDDIR)/stdio-common
-	touch $(GLIBC_HEADERS_BUILDDIR)/stdio-common/errlist-compat.c
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
