@@ -97,6 +97,9 @@ fixup()
 	arm*gnueabi)
 	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__"
 	    ;;
+	mips64*)
+	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-DBOOTSTRAP_GCC -D_MIPS_SIM=_ABI64 -D__mips=64"
+	    ;;
 	mips*)
 	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-DBOOTSTRAP_GCC -D_MIPS_SIM=_ABIO32 -D__mips=1"
 	    ;;
@@ -217,6 +220,10 @@ fixup()
 	mipsel-softfloat-linux-gnu|mips-softfloat-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-float=soft"
 	    PTXCONF_GLIBC_CONFIG_EXTRA="libc_mips_float=soft"
+	    ;;
+	mips64el-linux-gnuabi64)
+	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-mips-plt --with-arch-64=mips64r2 --with-madd4=no"
+	    PTXCONF_GLIBC_CONFIG_EXTRA="libc_mips_float=hard"
 	    ;;
 	powerpc-603e-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-cpu=603e	--disable-altivec"
