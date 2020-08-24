@@ -10,9 +10,12 @@ header extraction from the glibc, by not passing mips specific flags to
 the HOST compiler.
 
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+[mol: handle mips64 as well]
+Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
 ---
- sysdeps/mips/mips32/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ sysdeps/mips/mips32/Makefile     | 4 ++++
+ sysdeps/mips/mips64/n64/Makefile | 4 ++++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/sysdeps/mips/mips32/Makefile b/sysdeps/mips/mips32/Makefile
 index dec0b024c3a8..dde2ca6bce1d 100644
@@ -25,4 +28,19 @@ index dec0b024c3a8..dde2ca6bce1d 100644
  endif
 +else
 +CC += -D_MIPS_SZPTR=32
++endif
+diff --git a/sysdeps/mips/mips64/n64/Makefile b/sysdeps/mips/mips64/n64/Makefile
+index a823f32b53d3..f4112f19a79a 100644
+--- a/sysdeps/mips/mips64/n64/Makefile
++++ b/sysdeps/mips/mips64/n64/Makefile
+@@ -1,6 +1,10 @@
+ # `long double' is a distinct type we support.
+ long-double-fcts = yes
+ 
++ifeq ($(filter -DBOOTSTRAP_GCC,$(CC)),)
+ ifeq ($(filter -mabi=64,$(CC)),)
+ CC += -mabi=64
+ endif
++else
++CC += -D_MIPS_SZPTR=64
 +endif
