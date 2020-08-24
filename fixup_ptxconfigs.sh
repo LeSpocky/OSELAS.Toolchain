@@ -98,7 +98,7 @@ fixup()
 	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__"
 	    ;;
 	mips*)
-	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-DBOOTSTRAP_GCC -D_MIPS_SIM=_ABIO32"
+	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-DBOOTSTRAP_GCC -D_MIPS_SIM=_ABIO32 -D__mips=1"
 	    ;;
 	riscv64*)
 	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__riscv_atomic -D__riscv_xlen=64 -D__riscv_flen=64 -D__riscv_float_abi_double"
