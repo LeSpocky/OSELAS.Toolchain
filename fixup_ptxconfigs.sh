@@ -94,8 +94,14 @@ fixup()
     # - mips hack
     #
     case "${PTXCONF_GNU_TARGET}" in
-	arm*gnueabi)
-	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__"
+	arm-v5te-linux-gnueabi)
+	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__ -D__ARM_ARCH=5"
+	    ;;
+	arm-1136jfs-linux-gnueabi*)
+	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__ -D__ARM_ARCH=6"
+	    ;;
+	arm-v7*linux*)
+	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__ -D__ARM_ARCH=7"
 	    ;;
 	mips64*)
 	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-DBOOTSTRAP_GCC -D_MIPS_SIM=_ABI64 -D__mips=64"
