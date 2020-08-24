@@ -49,7 +49,7 @@ PTXCONF_GLIBC_TIMESTAMP=""
 PTXCONF_GLIBC_SERIES=""
 PTXCONF_GLIBC_ENABLE_KERNEL="3.16"
 PTXCONF_GLIBC_CONFIG_EXTRA=""
-PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-obsolete-rpc --enable-obsolete-nsl --enable-stackguard-randomization --enable-stack-protector=strong"
+PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-stackguard-randomization --enable-stack-protector=strong"
 PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__ARM_EABI__ -D__ARM_ARCH=6"
 PTXCONF_CROSS_BINUTILS=y
 PTXCONF_CROSS_BINUTILS_VERSION="2.35"

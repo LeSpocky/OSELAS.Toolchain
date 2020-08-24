@@ -49,7 +49,7 @@ PTXCONF_GLIBC_TIMESTAMP=""
 PTXCONF_GLIBC_SERIES=""
 PTXCONF_GLIBC_ENABLE_KERNEL="3.16"
 PTXCONF_GLIBC_CONFIG_EXTRA="libc_mips_float=soft"
-PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-obsolete-rpc --enable-obsolete-nsl --enable-stackguard-randomization --enable-stack-protector=strong"
+PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-stackguard-randomization --enable-stack-protector=strong"
 PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-DBOOTSTRAP_GCC -D_MIPS_SIM=_ABIO32 -D__mips=1"
 PTXCONF_CROSS_BINUTILS=y
 PTXCONF_CROSS_BINUTILS_VERSION="2.35"
