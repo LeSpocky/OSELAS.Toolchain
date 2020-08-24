@@ -5,7 +5,7 @@ menuconfig CROSS_GCC
 	prompt "gcc                         "
 	select CROSS_BINUTILS
 	select LIBC_FIRST
-	select HOST_GMP		if CROSS_GCC_43
+	select HOST_SYSTEM_GMP	if CROSS_GCC_43
 	select HOST_MPFR	if CROSS_GCC_43
 	select HOST_MPC		if CROSS_GCC_43
 	select HOST_ZLIB	if CROSS_GCC_43
@@ -246,7 +246,7 @@ config CROSS_GCC_FIRST
 	# without this there is no $(COMPILER_PREFIX)ld
 	select CROSS_ELF2FLT	if UCLIBC
 	select LIBC_HEADERS
-	select HOST_GMP		if CROSS_GCC_43
+	select HOST_SYSTEM_GMP	if CROSS_GCC_43
 	select HOST_MPFR	if CROSS_GCC_43
 	select HOST_MPC		if CROSS_GCC_43
 	select HOST_ZLIB	if CROSS_GCC_43
