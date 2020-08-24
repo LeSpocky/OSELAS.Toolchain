@@ -1,6 +1,0 @@
-## SECTION=hosttools_noprompt
-
-config HOST_MPC
-	bool
-	select HOST_GMP
-	select HOST_MPFR
