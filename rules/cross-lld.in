@@ -1,0 +1,35 @@
+menuconfig CROSS_LLD
+	tristate
+	select HOST_CMAKE
+	select CROSS_LLVM
+	depends on CROSS_CLANG
+	default CROSS_CLANG
+	prompt "lld                         "
+	help
+	  LLD is a new, high-performance linker. It is built as a set of
+	  reusable components which highly leverage existing libraries in
+	  the larger LLVM Project.
+
+if CROSS_LLD
+
+config CROSS_LLD_VERSION
+	string
+	prompt "lld version"
+	default "${PTXCONF_CROSS_LLVM_VERSION}"
+	help
+	  Specify the version of lld here.
+	  The default ${PTXCONF_CROSS_LLVM_VERSION} is usually correct.
+
+config CROSS_LLD_MD5
+	string
+	prompt "lld source md5sum"
+
+config CROSS_LLD_LICENSE
+	string
+	prompt "lld license"
+
+config CROSS_LLD_LICENSE_FILES
+	string
+	prompt "lld license files"
+
+endif
