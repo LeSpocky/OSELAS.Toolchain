@@ -26,6 +26,10 @@ CROSS_CLANG_DIR			:= $(CROSS_BUILDDIR)/$(CROSS_CLANG)
 CROSS_CLANG_LICENSE		:= $(call remove_quotes,$(PTXCONF_CROSS_CLANG_LICENSE))
 CROSS_CLANG_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_CROSS_CLANG_LICENSE_FILES))
 
+ifndef PTXCONF_ARCH_X86_64
+CROSS_CLANG_PATCHES		:= none
+endif
+
 # ----------------------------------------------------------------------------
 # Prepare
 # ----------------------------------------------------------------------------
