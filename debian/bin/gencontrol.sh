@@ -30,7 +30,13 @@ EOF
 if [ $# -gt 0 ]; then
 	configs=( "${@}" )
 else
-	configs=( ptxconfigs/*.ptxconfig )
+	if [ "$(lsb_release -r -s)" = "16.04" ]; then
+		# Skip the clang toolchains on Ubuntu Xenial
+		configs=( $(ls ptxconfigs/*.ptxconfig | grep -v clang) )
+	else
+		# Skip the corresponding non-clang toolchains
+		configs=( $(comm -3 <(ls ptxconfigs/*.ptxconfig) <(ls ptxconfigs/*.ptxconfig | sed -n 's/_clang-[^_]*_/_/p')) )
+	fi
 fi
 for configfile in "${configs[@]}"; do
 	toolchain_name="$(basename "${configfile}" .ptxconfig | sed s/_/-/g)"
