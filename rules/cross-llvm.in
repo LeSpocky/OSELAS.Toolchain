@@ -2,7 +2,7 @@ menuconfig CROSS_LLVM
 	tristate
 	select HOST_CMAKE
 	select HOST_NINJA
-	select HOST_ZLIB
+	select HOST_SYSTEM_ZLIB
 	select CROSS_GCC
 	prompt "llvm                        "
 	help

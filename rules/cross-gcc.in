@@ -8,7 +8,7 @@ menuconfig CROSS_GCC
 	select HOST_SYSTEM_GMP
 	select HOST_SYSTEM_MPFR
 	select HOST_SYSTEM_MPC
-	select HOST_ZLIB
+	select HOST_SYSTEM_ZLIB
 	select HOST_SYSTEM_ISL
 	select CROSS_ECJ	if CROSS_GCC_LANG_JAVA
 
@@ -221,6 +221,6 @@ config CROSS_GCC_FIRST
 	select HOST_SYSTEM_GMP
 	select HOST_SYSTEM_MPFR
 	select HOST_SYSTEM_MPC
-	select HOST_ZLIB
+	select HOST_SYSTEM_ZLIB
 	select HOST_SYSTEM_ISL
 
