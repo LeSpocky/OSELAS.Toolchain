@@ -5,11 +5,11 @@ menuconfig CROSS_GCC
 	prompt "gcc                         "
 	select CROSS_BINUTILS
 	select LIBC_FIRST
-	select HOST_SYSTEM_GMP	if CROSS_GCC_43
-	select HOST_SYSTEM_MPFR	if CROSS_GCC_43
-	select HOST_SYSTEM_MPC	if CROSS_GCC_43
-	select HOST_ZLIB	if CROSS_GCC_43
-	select HOST_SYSTEM_ISL	if CROSS_GCC_48
+	select HOST_SYSTEM_GMP
+	select HOST_SYSTEM_MPFR
+	select HOST_SYSTEM_MPC
+	select HOST_ZLIB
+	select HOST_SYSTEM_ISL
 	select CROSS_ECJ	if CROSS_GCC_LANG_JAVA
 
 if CROSS_GCC
@@ -37,33 +37,6 @@ config CROSS_GCC_PKGVERSION
 	string
 	default "${PTXCONF_PROJECT}" if CROSS_GCC_DL_VERSION = "${PTXCONF_CROSS_GCC_VERSION}"
 	default "${PTXCONF_PROJECT} ${PTXCONF_CROSS_GCC_DL_VERSION}" if CROSS_GCC_DL_VERSION != "${PTXCONF_CROSS_GCC_VERSION}"
-
-config CROSS_GCC_43
-	bool
-	prompt "additional deps for gcc >= 4.3"
-	help
-	  Add new dependencies for gcc >= 4.3: "GMP" and "MPFR"
-
-config CROSS_GCC_45
-	bool
-	prompt "additional deps for gcc >= 4.5"
-	select CROSS_GCC_43
-	help
-	  Add new dependencies for gcc >= 4.5: "libelf"
-
-config CROSS_GCC_48
-	bool
-	prompt "additional deps for gcc >= 4.8"
-	select CROSS_GCC_45
-	help
-	  Add new dependencies for gcc >= 4.8: "cloog"
-
-config CROSS_GCC_50
-	bool
-	prompt "additional deps for gcc >= 5.0"
-	select CROSS_GCC_48
-	help
-	  Add new dependencies for gcc >= 5.0: "isl" but not "cloog"
 
 config CROSS_GCC_SERIES
 	string
@@ -245,9 +218,9 @@ config CROSS_GCC_FIRST
 	# without this there is no $(COMPILER_PREFIX)ld
 	select CROSS_ELF2FLT	if UCLIBC
 	select LIBC_HEADERS
-	select HOST_SYSTEM_GMP	if CROSS_GCC_43
-	select HOST_SYSTEM_MPFR	if CROSS_GCC_43
-	select HOST_SYSTEM_MPC	if CROSS_GCC_43
-	select HOST_ZLIB	if CROSS_GCC_43
-	select HOST_SYSTEM_ISL	if CROSS_GCC_48
+	select HOST_SYSTEM_GMP
+	select HOST_SYSTEM_MPFR
+	select HOST_SYSTEM_MPC
+	select HOST_ZLIB
+	select HOST_SYSTEM_ISL
 
