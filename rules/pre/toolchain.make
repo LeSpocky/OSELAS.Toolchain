@@ -58,17 +58,14 @@ TOOLCHAIN_CROSS_DEBUG_MAP += \
 	$(call ptx/sh, realpath $(PTXDIST_WORKSPACE))/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform-
 endif
 
-TOOLCHAIN_CROSS_DEBUG_MAP_FLAGS := \
-	$(addprefix -fdebug-prefix-map=,$(TOOLCHAIN_CROSS_DEBUG_MAP))
-
 PTXDIST_HOST_CPPFLAGS := \
 	$(PTXDIST_HOST_CPPFLAGS) \
-	$(TOOLCHAIN_CROSS_DEBUG_MAP_FLAGS)
+	$(addprefix -fdebug-prefix-map=,$(TOOLCHAIN_CROSS_DEBUG_MAP))
 
 TOOLCHAIN_CROSS_DEBUG_FLAGS := \
 	-g3 \
 	-gno-record-gcc-switches \
-	$(TOOLCHAIN_CROSS_DEBUG_MAP_FLAGS)
+	$(addprefix -ffile-prefix-map=,$(TOOLCHAIN_CROSS_DEBUG_MAP))
 
 GLIBC_DEBUG_FLAGS_ENV := \
 	$(addsuffix "-O2 $(TOOLCHAIN_CROSS_DEBUG_FLAGS)",CFLAGS= CXXFLAGS=)
