@@ -4,7 +4,7 @@ menuconfig CROSS_GDB
 	select HOST_SYSTEM_EXPAT
 	select HOST_SYSTEM_GMP
 	select HOST_SYSTEM_ZLIB
-	select HOST_XZ
+	select HOST_SYSTEM_XZ
 	help
 	GDB is a source-level debugger, capable of breaking programs
 	at any specific line, displaying variable values, and
