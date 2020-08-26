@@ -42,6 +42,7 @@ for configfile in "${configs[@]}"; do
 Package: $pkg
 Architecture: any
 Depends: \${shlibs:Depends}, \${misc:Depends}
+Recommends: libgmp-dev, libmpc-dev, libmpfr-dev
 Description: OSELAS Toolchain for ${gnutriplet}
  
 Package: oselas.toolchain-${toolchain_version}-${gnutriplet/_/-}
