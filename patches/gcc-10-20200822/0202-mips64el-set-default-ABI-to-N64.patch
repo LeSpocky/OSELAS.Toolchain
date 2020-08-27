@@ -1,0 +1,26 @@
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+Date: Thu, 27 Aug 2020 09:20:58 +0200
+Subject: [PATCH] mips64el: set default ABI to N64
+
+Otherwise the default would be N32 an building fails.
+
+Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
+---
+ gcc/config.gcc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/gcc/config.gcc b/gcc/config.gcc
+index ed9697b9d4c3..601981ae4196 100644
+--- a/gcc/config.gcc
++++ b/gcc/config.gcc
+@@ -2532,6 +2532,10 @@ mips*-*-linux*)				# Linux MIPS, either endian.
+ 			default_mips_arch=mips64r2
+ 			enable_mips_multilibs="yes"
+ 			;;
++		mips64*-*-linux-gnuabi64 | mipsisa64*-*-linux-gnuabi64)
++			default_mips_abi=n64
++			enable_mips_multilibs="yes"
++			;;
+ 		mips64*-*-linux* | mipsisa64*-*-linux*)
+ 			default_mips_abi=n32
+ 			enable_mips_multilibs="yes"
