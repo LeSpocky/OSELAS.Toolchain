@@ -66,9 +66,6 @@ TOOLCHAIN_CROSS_DEBUG_FLAGS := \
 	-g3 \
 	-gno-record-gcc-switches \
 	$(addprefix -ffile-prefix-map=,$(TOOLCHAIN_CROSS_DEBUG_MAP))
-
-GLIBC_DEBUG_FLAGS_ENV := \
-	$(addsuffix "-O2 $(TOOLCHAIN_CROSS_DEBUG_FLAGS)",CFLAGS= CXXFLAGS=)
 endif
 
 #

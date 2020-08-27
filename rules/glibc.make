@@ -40,7 +40,6 @@ GLIBC_ENV := \
 	CC="$(CROSS_CC) -fuse-ld=bfd" \
 	BUILD_CC=$(HOSTCC) \
 	MAKEINFO=: \
-	$(GLIBC_DEBUG_FLAGS_ENV) \
 	\
 	libc_cv_slibdir='/lib' \
 	\
@@ -76,6 +75,9 @@ GLIBC_CONF_OPT	:= \
 	--enable-profile \
 	--enable-shared \
 	--enable-static-nss
+
+GLIBC_CFLAGS = $(TOOLCHAIN_CROSS_DEBUG_FLAGS)
+GLIBC_CXXFLAGS = $(TOOLCHAIN_CROSS_DEBUG_FLAGS)
 
 # ----------------------------------------------------------------------------
 # Install
