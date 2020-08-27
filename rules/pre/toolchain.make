@@ -49,13 +49,13 @@ PTXDIST_HOST_LDFLAGS				:= -L${PTXDIST_PATH_SYSROOT_HOST_PREFIX}/lib
 
 ifndef PTXCONF_TOOLCHAIN_DEBUG
 TOOLCHAIN_CROSS_DEBUG_MAP := \
-	$(PTXDIST_SYSROOT_CROSS)= \
-	$(PTXDIST_WORKSPACE)/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform-
+	$(PTXDIST_WORKSPACE)/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform- \
+	$(PTXDIST_SYSROOT_CROSS)=
 
 ifneq ($(PTXDIST_SYSROOT_CROSS),$(call ptx/sh, realpath $(PTXDIST_SYSROOT_CROSS)))
 TOOLCHAIN_CROSS_DEBUG_MAP += \
-	$(call ptx/sh, realpath $(PTXDIST_SYSROOT_CROSS))= \
-	$(call ptx/sh, realpath $(PTXDIST_WORKSPACE))/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform-
+	$(call ptx/sh, realpath $(PTXDIST_WORKSPACE))/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform- \
+	$(call ptx/sh, realpath $(PTXDIST_SYSROOT_CROSS))=
 endif
 
 PTXDIST_HOST_CPPFLAGS := \
