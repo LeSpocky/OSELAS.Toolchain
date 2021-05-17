@@ -10,10 +10,10 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 4 insertions(+)
 
 diff --git a/gcc/config.gcc b/gcc/config.gcc
-index ed9697b9d4c3..601981ae4196 100644
+index 357b0bed0673..f73c656e1a41 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
-@@ -2532,6 +2532,10 @@ mips*-*-linux*)				# Linux MIPS, either endian.
+@@ -2587,6 +2587,10 @@ mips*-*-linux*)				# Linux MIPS, either endian.
  			default_mips_arch=mips64r2
  			enable_mips_multilibs="yes"
  			;;
