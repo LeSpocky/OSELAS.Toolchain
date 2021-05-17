@@ -36,6 +36,10 @@ config PROJECT_CHECK_LICENSES
 	bool
 	default y
 
+config BASE
+	bool
+	default y
+
 comment "----------------------------------"
 
 source "workspace/rules/architecture.in"
