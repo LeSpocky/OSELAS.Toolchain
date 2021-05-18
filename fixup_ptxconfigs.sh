@@ -222,6 +222,9 @@ fixup()
 
 	x86_64-unknown-linux-gnu)
 	    ;;
+	x86_64-v3-linux-gnu)
+	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=x86-64-v3 --with-tune=generic"
+	    ;;
 
 	mipsel-softfloat-linux-gnu|mips-softfloat-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-float=soft"
@@ -261,7 +264,7 @@ fixup()
     #
     PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-stackguard-randomization --enable-stack-protector=strong"
     case "${PTXCONF_GNU_TARGET}" in
-	x86_64-unknown-linux-gnu)
+	x86_64-*-linux-gnu)
 		PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="${PTXCONF_GLIBC_CONFIG_EXTRA_CROSS} --enable-mathvec"
 	    ;;
     esac
