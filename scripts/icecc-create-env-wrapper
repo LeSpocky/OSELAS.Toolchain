@@ -1,10 +1,6 @@
 #!/bin/bash
 
-if grep -q -- --compression "${PTXDIST_ICECC_CREATE_ENV_REAL}"; then
-	args=( --compression none )
-fi
-
-"${PTXDIST_ICECC_CREATE_ENV_REAL}" "${@}" "${args[@]}" || exit
+"${PTXDIST_ICECC_CREATE_ENV_REAL}" "${@}" --compression none || exit
 
 ptxd_get_path *.tar*
 env="${ptxd_reply}"
