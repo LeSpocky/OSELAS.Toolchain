@@ -47,13 +47,7 @@ CROSS_GDB_CONF_OPT	:= \
 	\
 	--disable-werror \
 	--enable-tui \
-	--with-expat
-
-# define this from the outside to build without python
-ifeq ($(CROSS_GDB_WITHOUT_PYTHON),y)
-CROSS_GDB_CONF_OPT += --without-python
-else
-CROSS_GDB_CONF_OPT += --with-python=python3
-endif
+	--with-expat \
+	--with-python=python3
 
 # vim: syntax=make

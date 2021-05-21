@@ -21,11 +21,10 @@ debian/ptxdistrc:
 	fi >> $@
 
 PTXDIST_ENV := \
-	PTXDIST_PTXRC=$(CURDIR)/debian/ptxdistrc \
-	CROSS_GDB_WITHOUT_PYTHON=n
+	PTXDIST_PTXRC=$(CURDIR)/debian/ptxdistrc
 
 override_dh_auto_build: debian/ptxdistrc
-	$(PTXDIST_ENV) make -f build_all_v2.mk ARG="-j -q go" PTXDIST="$(PTXDIST)" $(TOOLCHAINS)
+	$(PTXDIST_ENV) make -j4 -f build_all_v2.mk ARG="-j -q go" PTXDIST="$(PTXDIST)" $(TOOLCHAINS)
 
 override_dh_auto_install-arch:
 	rm -rf $(CURDIR)/debian/tmp/opt
