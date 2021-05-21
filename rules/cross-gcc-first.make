@@ -65,7 +65,7 @@ CROSS_GCC_FIRST_MAKE_ENV := \
 
 ifdef PTXDIST_ICECC
 CROSS_GCC_FIRST_MAKE_ENV += \
-	STAGE_CC_WRAPPER=icerun
+	STAGE_CC_WRAPPER=$(PTXDIST_ICERUN)
 endif
 
 # ----------------------------------------------------------------------------
