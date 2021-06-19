@@ -21,7 +21,7 @@ $(STATEDIR)/host-system-gmp.prepare:
 	@echo "Checking for gmp ..."
 	@echo "#include <gmp.h>" | $(HOSTCC) -x c -c -o /dev/null - 2>/dev/null || \
 		ptxd_bailout "gmp development files not found!" \
-		"Please install libgmp-dev (debian)"
+		"Please install libgmp-dev (debian) or gmp-devel (fedora)"
 	@$(call touch)
 
 
