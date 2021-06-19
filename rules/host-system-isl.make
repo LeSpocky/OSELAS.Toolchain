@@ -17,7 +17,7 @@ $(STATEDIR)/host-system-isl.prepare:
 	@echo "Checking for isl ..."
 	@echo "#include <isl/version.h>" | $(HOSTCC) -x c -c -o /dev/null - 2>/dev/null || \
 		ptxd_bailout "isl development files not found!" \
-		"Please install libisl-dev (debian)"
+		"Please install libisl-dev (debian) or isl-devel (fedora)"
 	@$(call touch)
 
 # vim: syntax=make
