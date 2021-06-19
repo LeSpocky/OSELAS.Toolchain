@@ -21,7 +21,7 @@ $(STATEDIR)/host-system-mpc.prepare:
 	@echo "Checking for mpc ..."
 	@echo "#include <mpc.h>" | $(HOSTCC) -x c -c -o /dev/null - 2>/dev/null || \
 		ptxd_bailout "mpc development files not found!" \
-		"Please install libmpc-dev (debian)"
+		"Please install libmpc-dev (debian) or libmpc-devel (fedora)"
 	@$(call touch)
 
 # vim: syntax=make
