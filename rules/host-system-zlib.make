@@ -21,7 +21,7 @@ $(STATEDIR)/host-system-zlib.prepare:
 	@echo "Checking for zlib ..."
 	@pkg-config zlib || \
 		ptxd_bailout "zlib development files not found!" \
-		"Please install zlib1g-dev (debian)"
+		"Please install zlib1g-dev (debian) or zlib-devel (fedora)"
 	@$(call touch)
 
 # vim: syntax=make
