@@ -21,7 +21,7 @@ $(STATEDIR)/host-system-xz.prepare:
 	@echo "Checking for expat ..."
 	@pkg-config liblzma || \
 		ptxd_bailout "xz (lzma) development files not found!" \
-		"Please install liblzma-dev (debian)"
+		"Please install liblzma-dev (debian) or xz-devel (fedora)"
 	@$(call touch)
 
 # vim: syntax=make
