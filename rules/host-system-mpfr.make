@@ -21,7 +21,7 @@ $(STATEDIR)/host-system-mpfr.prepare:
 	@echo "Checking for mpfr ..."
 	@echo "#include <mpfr.h>" | $(HOSTCC) -x c -c -o /dev/null - 2>/dev/null || \
 		ptxd_bailout "mpfr development files not found!" \
-		"Please install libmpfr-dev (debian)"
+		"Please install libmpfr-dev (debian) or mpfr-devel (fedora)"
 	@$(call touch)
 
 # vim: syntax=make
