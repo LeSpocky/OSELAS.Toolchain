@@ -21,7 +21,7 @@ $(STATEDIR)/host-system-expat.prepare:
 	@echo "Checking for expat ..."
 	@pkg-config expat || \
 		ptxd_bailout "expat development files not found!" \
-		"Please install libexpat1-dev (debian)"
+		"Please install libexpat1-dev (debian) or expat-devel (fedora)"
 	@$(call touch)
 
 # vim: syntax=make
