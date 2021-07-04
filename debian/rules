@@ -34,6 +34,9 @@ override_dh_auto_install-arch:
 	ls -d $(CURDIR)/debian/tmp/opt/OSELAS.Toolchain-*/*/*/*/lib \
 		$(CURDIR)/debian/tmp/opt/OSELAS.Toolchain-*/*/*/lib/gcc/*/* \
 		| sed 's;$(CURDIR)/debian/tmp;-X;' >> $(CURDIR)/debian/excludes
+	ls -d $(CURDIR)/debian/tmp/opt/OSELAS.Toolchain-*/*/*/lib/rustlib/*/lib \
+		| grep -v /x86_64-unknown-linux-gnu/lib \
+		| sed 's;$(CURDIR)/debian/tmp;-X;' >> $(CURDIR)/debian/excludes
 
 override_dh_auto_clean:
 	dh_auto_clean
