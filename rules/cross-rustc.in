@@ -1,5 +1,6 @@
 menuconfig CROSS_RUSTC
 	tristate
+	select HOST_SYSTEM_OPENSSL
 	select CROSS_LLVM
 	prompt "rustc                       "
 	help
