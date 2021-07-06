@@ -20,7 +20,7 @@ fixup()
 
     # version
     PTXCONF_CONFIGFILE_VERSION="2021.07.0"
-    PTXCONF_PROJECT="OSELAS.Toolchain-2021.XX.0"
+    PTXCONF_PROJECT="OSELAS.Toolchain-2021.07.0"
     PTXCONF_PROJECT="${PTXCONF_PROJECT##*/}"
 
     # defaults
