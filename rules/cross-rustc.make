@@ -116,10 +116,14 @@ $(STATEDIR)/cross-rustc.install:
 	@$(call targetinfo)
 	@$(call world/execute, CROSS_RUSTC, \
 		DESTDIR=$(CROSS_RUSTC_PKGDIR) ./x.py install)
-	@rm -rv $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/$(GNU_BUILD)/bin
 	@cp -v $(CROSS_RUSTC_TARGET_PATH)/$(CROSS_RUSTC_TARGET).json \
 		$(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/
 	@$(call ptx/cross-rustc-wrapper)
+	@rm -v $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/install.log
+ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
+	sed -i -e 's;$(PTXDIST_WORKSPACE);OSELAS.Toolchain;' \
+		$(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/manifest*
+endif
 	@$(call touch)
 
 # vim: syntax=make

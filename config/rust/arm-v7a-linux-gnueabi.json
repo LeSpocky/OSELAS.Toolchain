@@ -8,7 +8,6 @@
   "features": "+v7,+thumb2,+soft-float,-neon",
   "has-elf-tls": true,
   "has-rpath": true,
-  "is-builtin": true,
   "linker-is-gnu": true,
   "llvm-target": "armv7-unknown-linux-gnueabi",
   "max-atomic-width": 64,

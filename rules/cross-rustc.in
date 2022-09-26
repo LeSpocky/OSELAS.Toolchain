@@ -29,6 +29,10 @@ config CROSS_RUSTC_BUILD_VERSION
 	help
 	  version of the prebuilt rust compiler. It will be used to bootstrap
 	  the rust compiler.
+	  Note: During updates, only change CROSS_RUSTC_VERSION at first.
+	  The compile stage will then try (and fail) to download the
+	  version (and build date) needed here. It is defined in
+	  src/stage0.json in the source tarball.
 
 config CROSS_RUSTC_BUILD_DATE
 	string

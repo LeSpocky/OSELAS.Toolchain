@@ -8,7 +8,6 @@
   "features": "+v7,+vfp3,-d32,+thumb2,-neon",
   "has-elf-tls": true,
   "has-rpath": true,
-  "is-builtin": true,
   "linker-is-gnu": true,
   "llvm-target": "armv7-unknown-linux-gnueabihf",
   "max-atomic-width": 64,
