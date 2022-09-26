@@ -19,7 +19,7 @@ fixup()
     local config="${1}"
 
     # version
-    PTXCONF_CONFIGFILE_VERSION="2021.07.0"
+    PTXCONF_CONFIGFILE_VERSION="2022.09.0"
     PTXCONF_PROJECT="OSELAS.Toolchain-2022.XX.0"
     PTXCONF_PROJECT="${PTXCONF_PROJECT##*/}"
 
