@@ -15,7 +15,7 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 5 insertions(+)
 
 diff --git a/manual/Makefile b/manual/Makefile
-index e83444341e28..a5e4ef26c15f 100644
+index 0de53ac7130f..f1734ee7c71a 100644
 --- a/manual/Makefile
 +++ b/manual/Makefile
 @@ -102,9 +102,14 @@ $(objpfx)libm-err.texi: $(objpfx)stamp-libm-err
