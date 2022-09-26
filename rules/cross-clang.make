@@ -47,10 +47,18 @@ CROSS_CLANG_CONF_OPT	 = \
 	-DENABLE_LINKER_BUILD_ID=ON \
 	-DLLVM_ENABLE_LIBXML2=OFF \
 	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON \
-	-DLLVM_CONFIG=$(CROSS_LLVM_DIR)-build/bin/llvm-config
+	-DLLVM_CMAKE_DIR=$(CROSS_LLVM_DIR)-build \
+	-DCMAKE_MODULE_PATH=$(CROSS_LLVM_DIR)/cmake/modules \
+	-DLLVM_MAIN_INCLUDE_DIR=$(CROSS_LLVM_DIR)/include \
+	-DLLVM_BINARY_DIR=$(CROSS_LLVM_DIR)-build
 
 CROSS_CLANG_LDFLAGS	:= \
 	-Wl,-rpath,$$ORIGIN/../lib
+
+# Some tools that use libLLVM-*.so are executed at runtime in the build
+# directory. So the rpath specified above does not work
+CROSS_CLANG_MAKE_ENV	:= \
+	LD_LIBRARY_PATH=$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/lib
 
 # ----------------------------------------------------------------------------
 # Install

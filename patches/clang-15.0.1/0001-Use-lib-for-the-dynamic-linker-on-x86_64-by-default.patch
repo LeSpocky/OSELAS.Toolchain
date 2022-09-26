@@ -11,13 +11,13 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/lib/Driver/ToolChains/Linux.cpp b/lib/Driver/ToolChains/Linux.cpp
-index 9663a7390ada..f6f6ef60dd2b 100644
+index ceb1a982c3a4..cab10339d75c 100644
 --- a/lib/Driver/ToolChains/Linux.cpp
 +++ b/lib/Driver/ToolChains/Linux.cpp
-@@ -544,8 +544,9 @@ std::string Linux::getDynamicLinker(const ArgList &Args) const {
+@@ -545,8 +545,9 @@ std::string Linux::getDynamicLinker(const ArgList &Args) const {
      break;
    case llvm::Triple::x86_64: {
-     bool X32 = Triple.getEnvironment() == llvm::Triple::GNUX32;
+     bool X32 = Triple.isX32();
 +    const Arg *A = Args.getLastArg(clang::driver::options::OPT_gcc_toolchain);
  
 -    LibDir = X32 ? "libx32" : "lib64";

@@ -8,24 +8,66 @@ See https://bugs.llvm.org/show_bug.cgi?id=49228
 
 Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
 ---
+ MachO/Arch/ARM64.cpp            |   2 +-
+ MachO/Arch/X86_64.cpp           |   2 +-
+ MachO/MarkLive.cpp              |   2 +-
  MachO/UnwindInfoSection.h       |   2 +-
  MachO/compact_unwind_encoding.h | 477 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 478 insertions(+), 1 deletion(-)
+ 5 files changed, 481 insertions(+), 4 deletions(-)
  create mode 100644 MachO/compact_unwind_encoding.h
 
+diff --git a/MachO/Arch/ARM64.cpp b/MachO/Arch/ARM64.cpp
+index c05fe8da8ca6..1359a97ee860 100644
+--- a/MachO/Arch/ARM64.cpp
++++ b/MachO/Arch/ARM64.cpp
+@@ -13,7 +13,7 @@
+ #include "Target.h"
+ 
+ #include "lld/Common/ErrorHandler.h"
+-#include "mach-o/compact_unwind_encoding.h"
++#include "compact_unwind_encoding.h"
+ #include "llvm/ADT/SmallVector.h"
+ #include "llvm/ADT/StringRef.h"
+ #include "llvm/BinaryFormat/MachO.h"
+diff --git a/MachO/Arch/X86_64.cpp b/MachO/Arch/X86_64.cpp
+index b1c46cbab9d4..99731b8928a3 100644
+--- a/MachO/Arch/X86_64.cpp
++++ b/MachO/Arch/X86_64.cpp
+@@ -12,7 +12,7 @@
+ #include "Target.h"
+ 
+ #include "lld/Common/ErrorHandler.h"
+-#include "mach-o/compact_unwind_encoding.h"
++#include "compact_unwind_encoding.h"
+ #include "llvm/BinaryFormat/MachO.h"
+ #include "llvm/Support/Endian.h"
+ 
+diff --git a/MachO/MarkLive.cpp b/MachO/MarkLive.cpp
+index 7239e30bbdb2..5e0f498344c5 100644
+--- a/MachO/MarkLive.cpp
++++ b/MachO/MarkLive.cpp
+@@ -12,7 +12,7 @@
+ #include "SymbolTable.h"
+ #include "Symbols.h"
+ #include "UnwindInfoSection.h"
+-#include "mach-o/compact_unwind_encoding.h"
++#include "compact_unwind_encoding.h"
+ #include "llvm/Support/TimeProfiler.h"
+ 
+ namespace lld {
 diff --git a/MachO/UnwindInfoSection.h b/MachO/UnwindInfoSection.h
-index 2285cf930d83..d277ae459654 100644
+index c6b334731c75..3230dd9a52af 100644
 --- a/MachO/UnwindInfoSection.h
 +++ b/MachO/UnwindInfoSection.h
-@@ -12,7 +12,7 @@
- #include "MergedOutputSection.h"
+@@ -13,7 +13,7 @@
  #include "SyntheticSections.h"
+ #include "llvm/ADT/MapVector.h"
  
 -#include "mach-o/compact_unwind_encoding.h"
 +#include "compact_unwind_encoding.h"
- #include "llvm/ADT/DenseMap.h"
  
- #include <vector>
+ namespace lld {
+ namespace macho {
 diff --git a/MachO/compact_unwind_encoding.h b/MachO/compact_unwind_encoding.h
 new file mode 100644
 index 000000000000..5301b1055ef9

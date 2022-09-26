@@ -20,6 +20,10 @@ config CROSS_LLVM_MD5
 	string
 	prompt "llvm source md5sum"
 
+config CROSS_LLVM_CMAKE_MODULES_MD5
+	string
+	prompt "llvm cmake source md5sum"
+
 config CROSS_LLVM_LICENSE
 	string
 	prompt "LLVM license"
