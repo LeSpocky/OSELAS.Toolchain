@@ -1,0 +1,35 @@
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+Date: Wed, 28 Sep 2022 16:21:50 +0200
+Subject: [PATCH] mips64el: change paths for pure64
+
+Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
+---
+ gcc/config/mips/mips.h    | 4 ++--
+ gcc/config/mips/t-linux64 | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gcc/config/mips/mips.h b/gcc/config/mips/mips.h
+index 858bbba3a369..59e20b1a250c 100644
+--- a/gcc/config/mips/mips.h
++++ b/gcc/config/mips/mips.h
+@@ -3450,8 +3450,8 @@ struct GTY(())  machine_function {
+ #define STANDARD_STARTFILE_PREFIX_1 "/lib32/"
+ #define STANDARD_STARTFILE_PREFIX_2 "/usr/lib32/"
+ #elif MIPS_ABI_DEFAULT == ABI_64
+-#define STANDARD_STARTFILE_PREFIX_1 "/lib64/"
+-#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib64/"
++#define STANDARD_STARTFILE_PREFIX_1 "/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib/"
+ #endif
+ 
+ /* Load store bonding is not supported by micromips and fix_24k.  The
+diff --git a/gcc/config/mips/t-linux64 b/gcc/config/mips/t-linux64
+index 2fdd8e004077..cfdf839c2847 100644
+--- a/gcc/config/mips/t-linux64
++++ b/gcc/config/mips/t-linux64
+@@ -23,4 +23,4 @@ MIPS_SOFT = $(if $(strip $(filter MASK_SOFT_FLOAT_ABI, $(target_cpu_default)) $(
+ MULTILIB_OSDIRNAMES = \
+ 	../lib32$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
+ 	../lib$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
+-	../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
++	../lib$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))

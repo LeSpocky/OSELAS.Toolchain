@@ -183,9 +183,9 @@ $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
 	sed -i -e 's;$(call remove_quotes,$(PTXDIST_SYSROOT_CROSS));;' \
 		$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/install-tools/mkheaders.conf
-	if [ -e $(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/bits/statx.h ]; then \
+	if [ -e $(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/pthread.h ]; then \
 		sed -i -e 's;$(call remove_quotes,$(PTXDIST_SYSROOT_CROSS));;' \
-			$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/bits/statx.h; \
+			$(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/gcc/$(PTXCONF_GNU_TARGET)/$(CROSS_GCC_VERSION)/include-fixed/pthread.h; \
 	fi
 endif
 	@$(call touch)
