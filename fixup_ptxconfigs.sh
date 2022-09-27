@@ -204,7 +204,7 @@ fixup()
 	    ;;
 
 	aarch64-v8a-linux-gnu)
-	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-abi=lp64						--with-arch=armv8-a"
+	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-abi=lp64						--with-arch=armv8-a				--with-specs='%{!pg:%{!fomit-frame-pointer:%{!fno-omit-frame-pointer:-fomit-frame-pointer}}}'"
 	    ;;
 
 	i486-unknown-linux-gnu)
