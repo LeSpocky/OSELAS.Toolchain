@@ -47,16 +47,16 @@ PTX_HOST_CROSS_AUTOCONF := \
 #
 PTXDIST_HOST_LDFLAGS				:= -L${PTXDIST_PATH_SYSROOT_HOST_PREFIX}/lib
 
-ifndef PTXCONF_TOOLCHAIN_DEBUG
-TOOLCHAIN_CROSS_DEBUG_MAP := \
-	$(PTXDIST_WORKSPACE)/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform- \
-	$(PTXDIST_SYSROOT_CROSS)=
+TOOLCHAIN_WORKSPACE_SYMLINK := $(subst $(PTXDIST_WORKSPACE),,$(call ptx/sh, realpath $(PTXDIST_WORKSPACE)))
 
-ifneq ($(PTXDIST_SYSROOT_CROSS),$(call ptx/sh, realpath $(PTXDIST_SYSROOT_CROSS)))
-TOOLCHAIN_CROSS_DEBUG_MAP += \
-	$(call ptx/sh, realpath $(PTXDIST_WORKSPACE))/platform-=$(call remove_quotes,$(PTXCONF_PROJECT))/platform- \
-	$(call ptx/sh, realpath $(PTXDIST_SYSROOT_CROSS))=
-endif
+define ptx/toolchain-map
+$(1)=$(2) $(if $(TOOLCHAIN_WORKSPACE_SYMLINK),$(call ptx/sh, realpath $(1))=$(2))
+endef
+
+TOOLCHAIN_CROSS_DEBUG_MAP := \
+	$(call ptx/toolchain-map,$(BUILDDIR)) \
+	$(call ptx/toolchain-map,$(CROSS_BUILDDIR)) \
+	$(call ptx/toolchain-map,$(PTXDIST_SYSROOT_CROSS))
 
 PTXDIST_HOST_CPPFLAGS := \
 	$(PTXDIST_HOST_CPPFLAGS) \
@@ -64,9 +64,16 @@ PTXDIST_HOST_CPPFLAGS := \
 
 TOOLCHAIN_CROSS_DEBUG_FLAGS := \
 	-g3 \
-	-gno-record-gcc-switches \
-	$(addprefix -ffile-prefix-map=,$(TOOLCHAIN_CROSS_DEBUG_MAP))
-endif
+	-gno-record-gcc-switches
+
+define ptx/toolchain-cross-debug-map
+$(if $(PTXCONF_TOOLCHAIN_DEBUG),$(call ptx/toolchain-map,$($(strip $(1))_DIR),$(PTXCONF_PREFIX_CROSS)/src/$($(strip $(1))))) \
+$(TOOLCHAIN_CROSS_DEBUG_MAP)
+endef
+define ptx/toolchain-cross-debug-flags
+$(TOOLCHAIN_CROSS_DEBUG_FLAGS) \
+$(addprefix -ffile-prefix-map=,$(call ptx/toolchain-cross-debug-map,$(1)))
+endef
 
 #
 # gcc-first
@@ -74,17 +81,6 @@ endif
 CROSS_GCC_FIRST_PREFIX	:= $(PTXDIST_PLATFORMDIR)/sysroot-target
 CROSS_PATH		:= $(PTXDIST_SYSROOT_HOST)/lib/wrapper:$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin:$(subst $(PTXDIST_SYSROOT_HOST)/lib/wrapper:,,$(PATH))
 HOST_CROSS_PATH		:= $(CROSS_PATH)
-
-#
-# debuggable gcc/glibc
-#
-ifdef PTXCONF_TOOLCHAIN_DEBUG
-BUILDDIR_DEBUG		:= $(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/src/target
-BUILDDIR_CROSS_DEBUG	:= $(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/src/cross
-else
-BUILDDIR_DEBUG		:= $(BUILDDIR)
-BUILDDIR_CROSS_DEBUG	:= $(CROSS_BUILDDIR)
-endif
 
 #
 # images

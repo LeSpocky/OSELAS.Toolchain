@@ -118,3 +118,27 @@ ptxd_make_world_install_pack() {
     fi
 }
 export -f ptxd_make_world_install_pack
+
+ptxd_make_world_install_src() {
+    local base dst
+    ptxd_make_world_init || break
+
+    if [ "$(ptxd_get_ptxconf PTXCONF_TOOLCHAIN_DEBUG)" != "y" ]; then
+	return
+    fi
+
+    base="${PTXDIST_SYSROOT_CROSS}$(ptxd_get_ptxconf PTXCONF_PREFIX_CROSS)/src"
+    dst="${base}/$(basename ${pkg_dir})"
+    echo -e "\nCopying sources to $(ptxd_print_path "${dst}") ...\n"
+    mkdir -p "${base}" &&
+    rm -rf "${dst}" &&
+    cp -a "${pkg_dir}" "${dst}" &&
+    rm -f "${dst}/.pc/.quilt_patches" &&
+    if [ -e "${dst}/.ptxdist" ]; then
+	# patches and series are symlinked to the BSP, explicit copy the
+	# actual files here
+	rm -r "${dst}/.ptxdist" &&
+	cp -aL "${pkg_dir}/.ptxdist" "${dst}/.ptxdist"
+    fi
+}
+export -f ptxd_make_world_install_src

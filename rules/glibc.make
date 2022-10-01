@@ -22,8 +22,8 @@ GLIBC_MD5		:= $(call remove_quotes,$(PTXCONF_GLIBC_MD5))
 GLIBC			:= glibc-$(GLIBC_DL_VERSION)
 GLIBC_SUFFIX		:= tar.gz
 GLIBC_SOURCE		:= $(SRCDIR)/$(GLIBC).$(GLIBC_SUFFIX)
-GLIBC_DIR		:= $(BUILDDIR_DEBUG)/$(GLIBC)
-GLIBC_BUILDDIR		:= $(BUILDDIR)/$(GLIBC)-build
+GLIBC_DIR		:= $(BUILDDIR)/$(GLIBC)
+GLIBC_BUILD_OOT		:= YES
 GLIBC_URL		:= \
 	$(call ptx/mirror, GNU, glibc/$(GLIBC).$(GLIBC_SUFFIX)) \
 	https://repo.or.cz/glibc.git/snapshot/$(GLIBC).$(GLIBC_SUFFIX) \
@@ -76,8 +76,8 @@ GLIBC_CONF_OPT	:= \
 	--enable-shared \
 	--enable-static-nss
 
-GLIBC_CFLAGS = $(TOOLCHAIN_CROSS_DEBUG_FLAGS)
-GLIBC_CXXFLAGS = $(TOOLCHAIN_CROSS_DEBUG_FLAGS)
+GLIBC_CFLAGS	:= $(call ptx/toolchain-cross-debug-flags, GLIBC)
+GLIBC_CXXFLAGS	:= $(call ptx/toolchain-cross-debug-flags, GLIBC)
 
 # ----------------------------------------------------------------------------
 # Install
@@ -99,7 +99,12 @@ $(STATEDIR)/glibc.install: $(STATEDIR)/glibc.report
 		echo '   libraries :-( So try them secondarily. */'							>> "$(GLIBC_PKGDIR)/usr/lib/libc.a" && \
 		echo 'GROUP ( /usr/lib/libc_ns.a /usr/lib/libnss_files.a /usr/lib/libnss_dns.a /usr/lib/libresolv.a )'	>> "$(GLIBC_PKGDIR)/usr/lib/libc.a" ; \
 	fi
+	@$(call touch)
 
+$(STATEDIR)/glibc.install.post:
+	@$(call targetinfo)
+	@$(call world/install.post, GLIBC)
+	@$(call world/install-src, GLIBC)
 	@$(call touch)
 
 # vim: syntax=make

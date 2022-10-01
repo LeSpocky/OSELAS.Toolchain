@@ -20,8 +20,8 @@ NEWLIB		:= newlib-$(NEWLIB_VERSION)
 NEWLIB_SUFFIX	:= tar.gz
 NEWLIB_URL	:= https://sourceware.org/pub/newlib/$(NEWLIB).$(NEWLIB_SUFFIX)
 NEWLIB_SOURCE	:= $(SRCDIR)/$(NEWLIB).$(NEWLIB_SUFFIX)
-NEWLIB_DIR	:= $(BUILDDIR_DEBUG)/$(NEWLIB)
-NEWLIB_BUILDDIR	:= $(BUILDDIR)/$(NEWLIB)-build
+NEWLIB_DIR	:= $(BUILDDIR)/$(NEWLIB)
+NEWLIB_BUILD_OOT:= YES
 
 # ----------------------------------------------------------------------------
 # Prepare

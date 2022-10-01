@@ -21,8 +21,7 @@ CROSS_GCC_MD5		:= $(call remove_quotes,$(PTXCONF_CROSS_GCC_MD5))
 CROSS_GCC		:= gcc-$(CROSS_GCC_DL_VERSION)
 CROSS_GCC_SUFFIX	:= tar.xz
 CROSS_GCC_SOURCE	:= $(SRCDIR)/$(CROSS_GCC).$(CROSS_GCC_SUFFIX)
-CROSS_GCC_DIR		:= $(BUILDDIR_CROSS_DEBUG)/$(CROSS_GCC)
-CROSS_GCC_BUILDDIR	:= $(CROSS_BUILDDIR)/$(CROSS_GCC)-build
+CROSS_GCC_DIR		:= $(CROSS_BUILDDIR)/$(CROSS_GCC)
 CROSS_GCC_BUILD_OOT	:= YES
 CROSS_GCC_LICENSE	:= $(call remove_quotes,$(PTXCONF_CROSS_GCC_LICENSE))
 CROSS_GCC_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_CROSS_GCC_LICENSE_FILES))
@@ -41,7 +40,7 @@ ptx/abs2rel := $(PTXDIST_WORKSPACE)/scripts/ptxd_abs2rel.sh
 $(STATEDIR)/cross-gcc.extract:
 	@$(call targetinfo)
 	@$(call clean, $(CROSS_GCC_DIR))
-	@$(call extract, CROSS_GCC, $(BUILDDIR_CROSS_DEBUG))
+	@$(call extract, CROSS_GCC)
 	@$(call patchin, CROSS_GCC, $(CROSS_GCC_DIR))
 ifdef PTXCONF_CROSS_ECJ
 	@cp $(CROSS_ECJ_SOURCE) $(CROSS_GCC_DIR)/ecj.jar
@@ -91,15 +90,13 @@ CROSS_GCC_AUTOCONF_COMMON := \
 	$(call ptx/ifdef,PTXCONF_HOST_SYSTEM_MPC,--with-mpc) \
 	$(call ptx/ifdef,PTXCONF_HOST_SYSTEM_ISL,--with-isl)
 
-ifndef PTXCONF_TOOLCHAIN_DEBUG
 CROSS_GCC_AUTOCONF_COMMON += \
-	--with-debug-prefix-map="$(TOOLCHAIN_CROSS_DEBUG_MAP)" \
-	--enable-libstdcxx-debug-flags="-gdwarf-4 -O0 $(TOOLCHAIN_CROSS_DEBUG_FLAGS)"
+	--with-debug-prefix-map="$(call ptx/toolchain-cross-debug-map, CROSS_GCC)" \
+	--enable-libstdcxx-debug-flags="-gdwarf-4 -O0 -D_GLIBCXX_ASSERTIONS $(call ptx/toolchain-cross-debug-flags, CROSS_GCC)"
 
 CROSS_GCC_CONF_ENV += \
-	CFLAGS_FOR_TARGET="$(TOOLCHAIN_CROSS_DEBUG_FLAGS)" \
-	CXXFLAGS_FOR_TARGET="$(TOOLCHAIN_CROSS_DEBUG_FLAGS)"
-endif
+	CFLAGS_FOR_TARGET="$(call ptx/toolchain-cross-debug-flags, CROSS_GCC)" \
+	CXXFLAGS_FOR_TARGET="$(call ptx/toolchain-cross-debug-flags, CROSS_GCC)"
 
 #   --enable-tls            enable or disable generation of tls code
 #                           overriding the assembler check for tls support
@@ -141,7 +138,7 @@ $(STATEDIR)/cross-gcc.prepare:
 	@$(call world/prepare, CROSS_GCC)
 	sed -i -e '/TOPLEVEL_CONFIGURE_ARGUMENTS/s;$(PTXDIST_WORKSPACE);$(PTXCONF_PROJECT);g' \
 		-e '/TOPLEVEL_CONFIGURE_ARGUMENTS/s;$(call ptx/sh, realpath $(PTXDIST_WORKSPACE));$(PTXCONF_PROJECT);g' \
-		$(CROSS_GCC_BUILDDIR)/Makefile
+		$(CROSS_GCC_DIR)-build/Makefile
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
@@ -193,6 +190,7 @@ endif
 $(STATEDIR)/cross-gcc.install.post:
 	@$(call targetinfo)
 	@$(call world/install.post, CROSS_GCC)
+	@$(call world/install-src, CROSS_GCC)
 	@ptxd_make_setup_target_compiler $(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/bin
 	@$(call touch)
 
