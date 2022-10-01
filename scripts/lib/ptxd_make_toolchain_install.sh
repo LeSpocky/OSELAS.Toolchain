@@ -8,25 +8,25 @@
 
 ptxd_make_toolchain_install() {
     local tmpfile install_helper
-    local prefix="$(ptxd_get_ptxconf PTXCONF_PREFIX_CROSS)"
-    local install_prefix="${ptx_install_destdir}${prefix}"
-    local install_source="${PTXDIST_SYSROOT_CROSS}${prefix}"
+    local prefix_cross="$(ptxd_get_ptxconf PTXCONF_PREFIX_CROSS)"
+    local sysroot="${ptx_install_destdir}${prefix_cross}"
+    local install_source="${PTXDIST_SYSROOT_CROSS}${prefix_cross}"
 
-    echo "Installing to ${install_prefix} ..."
+    echo "Installing to ${sysroot} ..."
 
-    if [ -d "${install_prefix}" ]; then
-	if [ -z "$(find "${install_prefix}" -maxdepth 0 -empty)" -a -z "${PTXDIST_FORCE}" ]; then
-	    ptxd_bailout "${install_prefix} is not empty!" \
+    if [ -d "${sysroot}" ]; then
+	if [ -z "$(find "${sysroot}" -maxdepth 0 -empty)" -a -z "${PTXDIST_FORCE}" ]; then
+	    ptxd_bailout "${sysroot} is not empty!" \
 		"Use --force to remove the existing content first."
 	fi
     fi
 
-    mkdir -p "${install_prefix}" 2>/dev/null &&
-    tmpfile="$(mktemp "${install_prefix}/touch.XXXXXXXX" 2>/dev/null)" &&
+    mkdir -p "${sysroot}" 2>/dev/null &&
+    tmpfile="$(mktemp "${sysroot}/touch.XXXXXXXX" 2>/dev/null)" &&
     rm "${tmpfile}"
     if [ $? -ne 0 ]; then
 	echo
-	echo "'${install_prefix}' is not writable."
+	echo "'${sysroot}' is not writable."
 	read -t 5 -p "Press enter to install with sudo!"
 	if [ ${?} -ne 0 ]; then
 	    echo
@@ -34,9 +34,10 @@ ptxd_make_toolchain_install() {
 	fi
 	install_helper=sudo
     fi
-    ${install_helper} rm -rf "${install_prefix}" &&
-    ${install_helper} mkdir -p $(dirname "${install_prefix}") &&
+    ${install_helper} rm -rf "${sysroot}" &&
+    ${install_helper} mkdir -p $(dirname "${sysroot}") &&
     ${install_helper} cp -a --no-preserve=ownership \
-	"${install_source}" $(dirname "${install_prefix}")
+	"${install_source}" $(dirname "${sysroot}") &&
+    ptxd_make_strip_toolchain
 }
 export -f ptxd_make_toolchain_install
