@@ -1,0 +1,69 @@
+From: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Date: Tue, 28 Sep 2021 17:53:28 +0000
+Subject: [PATCH] arm: Enable USE_ATOMIC_COMPILER_BUILTINS (BZ #24774)
+
+As per other architectures.  I have checked on a armv8 hardware with
+the following configurations:
+
+  arm-linux-gnueabihf (gcc built with --with-float=hard --with-cpu=arm926ej-s)
+  armv5-linux-gnueabihf (-march=armv5te -mfpu=vfpv3)
+  armv7-linux-gnueabihf (-march=armv7-a -mfpu=vfpv3)
+  armv7-thumb-linux-gnueabihf (-march=armv7-a -mfpu=vfpv3 -mthumb)
+  armv7-neon-linux-gnueabihf (-march=armv7-a -mfpu=neon)
+  armv7-neonhard-linux-gnueabihf (-march=armv7-a -mfpu=neon -mfloat-abi=hard)
+
+Without any regression.
+
+I haven't dig into the code, but since Linux atomic-machine.h handle
+pre-ARMv6 and ARMv6 I expect the compiler might have some small room
+to optimize.
+
+The code size also improves is most of the configurations:
+
+* master
+
+   text    data     bss     dec     hex filename
+1727801    9720   37928 1775449  1b1759	 arm-linux-gnueabihf/libc.so
+1691729    9720   37928 1739377  1a8a71	 arm-linux-gnueabihf-armv7-disable-multi-arch/libc.so
+1725509    9720   37928 1773157  1b0e65	 armv5-linux-gnueabihf/libc.so
+1700757    9720   37928 1748405  1aadb5	 armv6-linux-gnueabihf/libc.so
+1698973    9720   37928 1746621  1aa6bd	 armv6t2-linux-gnueabihf/libc.so
+1695481    9752   37928 1743161  1a9939	 armv7-linux-gnueabihf/libc.so
+1692917    9744   37928 1740589  1a8f2d	 armv7-neonhard-linux-gnueabihf/libc.so
+1692917    9744   37928 1740589  1a8f2d	 armv7-neon-linux-gnueabihf/libc.so
+1225353    9752   37928 1273033  136cc9	 armv7-thumb-linux-gnueabihf/libc.so
+
+* patched
+
+   text    data     bss     dec     hex filename
+1726805    9720   37928 1774453  1b1375 arm-linux-gnueabihf/libc.so
+1689321    9720   37928 1736969  1a8109	arm-linux-gnueabihf-armv7-disable-multi-arch/libc.so
+1724433    9720   37928 1772081  1b0a31 armv5-linux-gnueabihf/libc.so
+1698301    9720   37928 1745949  1aa41d armv6-linux-gnueabihf/libc.so
+1696525    9720   37928 1744173  1a9d2d armv6t2-linux-gnueabihf/libc.so
+1693009    9752   37928 1740689  1a8f91 armv7-linux-gnueabihf/libc.so
+1690493    9744   37928 1738165  1a85b5 armv7-neonhard-linux-gnueabihf/libc.so
+1690493    9744   37928 1738165  1a85b5 armv7-neon-linux-gnueabihf/libc.so
+1223837    9752   37928 1271517  1366dd armv7-thumb-linux-gnueabihf/libc.so
+
+The idea is eventually move all architectures to use compiler builtins.
+
+Reviewed-by: Aurelien Jarno <aurelien@aurel32.net>
+Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+---
+ sysdeps/arm/atomic-machine.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sysdeps/arm/atomic-machine.h b/sysdeps/arm/atomic-machine.h
+index 952404379748..e1f7731df017 100644
+--- a/sysdeps/arm/atomic-machine.h
++++ b/sysdeps/arm/atomic-machine.h
+@@ -17,7 +17,7 @@
+    <https://www.gnu.org/licenses/>.  */
+ 
+ #define __HAVE_64B_ATOMICS 0
+-#define USE_ATOMIC_COMPILER_BUILTINS 0
++#define USE_ATOMIC_COMPILER_BUILTINS 1
+ #define ATOMIC_EXCHANGE_USES_CAS 1
+ 
+ void __arm_link_error (void);
