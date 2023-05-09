@@ -4,8 +4,7 @@
 #tag:OSELAS.toolchain --start-number 200
 0200-gcc-i386-use-pure64-CLFS-patch.patch
 0201-aarch64-change-paths-for-pure64.patch
-0202-mips64el-set-default-ABI-to-N64.patch
-0203-mips64el-change-paths-for-pure64.patch
+0202-mips64el-change-paths-for-pure64.patch
 #tag:gentoo --start-number 300
 0300-libstdc-pic.patch
-# 39ffb68ba8efb4cfea8ee32a9cf8f9f6  - git-ptx-patches magic
+# d153100fabd1027251e52223506f7bdf  - git-ptx-patches magic
