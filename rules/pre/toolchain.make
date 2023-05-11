@@ -63,6 +63,7 @@ PTXDIST_HOST_CPPFLAGS := \
 	$(addprefix -fdebug-prefix-map=,$(TOOLCHAIN_CROSS_DEBUG_MAP))
 
 TOOLCHAIN_CROSS_DEBUG_FLAGS := \
+	-O2 \
 	-g3 \
 	-gno-record-gcc-switches
 
