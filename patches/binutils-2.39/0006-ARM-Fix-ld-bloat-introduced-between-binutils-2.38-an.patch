@@ -1,0 +1,54 @@
+From: Hans-Peter Nilsson <hp@axis.com>
+Date: Tue, 3 Jan 2023 03:19:54 +0100
+Subject: [PATCH] ARM: Fix ld bloat introduced between binutils-2.38 and 2.39
+
+Since commit 9833b7757d24, "PR28824, relro security issues",
+ELF_MAXPAGESIZE matters much more, with regards to layout of
+the linked file.  That commit fixed an actual bug, but also
+exposes a problem for targets were that value is too high.
+
+For example, for ARM(32, a.k.a. "Aarch32") specifically
+bfd_arch_arm, it's set to 64 KiB, making all Linux(/GNU)
+targets pay an extra amount of up to 60 KiB of bloat in
+DSO:s and executables.  This matters when there are many
+such files, and where storage is expensive.
+
+It's *mostly* bloat when using a Linux kernel, as ARM(32) is
+a good example of an target where ELF_MAXPAGESIZE is set to
+an extreme value for an obscure corner-case.  The ARM
+(32-bit) kernel has 4 KiB pages, has had that value forever,
+and can't be configured to any other value.  The use-case is
+IIUC "Aarch32" emulation on an "Aarch64" (arm64) kernel, but
+not just that, but a setup where the Linux page-size is
+configured to something other than the *default* 4 KiB.  Not
+sure there actually any such systems in use, again with
+both Aarch32 compatibility support and a non-4KiB pagesize,
+with all the warnings in the kernel config and requiring the
+"EXPERT" level set on.
+
+So, let's do like x86-64 in a2267dbfc9e1 "x86-64: Use only
+one default max-page-size" and set ELF_MAXPAGESIZE to 4096.
+
+bfd:
+	* elf32-arm.c (ELF_MAXPAGESIZE): Always set to 0x1000.
+(cherry picked from commit 1a26a53a0dee39106ba58fcb15496c5f13074652)
+---
+ bfd/elf32-arm.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/bfd/elf32-arm.c b/bfd/elf32-arm.c
+index 0852b38ae4cf..835c4ceb7f48 100644
+--- a/bfd/elf32-arm.c
++++ b/bfd/elf32-arm.c
+@@ -20249,11 +20249,7 @@ elf32_arm_backend_symbol_processing (bfd *abfd, asymbol *sym)
+ #define ELF_ARCH			bfd_arch_arm
+ #define ELF_TARGET_ID			ARM_ELF_DATA
+ #define ELF_MACHINE_CODE		EM_ARM
+-#ifdef __QNXTARGET__
+ #define ELF_MAXPAGESIZE			0x1000
+-#else
+-#define ELF_MAXPAGESIZE			0x10000
+-#endif
+ #define ELF_COMMONPAGESIZE		0x1000
+ 
+ #define bfd_elf32_mkobject			elf32_arm_mkobject

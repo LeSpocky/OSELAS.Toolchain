@@ -1,0 +1,88 @@
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Tue, 27 Dec 2022 11:41:11 -0800
+Subject: [PATCH] x86-64: Allocate input section memory if needed
+
+When --no-keep-memory is used, the input section memory may not be cached.
+Allocate input section memory for -z pack-relative-relocs if needed.
+
+bfd/
+
+	PR ld/29939
+	* elfxx-x86.c (elf_x86_size_or_finish_relative_reloc): Allocate
+	input section memory if needed.
+
+ld/
+
+	PR ld/29939
+	* testsuite/ld-elf/dt-relr-2i.d: New test.
+
+(cherry picked from commit 9eb71a53bf36a370e21a6fbbb21e2726f64b0fd0)
+---
+ bfd/elfxx-x86.c                  | 25 +++++++++++++++++++++++--
+ ld/testsuite/ld-elf/dt-relr-2i.d | 17 +++++++++++++++++
+ 2 files changed, 40 insertions(+), 2 deletions(-)
+ create mode 100644 ld/testsuite/ld-elf/dt-relr-2i.d
+
+diff --git a/bfd/elfxx-x86.c b/bfd/elfxx-x86.c
+index 7fb972752b34..b32f2422e1b3 100644
+--- a/bfd/elfxx-x86.c
++++ b/bfd/elfxx-x86.c
+@@ -1541,12 +1541,33 @@ elf_x86_size_or_finish_relative_reloc
+ 		    }
+ 		  else
+ 		    {
++		      bfd_byte *contents;
++
+ 		      if (rel.r_offset >= sec->size)
+ 			abort ();
++
++		      if (elf_section_data (sec)->this_hdr.contents
++			  != NULL)
++			contents
++			  = elf_section_data (sec)->this_hdr.contents;
++		      else
++			{
++			  if (!bfd_malloc_and_get_section (sec->owner,
++							   sec,
++							   &contents))
++			    info->callbacks->einfo
++			      /* xgettext:c-format */
++			      (_("%F%P: %pB: failed to allocate memory for section `%pA'\n"),
++			       info->output_bfd, sec);
++
++			  /* Cache the section contents for
++			     elf_link_input_bfd.  */
++			  elf_section_data (sec)->this_hdr.contents
++			    = contents;
++			}
+ 		      htab->elf_write_addend
+ 			(info->output_bfd, outrel->r_addend,
+-			 (elf_section_data (sec)->this_hdr.contents
+-			  + rel.r_offset));
++			 contents + rel.r_offset);
+ 		    }
+ 		}
+ 	    }
+diff --git a/ld/testsuite/ld-elf/dt-relr-2i.d b/ld/testsuite/ld-elf/dt-relr-2i.d
+new file mode 100644
+index 000000000000..ed0ef9ccded0
+--- /dev/null
++++ b/ld/testsuite/ld-elf/dt-relr-2i.d
+@@ -0,0 +1,17 @@
++#source: dt-relr-2.s
++#ld: -e _start -pie --no-keep-memory $DT_RELR_LDFLAGS
++#readelf: -rW -d
++#target: [supports_dt_relr]
++
++#...
++ 0x[0-9a-f]+ \(RELR\)    +0x[0-9a-f]+
++ 0x[0-9a-f]+ \(RELRSZ\)  +(8|16) \(bytes\)
++ 0x[0-9a-f]+ \(RELRENT\) +(4|8) \(bytes\)
++#...
++Relocation section '\.rel(a|)\.dyn' at offset 0x[0-9a-f]+ contains 1 entry:
++#...
++[0-9a-f]+ +[0-9a-f]+ +R_.*_(RELATIVE|UADDR.*) .*
++#...
++Relocation section '\.relr\.dyn' at offset 0x[0-9a-f]+ contains 2 entries:
++  4 offsets
++#pass

@@ -1,0 +1,186 @@
+From: Alan Modra <amodra@gmail.com>
+Date: Thu, 11 Aug 2022 09:51:03 +0930
+Subject: [PATCH] PR29466, APP/NO_APP with .linefile
+
+Commit 53f2b36a54b9 exposed a bug in sb_scrub_and_add_sb that could
+result in losing input.  If scrubbing results in expansion past the
+holding capacity of do_scrub_chars output buffer, then do_scrub_chars
+stashes the extra input for the next call.  That call never came
+because sb_scrub_and_add_sb wrongly decided it was done.  Fix that by
+allowing sb_scrub_and_add_sb to see whether there is pending input.
+Also allow a little extra space so that in most cases we won't need
+to resize the output buffer.
+
+sb_scrub_and_add_sb also limited output to the size of the input,
+rather than the actual output buffer size.  Fixing that resulted in a
+fail of gas/testsuite/macros/dot with an extra warning: "end of file
+not at end of a line; newline inserted".  OK, so the macro in dot.s
+really does finish without end-of-line.  Apparently the macro
+expansion code relied on do_scrub_chars returning early.  So fix that
+too by adding a newline if needed in macro_expand_body.
+
+	PR 29466
+	* app.c (do_scrub_pending): New function.
+	* as.h: Declare it.
+	* input-scrub.c (input_scrub_include_sb): Add extra space for
+	two .linefile directives.
+	* sb.c (sb_scrub_and_add_sb): Take into account pending input.
+	Allow output to max.
+	* macro.c (macro_expand_body): Add terminating newline.
+	* testsuite/config/default.exp (SIZE, SIZEFLAGS): Define.
+	* testsuite/gas/macros/app5.d,
+	* testsuite/gas/macros/app5.s: New test.
+	* testsuite/gas/macros/macros.exp: Run it.
+
+(cherry picked from commit 4d74aab7aa562fe79d4669cdad0c32610531cbc0)
+---
+ gas/app.c                           | 13 +++++++++++++
+ gas/as.h                            |  1 +
+ gas/input-scrub.c                   |  6 ++++--
+ gas/macro.c                         |  2 ++
+ gas/sb.c                            |  5 +++--
+ gas/testsuite/config/default.exp    |  8 ++++++++
+ gas/testsuite/gas/macros/app5.d     |  6 ++++++
+ gas/testsuite/gas/macros/app5.s     |  5 +++++
+ gas/testsuite/gas/macros/macros.exp |  1 +
+ 9 files changed, 43 insertions(+), 4 deletions(-)
+ create mode 100644 gas/testsuite/gas/macros/app5.d
+ create mode 100644 gas/testsuite/gas/macros/app5.s
+
+diff --git a/gas/app.c b/gas/app.c
+index a3ad146625ca..096829fd5414 100644
+--- a/gas/app.c
++++ b/gas/app.c
+@@ -1537,3 +1537,16 @@ do_scrub_chars (size_t (*get) (char *, size_t), char *tostart, size_t tolen)
+     last_char = to[-1];
+   return to - tostart;
+ }
++
++/* Return amount of pending input.  */
++
++size_t
++do_scrub_pending (void)
++{
++  size_t len = 0;
++  if (saved_input)
++    len += saved_input_len;
++  if (state == -1)
++    len += strlen (out_string);
++  return len;
++}
+diff --git a/gas/as.h b/gas/as.h
+index 4fac7d21a320..58b93bbc9bed 100644
+--- a/gas/as.h
++++ b/gas/as.h
+@@ -460,6 +460,7 @@ void   input_scrub_insert_file (char *);
+ char * input_scrub_new_file (const char *);
+ char * input_scrub_next_buffer (char **bufp);
+ size_t do_scrub_chars (size_t (*get) (char *, size_t), char *, size_t);
++size_t do_scrub_pending (void);
+ bool   scan_for_multibyte_characters (const unsigned char *, const unsigned char *, bool);
+ int    gen_to_words (LITTLENUM_TYPE *, int, long);
+ int    had_err (void);
+diff --git a/gas/input-scrub.c b/gas/input-scrub.c
+index ec0b007c77a1..44e4bdca521c 100644
+--- a/gas/input-scrub.c
++++ b/gas/input-scrub.c
+@@ -278,9 +278,11 @@ input_scrub_include_sb (sb *from, char *position, enum expansion expansion)
+ 
+   next_saved_file = input_scrub_push (position);
+ 
+-  /* Allocate sufficient space: from->len + optional newline.  */
++  /* Allocate sufficient space: from->len plus optional newline
++     plus two ".linefile " directives, plus a little more for other
++     expansion.  */
+   newline = from->len >= 1 && from->ptr[0] != '\n';
+-  sb_build (&from_sb, from->len + newline);
++  sb_build (&from_sb, from->len + newline + 2 * sizeof (".linefile") + 30);
+   if (expansion == expanding_repeat && from_sb_expansion >= expanding_macro)
+     expansion = expanding_nested;
+   from_sb_expansion = expansion;
+diff --git a/gas/macro.c b/gas/macro.c
+index 3aba78f6bfee..c9db444049bb 100644
+--- a/gas/macro.c
++++ b/gas/macro.c
+@@ -1056,6 +1056,8 @@ macro_expand_body (sb *in, sb *out, formal_entry *formals,
+       loclist = f;
+     }
+ 
++  if (!err && (out->len == 0 || out->ptr[out->len - 1] != '\n'))
++    sb_add_char (out, '\n');
+   return err;
+ }
+ 
+diff --git a/gas/sb.c b/gas/sb.c
+index c44016a0338f..e83a5f524f80 100644
+--- a/gas/sb.c
++++ b/gas/sb.c
+@@ -119,11 +119,12 @@ sb_scrub_and_add_sb (sb *ptr, sb *s)
+      So we loop until the input S is consumed.  */
+   while (1)
+     {
+-      size_t copy = s->len - (scrub_position - s->ptr);
++      size_t copy = s->len - (scrub_position - s->ptr) + do_scrub_pending ();
+       if (copy == 0)
+ 	break;
+       sb_check (ptr, copy);
+-      ptr->len += do_scrub_chars (scrub_from_sb, ptr->ptr + ptr->len, copy);
++      ptr->len += do_scrub_chars (scrub_from_sb, ptr->ptr + ptr->len,
++				  ptr->max - ptr->len);
+     }
+ 
+   sb_to_scrub = 0;
+diff --git a/gas/testsuite/config/default.exp b/gas/testsuite/config/default.exp
+index 5a3dda915f77..21859d961d9f 100644
+--- a/gas/testsuite/config/default.exp
++++ b/gas/testsuite/config/default.exp
+@@ -52,6 +52,14 @@ if ![info exists NMFLAGS] then {
+     set NMFLAGS {}
+ }
+ 
++if ![info exists SIZE] then {
++    set SIZE [findfile $base_dir/size]
++}
++
++if ![info exists SIZEFLAGS] then {
++    set SIZEFLAGS ""
++}
++
+ if ![info exists OBJCOPY] then {
+     set OBJCOPY [findfile $base_dir/../../binutils/objcopy]
+ }
+diff --git a/gas/testsuite/gas/macros/app5.d b/gas/testsuite/gas/macros/app5.d
+new file mode 100644
+index 000000000000..0a1483ccc3a3
+--- /dev/null
++++ b/gas/testsuite/gas/macros/app5.d
+@@ -0,0 +1,6 @@
++#name: APP with linefile
++#xfail: tic30-*-*
++#size: -G
++# pr29466 just check that the test assembles
++
++#pass
+diff --git a/gas/testsuite/gas/macros/app5.s b/gas/testsuite/gas/macros/app5.s
+new file mode 100644
+index 000000000000..a960ae223ba4
+--- /dev/null
++++ b/gas/testsuite/gas/macros/app5.s
+@@ -0,0 +1,5 @@
++#NO_APP
++#APP
++# 5 "foo.c" 1
++# 0 "" 2
++#NO_APP
+diff --git a/gas/testsuite/gas/macros/macros.exp b/gas/testsuite/gas/macros/macros.exp
+index 915c45d74f66..7a45af4a3086 100644
+--- a/gas/testsuite/gas/macros/macros.exp
++++ b/gas/testsuite/gas/macros/macros.exp
+@@ -70,6 +70,7 @@ run_dump_test app2
+ run_dump_test app3
+ remote_download host "$srcdir/$subdir/app4b.s"
+ run_dump_test app4
++run_dump_test app5
+ 
+ run_list_test badarg ""
+ 
