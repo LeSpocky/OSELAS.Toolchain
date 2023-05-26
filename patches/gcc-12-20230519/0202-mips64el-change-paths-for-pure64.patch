@@ -9,10 +9,10 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/gcc/config/mips/mips.h b/gcc/config/mips/mips.h
-index 858bbba3a369..59e20b1a250c 100644
+index 02562d3b6442..6c1ff0b7c40d 100644
 --- a/gcc/config/mips/mips.h
 +++ b/gcc/config/mips/mips.h
-@@ -3450,8 +3450,8 @@ struct GTY(())  machine_function {
+@@ -3446,8 +3446,8 @@ struct GTY(())  machine_function {
  #define STANDARD_STARTFILE_PREFIX_1 "/lib32/"
  #define STANDARD_STARTFILE_PREFIX_2 "/usr/lib32/"
  #elif MIPS_ABI_DEFAULT == ABI_64
