@@ -23,9 +23,9 @@ HOST_FAKE_MAKEINFO_LICENSE	:= ignore
 
 $(STATEDIR)/host-fake-makeinfo.install:
 	@$(call targetinfo)
-	install -d $(HOST_FAKE_MAKEINFO_PKGDIR)/bin
-	echo 'if [ "$${1}" == "--version" ]; then  echo "makeinfo (GNU texinfo) 5.2"; fi' > $(HOST_FAKE_MAKEINFO_PKGDIR)/bin/makeinfo
-	chmod +x $(HOST_FAKE_MAKEINFO_PKGDIR)/bin/makeinfo
+	install -d $(HOST_FAKE_MAKEINFO_PKGDIR)/usr/bin
+	echo 'if [ "$${1}" == "--version" ]; then  echo "makeinfo (GNU texinfo) 5.2"; fi' > $(HOST_FAKE_MAKEINFO_PKGDIR)/usr/bin/makeinfo
+	chmod +x $(HOST_FAKE_MAKEINFO_PKGDIR)/usr/bin/makeinfo
 	@$(call touch)
 
 # vim: syntax=make
