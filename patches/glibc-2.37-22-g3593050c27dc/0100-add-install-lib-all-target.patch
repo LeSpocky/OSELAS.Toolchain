@@ -16,10 +16,10 @@ Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
  1 file changed, 6 insertions(+)
 
 diff --git a/Makerules b/Makerules
-index d1e139d03c1c..ffcdf7a129b0 100644
+index fae6b626e661..7f0b7e343176 100644
 --- a/Makerules
 +++ b/Makerules
-@@ -933,6 +933,12 @@ installed-libcs := $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
+@@ -932,6 +932,12 @@ installed-libcs := $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
  			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
  						     $(libprefix)$(libc-name)))
  
