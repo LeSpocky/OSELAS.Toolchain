@@ -34,8 +34,8 @@ CROSS_LLVM_CMAKE_MODULES_URL		:= \
 	https://releases.llvm.org/$(CROSS_LLVM_CMAKE_MODULES_VERSION)/$(CROSS_LLVM_CMAKE_MODULES).$(CROSS_LLVM_CMAKE_MODULES_SUFFIX) \
 	https://github.com/llvm/llvm-project/releases/download/llvmorg-$(CROSS_LLVM_CMAKE_MODULES_VERSION)/$(CROSS_LLVM_CMAKE_MODULES).$(CROSS_LLVM_CMAKE_MODULES_SUFFIX)
 CROSS_LLVM_CMAKE_MODULES_SOURCE		:= $(SRCDIR)/$(CROSS_LLVM_CMAKE_MODULES).$(CROSS_LLVM_SUFFIX)
-CROSS_LLVM_CMAKE_MODULES_DIR		:= $(CROSS_BUILDDIR)/$(CROSS_LLVM)/cmake/modules
-CROSS_LLVM_CMAKE_MODULES_STRIP_LEVEL	:= 2
+CROSS_LLVM_CMAKE_MODULES_DIR		:= $(CROSS_BUILDDIR)/cmake
+CROSS_LLVM_CMAKE_MODULES_STRIP_LEVEL	:= 1
 $(CROSS_LLVM_CMAKE_MODULES_SOURCE)	:= CROSS_LLVM_CMAKE_MODULES
 CROSS_LLVM_SOURCES			+= $(CROSS_LLVM_CMAKE_MODULES_SOURCE)
 
@@ -106,6 +106,13 @@ $(STATEDIR)/cross-llvm.extract:
 	@$(call clean, $(CROSS_LLVM_DIR))
 	@$(call extract, CROSS_LLVM)
 	@$(call extract, CROSS_LLVM_CMAKE_MODULES)
+	@$(call touch)
+
+$(STATEDIR)/cross-llvm.install:
+	@$(call targetinfo)
+	@$(call world/install, CROSS_LLVM)
+	@install -v -m644 -D -t $(CROSS_LLVM_PKGDIR)/usr/lib/cmake/llvm \
+		$(CROSS_LLVM_DIR)-build/lib/cmake/llvm/*
 	@$(call touch)
 
 # vim: syntax=make
