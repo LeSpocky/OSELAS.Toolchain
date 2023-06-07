@@ -55,6 +55,7 @@ CROSS_BINUTILS_CONF_OPT		:= \
 	\
 	--enable-gold \
 	--enable-ld=default \
+	--disable-gprofng \
 	--disable-werror \
 	--disable-nls \
 	\
