@@ -38,6 +38,12 @@ CROSS_BINUTILS_CONF_ENV	:= \
 	CFLAGS="-ggdb3 -O2" \
 	CXXFLAGS="-ggdb3 -O2"
 
+ifneq ($(PTXCONF_ARCH_ARM64)$(PTXCONF_ARCH_X86_64)$(PTXCONF_ARCH_MIPS64),)
+CROSS_BINUTILS_LIBDIR := lib64
+else
+CROSS_BINUTILS_LIBDIR := lib
+endif
+
 #
 # autoconf
 #
@@ -45,7 +51,7 @@ CROSS_BINUTILS_CONF_TOOL	:= autoconf
 CROSS_BINUTILS_CONF_OPT		:= \
 	$(PTX_HOST_CROSS_AUTOCONF) \
 	$(PTXCONF_TOOLCHAIN_CONFIG_SYSROOT) \
-	--with-lib-path="=/../$(PTX_TOUPLE_TARGET)/lib:=/lib:=/usr/lib" \
+	--with-lib-path="=/../$(PTX_TOUPLE_TARGET)/$(CROSS_BINUTILS_LIBDIR):=/$(CROSS_BINUTILS_LIBDIR):=/usr/$(CROSS_BINUTILS_LIBDIR)" \
 	\
 	--enable-gold \
 	--enable-ld=default \

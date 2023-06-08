@@ -164,6 +164,10 @@ CROSS_GCC_MAKE_OPT := \
 $(STATEDIR)/cross-gcc.install: $(STATEDIR)/cross-gcc.report
 	@$(call targetinfo)
 	@$(call world/install, CROSS_GCC)
+ifdef PTXCONF_CROSS_GCC_LANG_CXX
+	@test -e $(CROSS_GCC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/$(PTXCONF_GNU_TARGET)/$(CROSS_BINUTILS_LIBDIR)/libstdc++.so.6 || \
+		ptxd_bailout "CROSS_BINUTILS_LIBDIR incorrect!"
+endif
 
 	@$(call world/env, CROSS_GCC) \
 		pkg_license_target=gcclibs \
