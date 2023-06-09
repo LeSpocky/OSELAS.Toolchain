@@ -13,6 +13,9 @@ choice
 	config ARCH_MIPS
 		bool "mips   "
 
+	config ARCH_MIPS64
+		bool "mips64 "
+
 	config ARCH_POWERPC
 		bool "powerpc"
 
@@ -47,6 +50,7 @@ config ARCH
 	default "i386"		if ARCH_I386
 	default "x86_64"	if ARCH_X86_64
 	default "mips"		if ARCH_MIPS
+	default "mips"		if ARCH_MIPS64
 	default "powerpc"	if ARCH_POWERPC
 	default "riscv"		if ARCH_RISCV64
 

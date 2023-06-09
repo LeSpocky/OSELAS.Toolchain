@@ -126,6 +126,9 @@ fixup()
 	i?86*)
 	    PTXCONF_ARCH_I386=y
 	    ;;
+	mips64*)
+	    PTXCONF_ARCH_MIPS64=y
+	    ;;
 	mips*)
 	    PTXCONF_ARCH_MIPS=y
 	    ;;
