@@ -41,8 +41,6 @@ GLIBC_ENV := \
 	BUILD_CC=$(HOSTCC) \
 	MAKEINFO=: \
 	\
-	libc_cv_slibdir='/lib' \
-	\
 	ac_cv_path_BASH_SHELL=/bin/bash \
 	ac_cv_sizeof_long_double=$(PTXCONF_SIZEOF_LONG_DOUBLE)
 
@@ -86,6 +84,8 @@ GLIBC_CXXFLAGS	:= $(call ptx/toolchain-cross-debug-flags, GLIBC)
 $(STATEDIR)/glibc.install: $(STATEDIR)/glibc.report
 	@$(call targetinfo)
 	@$(call world/install, GLIBC)
+	@test -e $(GLIBC_PKGDIR)/usr/$(GLIBC_CRT_LIBDIR)/crt1.o || \
+		ptxd_bailout "GLIBC_CRT_LIBDIR incorrect!"
 
 	@$(call world/env, GLIBC) ptxd_make_world_copy_license
 #

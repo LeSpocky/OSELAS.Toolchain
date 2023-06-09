@@ -38,8 +38,7 @@ GLIBC_CRT_ENV := \
 	ac_cv_path_GREP=grep \
 	ac_cv_sizeof_long_double=$(PTXCONF_SIZEOF_LONG_DOUBLE) \
 	libc_cv_c_cleanup=yes \
-	libc_cv_forced_unwind=yes \
-	libc_cv_slibdir='/lib'
+	libc_cv_forced_unwind=yes
 
 #
 # autoconf
@@ -52,12 +51,20 @@ GLIBC_CRT_MAKE_OPT	:= csu/subdir_lib
 # Install
 # ----------------------------------------------------------------------------
 
+GLIBC_CRT_LIBDIR := lib
+ifdef PTXCONF_ARCH_RISCV64
+GLIBC_CRT_LIBDIR := lib64/lp64d
+endif
+ifneq ($(PTXCONF_ARCH_ARM64)$(PTXCONF_ARCH_X86_64)$(PTXCONF_ARCH_MIPS64),)
+GLIBC_CRT_LIBDIR := lib64
+endif
+
 $(STATEDIR)/glibc-crt.install:
 	@$(call targetinfo)
-	@mkdir -vp $(SYSROOT)/usr/lib
+	@mkdir -vp $(SYSROOT)/usr/$(GLIBC_CRT_LIBDIR)
 	@for file in {S,}crt1.o crt{i,n}.o; do \
 		$(INSTALL) -v -m 644 $(GLIBC_CRT_BUILDDIR)/csu/$$file \
-			$(SYSROOT)/usr/lib/$$file || exit 1; \
+			$(SYSROOT)/usr/$(GLIBC_CRT_LIBDIR)/$$file || exit 1; \
 	done
 	@$(call touch)
 
