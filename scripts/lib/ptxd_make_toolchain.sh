@@ -12,10 +12,10 @@ ptxd_make_toolchain_cleanup() {
 
     # packages install to pkgdir anyways and this avoid empty directories
     # in the final toolchain
-    rmdir --ignore-fail-on-non-empty \
-	{"${sysroot_cross}","${sysroot_target}"{,/usr}}/{etc,lib,{,s}bin,include,{,share/}man/{man*,},share} 2>/dev/null
-    # errors may occur because the dirs may not exist (e.g. for 'ptxdist print').
-    true
+    if [ -d "${sysroot_cross}" ]; then
+        rmdir --ignore-fail-on-non-empty \
+	    {"${sysroot_cross}","${sysroot_target}"}/{etc,usr/{lib,{,s}bin,include,{,share/}{man/{man*,},}}} &&
+    fi
 }
 
 ptxd_make_toolchain_cleanup

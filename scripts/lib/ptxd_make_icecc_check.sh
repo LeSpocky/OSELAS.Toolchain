@@ -16,7 +16,8 @@ ptxd_make_icecc_check() {
 
     # old icerun versions cannot handle relative paths
     sysroot_host="$(ptxd_get_ptxconf PTXCONF_SYSROOT_HOST)" &&
-    sysroot_host=".${sysroot_host#${PTXDIST_WORKSPACE}}"
+    sysroot_host=".${sysroot_host#${PTXDIST_WORKSPACE}}" &&
+    mkdir -p "${sysroot_host}/bin" &&
     ln -s /bin/true "${sysroot_host}/bin/test-icerun" &&
     icerun "${sysroot_host}/bin/test-icerun" || {
 	echo "Disabling broken icerun!"
