@@ -13,6 +13,7 @@ config _ptxconfig_MAGIC__
 config BUILD_TOOLCHAIN
 	bool
 	select HOST_CHRPATH
+	select HOST_FAKEROOT
 	default y
 
 config NO_PLATFORM
