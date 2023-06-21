@@ -34,6 +34,9 @@ choice
 	config ARCH_RISCV64
 		bool "RISCV64"
 
+	config ARCH_LOONGARCH
+		bool "LoongArch"
+
 	help
 	  This option specifies the toolchain architecture. It corresponds to
 	  the arch/ directory of the Linux kernel.
@@ -53,6 +56,7 @@ config ARCH
 	default "mips"		if ARCH_MIPS64
 	default "powerpc"	if ARCH_POWERPC
 	default "riscv"		if ARCH_RISCV64
+	default "loongarch"	if ARCH_LOONGARCH
 
 config GNU_TARGET
 	string
@@ -67,5 +71,5 @@ config GNU_TARGET
 config SIZEOF_LONG_DOUBLE
 	string
 	default "12" if ARCH_I386
-	default "16" if ARCH_X86_64 || ARCH_ARM64 || ARCH_RISCV64
+	default "16" if ARCH_X86_64 || ARCH_ARM64 || ARCH_RISCV64 || ARCH_LOONGARCH
 	default "8"
