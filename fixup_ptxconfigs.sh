@@ -112,6 +112,9 @@ fixup()
 	riscv64*)
 	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__riscv_atomic -D__riscv_xlen=64 -D__riscv_flen=64 -D__riscv_float_abi_double"
 	    ;;
+	loongarch64*)
+	    PTXCONF_GLIBC_HEADERS_FAKE_CROSS="-D__loongarch -D__loongarch_lp64 -D__loongarch_double_float"
+	    ;;
 	*)
 	    ;;
     esac
@@ -143,6 +146,9 @@ fixup()
 	    ;;
 	riscv64*)
 	    PTXCONF_ARCH_RISCV64=y
+	    ;;
+	loongarch64*)
+	    PTXCONF_ARCH_LOONGARCH=y
 	    ;;
 	*)
 	    echo "unsupported GNU_TARGET: ${PTXCONF_GNU_TARGET}"
@@ -249,6 +255,9 @@ fixup()
 	    #FIXME
 	    ;;
 	riscv64-linux-gnu)
+	    #FIXME
+	    ;;
+	loongarch64-linux-gnu)
 	    #FIXME
 	    ;;
 
