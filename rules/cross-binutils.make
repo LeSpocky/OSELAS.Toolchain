@@ -53,7 +53,7 @@ CROSS_BINUTILS_CONF_OPT		:= \
 	$(PTXCONF_TOOLCHAIN_CONFIG_SYSROOT) \
 	--with-lib-path="=/../$(PTX_TOUPLE_TARGET)/$(CROSS_BINUTILS_LIBDIR):=/$(CROSS_BINUTILS_LIBDIR):=/usr/$(CROSS_BINUTILS_LIBDIR)" \
 	\
-	--enable-gold \
+	--$(call ptx/endis,PTXCONF_CROSS_BINUTILS_GOLD)-gold \
 	--enable-ld=default \
 	--disable-gprofng \
 	--disable-werror \

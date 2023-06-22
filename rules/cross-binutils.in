@@ -30,4 +30,9 @@ config CROSS_BINUTILS_LICENSE_FILES
 config CROSS_BINUTILS_LD_REAL
 	bool
 
+config CROSS_BINUTILS_GOLD
+	bool
+	default y
+	prompt "build gold linker"
+
 endif
