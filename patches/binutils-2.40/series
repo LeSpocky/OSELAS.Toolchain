@@ -18,4 +18,5 @@
 0015-lto-Don-t-add-indirect-symbols-for-versioned-aliases.patch
 0016-PR30536-ppc64el-gold-linker-produces-unusable-clang-.patch
 0017-powerpc-DT_RELACOUNT.patch
-# fbfe50c604ae148287cc2bec0b4e99e5  - git-ptx-patches magic
+0018-PR30697-ppc32-mix-of-local-dynamic-and-global-dynami.patch
+# f7237da75dc34824abcf5032ef617223  - git-ptx-patches magic
