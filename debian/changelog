@@ -1,3 +1,9 @@
+oselas.toolchain (2022.10.2-1) unstable; urgency=medium
+
+  * new upstream version
+
+ -- Michael Olbrich <m.olbrich@pengutronix.de>  Tue, 21 Nov 2023 08:04:25 +0100
+
 oselas.toolchain (2022.10.1-1) unstable; urgency=medium
 
   * new upstream version
