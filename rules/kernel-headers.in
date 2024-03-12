@@ -1,6 +1,7 @@
 # config for kernel-headers
 
 menuconfig KERNEL_HEADERS
+	select HOST_SYSTEM_RSYNC	if KERNEL_HEADERS_SANITIZED
 	prompt "kernel headers              "
 	bool
 
