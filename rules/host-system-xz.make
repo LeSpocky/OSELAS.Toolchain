@@ -18,7 +18,7 @@ HOST_SYSTEM_XZ_LICENSE	:= ignore
 
 $(STATEDIR)/host-system-xz.prepare:
 	@$(call targetinfo)
-	@echo "Checking for expat ..."
+	@echo "Checking for xz (lzma) ..."
 	@pkg-config liblzma || \
 		ptxd_bailout "xz (lzma) development files not found!" \
 		"Please install liblzma-dev (debian) or xz-devel (fedora)"
