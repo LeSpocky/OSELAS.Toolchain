@@ -1,6 +1,7 @@
 menuconfig CROSS_GDB
 	bool "cross gdb                   "
 	select HOST_SYSTEM_PYTHON3
+	select HOST_SYSTEM_PYTHON3_DEV
 	select HOST_SYSTEM_EXPAT
 	select HOST_SYSTEM_GMP
 	select HOST_SYSTEM_ZLIB
