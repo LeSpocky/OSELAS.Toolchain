@@ -1,0 +1,36 @@
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Sun, 8 Sep 2024 17:27:00 -0700
+Subject: [PATCH] bfd: Pass true to ld_plugin_object_p
+
+Since linker calls bfd_plugin_object_p, which calls ld_plugin_object_p,
+only for command-line input objects, pass true to ld_plugin_object_p so
+that the same input IR file won't be included twice if the new LTO hook,
+LDPT_REGISTER_CLAIM_FILE_HOOK_V2 isn't used.
+
+	PR ld/32153
+	* plugin.c (bfd_plugin_object_p): Pass true to ld_plugin_object_p.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+(cherry picked from commit c839a44c39161c9932d58c28c2949ab3bb94ea6f)
+---
+ bfd/plugin.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/bfd/plugin.c b/bfd/plugin.c
+index f6c6fdbee69a..de2137fddc49 100644
+--- a/bfd/plugin.c
++++ b/bfd/plugin.c
+@@ -596,8 +596,12 @@ load_plugin (bfd *abfd)
+ static bfd_cleanup
+ bfd_plugin_object_p (bfd *abfd)
+ {
++  /* Since ld_plugin_object_p is called only for linker command-line input
++     objects, pass true to ld_plugin_object_p so that the same input IR
++     file won't be included twice if the LDPT_REGISTER_CLAIM_FILE_HOOK_V2
++     isn't used.  */
+   if (ld_plugin_object_p)
+-    return ld_plugin_object_p (abfd, false);
++    return ld_plugin_object_p (abfd, true);
+ 
+   if (abfd->plugin_format == bfd_plugin_unknown && !load_plugin (abfd))
+     return NULL;

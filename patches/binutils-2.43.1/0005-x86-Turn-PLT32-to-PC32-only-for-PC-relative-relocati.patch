@@ -1,0 +1,133 @@
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Sun, 22 Sep 2024 17:06:45 +0800
+Subject: [PATCH] x86: Turn PLT32 to PC32 only for PC-relative relocations
+
+commit 292676c15a615b5a95bede9ee91004d3f7ee7dfd
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Thu Feb 13 13:44:17 2020 -0800
+
+    x86: Resolve PLT32 reloc aganst local symbol to section
+
+resolved PLT32 relocation against local symbol to section and
+
+commit 2585b7a5ce5830e60a089aa2316a329558902f0c
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Sun Jul 19 06:51:19 2020 -0700
+
+    x86: Change PLT32 reloc against section to PC32
+
+turned PLT32 relocation against section into PC32 relocation.  But these
+transformations are valid only for PC-relative relocations.  Add fx_pcrel
+check for PC-relative relocations when performing these transformations
+to keep PLT32 relocation in `movq $foo@PLT, %rax`.
+
+gas/
+
+	PR gas/32196
+	* config/tc-i386.c (tc_i386_fix_adjustable): Return fixP->fx_pcrel
+	for PLT32 relocations.
+	(i386_validate_fix): Turn PLT32 relocation into PC32 relocation
+	only if fixp->fx_pcrel is set.
+	* testsuite/gas/i386/reloc32.d: Updated.
+	* testsuite/gas/i386/reloc64.d: Likewise.
+	* testsuite/gas/i386/reloc32.s: Add PR gas/32196 test.
+	* testsuite/gas/i386/reloc64.s: Likewise.
+
+ld/
+
+	PR gas/32196
+	* testsuite/ld-x86-64/plt3.s: New file.
+	* testsuite/ld-x86-64/x86-64.exp: Run plt3.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+(cherry picked from commit 1b714c14e40f37ea8ea02a4998c4d95f25aff7f3)
+---
+ gas/config/tc-i386.c             | 11 ++++++++++-
+ gas/testsuite/gas/i386/reloc32.d |  1 +
+ gas/testsuite/gas/i386/reloc32.s |  7 +++++++
+ gas/testsuite/gas/i386/reloc64.d |  1 +
+ gas/testsuite/gas/i386/reloc64.s |  2 ++
+ 5 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/gas/config/tc-i386.c b/gas/config/tc-i386.c
+index 9e68ddfe0513..bed54f18e8f7 100644
+--- a/gas/config/tc-i386.c
++++ b/gas/config/tc-i386.c
+@@ -3806,6 +3806,11 @@ tc_i386_fix_adjustable (fixS *fixP)
+       || fixP->fx_r_type == BFD_RELOC_VTABLE_INHERIT
+       || fixP->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
+     return 0;
++  /* Resolve PLT32 relocation against local symbol to section only for
++     PC-relative relocations.  */
++  if (fixP->fx_r_type == BFD_RELOC_386_PLT32
++      || fixP->fx_r_type == BFD_RELOC_X86_64_PLT32)
++    return fixP->fx_pcrel;
+   return 1;
+ }
+ #endif
+@@ -18322,8 +18327,12 @@ i386_validate_fix (fixS *fixp)
+     {
+       /* NB: Commit 292676c1 resolved PLT32 reloc aganst local symbol
+ 	 to section.  Since PLT32 relocation must be against symbols,
+-	 turn such PLT32 relocation into PC32 relocation.  */
++	 turn such PLT32 relocation into PC32 relocation.  NB: We can
++	 turn PLT32 relocation into PC32 relocation only for PC-relative
++	 relocations since non-PC-relative relocations need PLT entries.
++       */
+       if (fixp->fx_addsy
++	  && fixp->fx_pcrel
+ 	  && (fixp->fx_r_type == BFD_RELOC_386_PLT32
+ 	      || fixp->fx_r_type == BFD_RELOC_X86_64_PLT32)
+ 	  && symbol_section_p (fixp->fx_addsy))
+diff --git a/gas/testsuite/gas/i386/reloc32.d b/gas/testsuite/gas/i386/reloc32.d
+index 263a742022e1..96c5224393f3 100644
+--- a/gas/testsuite/gas/i386/reloc32.d
++++ b/gas/testsuite/gas/i386/reloc32.d
+@@ -43,6 +43,7 @@ Disassembly of section \.text:
+ .*[ 	]+R_386_TLS_LE[ 	]+xtrn
+ .*[ 	]+R_386_TLS_LE_32[ 	]+xtrn
+ .*[ 	]+R_386_TLS_LE_32[ 	]+xtrn
++.*[ 	]+R_386_PLT32[ 	]+ptr
+ Disassembly of section \.data:
+ #...
+ .*[ 	]+R_386_32[ 	]+xtrn
+diff --git a/gas/testsuite/gas/i386/reloc32.s b/gas/testsuite/gas/i386/reloc32.s
+index e766a3dcc258..5616cd57e3f2 100644
+--- a/gas/testsuite/gas/i386/reloc32.s
++++ b/gas/testsuite/gas/i386/reloc32.s
+@@ -162,3 +162,10 @@ bad	.byte	xtrn@tpoff
+ 	.long	xtrn@got + 4
+ 	.long	xtrn@got - 4
+ bad	.long	xtrn@plt - .
++
++	.text
++	movl	$ptr@PLT, %eax
++
++	.data
++ptr:
++	.dc.a 0
+diff --git a/gas/testsuite/gas/i386/reloc64.d b/gas/testsuite/gas/i386/reloc64.d
+index a96072d66fb6..3a38a26556d3 100644
+--- a/gas/testsuite/gas/i386/reloc64.d
++++ b/gas/testsuite/gas/i386/reloc64.d
+@@ -59,6 +59,7 @@ Disassembly of section \.text:
+ .*[ 	]+R_X86_64_32[ 	]+xtrn
+ .*[ 	]+R_X86_64_GOT64[ 	]+ptr
+ .*[ 	]+R_X86_64_GOTOFF64[ 	]+Ldst
++.*[ 	]+R_X86_64_PLT32[ 	]+ptr
+ Disassembly of section \.data:
+ #...
+ .*[ 	]+R_X86_64_64[ 	]+xtrn
+diff --git a/gas/testsuite/gas/i386/reloc64.s b/gas/testsuite/gas/i386/reloc64.s
+index 2293865df20b..5c0f4136a09f 100644
+--- a/gas/testsuite/gas/i386/reloc64.s
++++ b/gas/testsuite/gas/i386/reloc64.s
+@@ -229,6 +229,8 @@ bad	.long	xtrn@plt - .
+ 	.text
+ 	movabs	$ptr@GOT, %rax
+ 	movabs	$Ldst@GOTOFF, %rdx
++	movq	$ptr@PLT, %rax
++
+ 	.data
+ ptr:
+ 	.quad 0

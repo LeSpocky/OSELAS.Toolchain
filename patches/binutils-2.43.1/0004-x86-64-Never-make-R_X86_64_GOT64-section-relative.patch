@@ -1,0 +1,81 @@
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Fri, 20 Sep 2024 05:37:04 +0800
+Subject: [PATCH] x86-64: Never make R_X86_64_GOT64 section relative
+
+R_X86_64_GOT64 relocation should never be made section relative.  Change
+tc_i386_fix_adjustable to return 0 for BFD_RELOC_X86_64_GOT64.
+
+gas/
+
+	PR gas/32189
+	* config/tc-i386.c (tc_i386_fix_adjustable): Return 0 for
+	BFD_RELOC_X86_64_GOT64.
+	* testsuite/gas/i386/reloc64.d: Updated.
+	* testsuite/gas/i386/reloc64.s: Add more tests for R_X86_64_GOT64
+	and R_X86_64_GOTOFF64.
+
+ld/
+
+	PR gas/32189
+	* testsuite/ld-x86-64/x86-64.exp: Run PR gas/32189 test.
+	* testsuite/ld-x86-64/pr32189.s: New file.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+(cherry picked from commit 8015b1b0c1a1d3a581099c4855f95e4adfa3c0ad)
+---
+ gas/config/tc-i386.c             | 1 +
+ gas/testsuite/gas/i386/reloc64.d | 7 +++++++
+ gas/testsuite/gas/i386/reloc64.s | 9 +++++++++
+ 3 files changed, 17 insertions(+)
+
+diff --git a/gas/config/tc-i386.c b/gas/config/tc-i386.c
+index 79347405b507..9e68ddfe0513 100644
+--- a/gas/config/tc-i386.c
++++ b/gas/config/tc-i386.c
+@@ -3799,6 +3799,7 @@ tc_i386_fix_adjustable (fixS *fixP)
+       || fixP->fx_r_type == BFD_RELOC_X86_64_TPOFF32
+       || fixP->fx_r_type == BFD_RELOC_X86_64_TPOFF64
+       || fixP->fx_r_type == BFD_RELOC_X86_64_GOTOFF64
++      || fixP->fx_r_type == BFD_RELOC_X86_64_GOT64
+       || fixP->fx_r_type == BFD_RELOC_X86_64_GOTPC32_TLSDESC
+       || fixP->fx_r_type == BFD_RELOC_X86_64_CODE_4_GOTPC32_TLSDESC
+       || fixP->fx_r_type == BFD_RELOC_X86_64_TLSDESC_CALL
+diff --git a/gas/testsuite/gas/i386/reloc64.d b/gas/testsuite/gas/i386/reloc64.d
+index 540a9b77d350..a96072d66fb6 100644
+--- a/gas/testsuite/gas/i386/reloc64.d
++++ b/gas/testsuite/gas/i386/reloc64.d
+@@ -57,6 +57,8 @@ Disassembly of section \.text:
+ .*[ 	]+R_X86_64_32[ 	]+xtrn
+ .*[ 	]+R_X86_64_32S[ 	]+xtrn
+ .*[ 	]+R_X86_64_32[ 	]+xtrn
++.*[ 	]+R_X86_64_GOT64[ 	]+ptr
++.*[ 	]+R_X86_64_GOTOFF64[ 	]+Ldst
+ Disassembly of section \.data:
+ #...
+ .*[ 	]+R_X86_64_64[ 	]+xtrn
+@@ -97,3 +99,8 @@ Disassembly of section \.data:
+ .*[ 	]+R_X86_64_GOT32[ 	]+xtrn-0x4
+ .*[ 	]+R_X86_64_GOT32[ 	]+xtrn\+0x4
+ .*[ 	]+R_X86_64_GOTPLT64[ 	]+xtrn
++
++.* <ptr>:
++	...
++.* <Ldst>:
++	...
+diff --git a/gas/testsuite/gas/i386/reloc64.s b/gas/testsuite/gas/i386/reloc64.s
+index bc6f0fa6cc31..2293865df20b 100644
+--- a/gas/testsuite/gas/i386/reloc64.s
++++ b/gas/testsuite/gas/i386/reloc64.s
+@@ -225,3 +225,12 @@ bad	.byte	xtrn@gotplt
+ 	vgatherdps %xmm2, xtrn(,%xmm1), %xmm0
+ 	addr32 vgatherdps %xmm2, xtrn(,%xmm1), %xmm0
+ bad	.long	xtrn@plt - .
++
++	.text
++	movabs	$ptr@GOT, %rax
++	movabs	$Ldst@GOTOFF, %rdx
++	.data
++ptr:
++	.quad 0
++Ldst:
++	.quad 0

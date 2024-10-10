@@ -1,0 +1,64 @@
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Sun, 22 Sep 2024 08:23:08 +0800
+Subject: [PATCH] ld: Don't explicitly add .note.gnu.build-id in elf.sc
+
+The commit:
+
+e8e10743f7b Add --rosegment option to BFD linker to stop the '-z separate-code' from generating two read-only segments.
+
+places .note.gnu.property and text sections in the same PT_LOAD segment
+when --rosegment and -z separate-code are used together.  After
+
+commit f3e660db14a0a95f3953496d8beb7c58ef34c6d5
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Mon Oct 8 04:39:09 2018 -0700
+
+    ELF: Properly group and place orphan note sections
+
+    Properly group orphan note sections.  When placing orphan note section
+    as the first note section, place it after the section before all note
+    sections.
+
+ld properly groups and places orphan note sections.  If .note.gnu.build-id
+is added to elf.sc, the orphan .note.gnu.property section will be placed
+before the .note.gnu.build-id section due to the larger section alignment
+and may be placed in the same PT_LOAD segment with text sections.  Remove
+.note.gnu.build-id from elf.sc to let ld properly group and add all orphan
+note sections.
+
+Binutils 2.44 has been fixed by a different fix:
+
+commit 052940eba6fcd2b9f359f03ee205e9cd4dfb1575
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Fri Sep 20 11:32:26 2024 +0800
+
+    ld: Ignore .note.gnu.build-id when placing orphaned notes
+
+since .note.gnu.build-id has been removed from emit_early_ro in elf.sc.
+
+	PR ld/32191
+	* scripttempl/elf.sc (emit_early_ro): Remove .note.gnu.build-id.
+	* testsuite/ld-i386/i386.exp: Run PR ld/32191 test.
+	* testsuite/ld-i386/pr32191.d: New file.
+	* testsuite/ld-x86-64/pr32191-x32.d: New file.
+	* testsuite/ld-x86-64/pr32191.d: Likewise.
+	* testsuite/ld-x86-64/pr32191.s: Likewise.
+	* testsuite/ld-x86-64/x86-64.exp: Run PR ld/32191 tests.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+---
+ ld/scripttempl/elf.sc | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/ld/scripttempl/elf.sc b/ld/scripttempl/elf.sc
+index 54716110b61e..3fdbff520946 100644
+--- a/ld/scripttempl/elf.sc
++++ b/ld/scripttempl/elf.sc
+@@ -425,7 +425,6 @@ emit_early_ro()
+ {
+   cat <<EOF
+   ${INITIAL_READONLY_SECTIONS}
+-  .note.gnu.build-id ${RELOCATING-0}: { *(.note.gnu.build-id) }
+ EOF
+ }
+ 
