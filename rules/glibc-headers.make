@@ -82,6 +82,8 @@ GLIBC_HEADERS_ENV  := \
 	libc_cv_ppc_machine=yes \
 	libc_cv_ppc_rel16=yes \
 	\
+	libc_cv_loongarch_vec_asm=yes \
+	\
 	ac_cv_header_cpuid_h=yes \
 	ac_cv_path_GREP=grep
 
@@ -92,6 +94,7 @@ GLIBC_HEADERS_CONF_TOOL	:= autoconf
 GLIBC_HEADERS_CONF_OPT	 = \
 	$(GLIBC_AUTOCONF_COMMON) \
 	\
+	--disable-mathvec \
 	--enable-hacker-mode
 
 $(STATEDIR)/glibc-headers.prepare:
@@ -123,10 +126,6 @@ $(STATEDIR)/glibc-headers.install:
 	@$(call world/install, GLIBC_HEADERS)
 	@install -vd -m 755 $(GLIBC_HEADERS_PKGDIR)/usr/include/gnu
 	touch $(GLIBC_HEADERS_PKGDIR)/usr/include/gnu/stubs.h
-	@install -vD -m 644 $(GLIBC_HEADERS_DIR)/include/features.h \
-		$(GLIBC_HEADERS_PKGDIR)/usr/include/features.h
-	@install -vD -m 644  $(GLIBC_HEADERS_BUILDDIR)/bits/stdio_lim.h \
-		$(GLIBC_HEADERS_PKGDIR)/usr/include/bits/stdio_lim.h
 	@$(call touch)
 
 # vim: syntax=make
