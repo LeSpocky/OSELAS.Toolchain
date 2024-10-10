@@ -12,10 +12,10 @@ Signed-off-by: Robert Schwebel <r.schwebel@pengutronix.de>
  2 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/libstdc++-v3/src/Makefile.am b/libstdc++-v3/src/Makefile.am
-index 5b9af41cdb91..cdfeaadb800c 100644
+index 37ba1491deac..9bd89d2cb02b 100644
 --- a/libstdc++-v3/src/Makefile.am
 +++ b/libstdc++-v3/src/Makefile.am
-@@ -301,6 +301,13 @@ CXXLINK = \
+@@ -309,6 +309,13 @@ CXXLINK = \
  	$(LTLDFLAGS) $(LTLIBICONV) \
  	-o $@
  
@@ -30,10 +30,10 @@ index 5b9af41cdb91..cdfeaadb800c 100644
  # See configure.host and configure.ac for port_specific_symbol_files.
  if ENABLE_SYMVERS
 diff --git a/libstdc++-v3/src/Makefile.in b/libstdc++-v3/src/Makefile.in
-index f42d957af36c..eac743742a0d 100644
+index 1bdf0daa88f5..1dbeba8cd83d 100644
 --- a/libstdc++-v3/src/Makefile.in
 +++ b/libstdc++-v3/src/Makefile.in
-@@ -947,7 +947,7 @@ install-dvi: install-dvi-recursive
+@@ -952,7 +952,7 @@ install-dvi: install-dvi-recursive
  
  install-dvi-am:
  
@@ -42,7 +42,7 @@ index f42d957af36c..eac743742a0d 100644
  
  install-html: install-html-recursive
  
-@@ -1156,6 +1156,13 @@ install-debug: build-debug
+@@ -1163,6 +1163,13 @@ install-debug: build-debug
  	$(MAKE) -C debug CXXFLAGS='$(DEBUG_FLAGS)' \
  	  toolexeclibdir=$(glibcxx_toolexeclibdir)/debug install
  
