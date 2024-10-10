@@ -1,41 +1,36 @@
 {
+  "abi": "eabi",
   "arch": "arm",
+  "crt-objects-fallback": "false",
   "crt-static-respected": true,
   "data-layout": "e-m:e-p:32:32-Fi8-i64:64-v128:64:128-a:0:32-n32-S64",
   "dynamic-linking": true,
   "env": "gnu",
-  "executables": true,
   "features": "+v7,+thumb2,+soft-float,-neon",
-  "has-elf-tls": true,
   "has-rpath": true,
-  "linker-is-gnu": true,
+  "has-thread-local": true,
+  "linker-flavor": "gnu-cc",
+  "llvm-mcount-intrinsic": "llvm.arm.gnu.eabi.mcount",
   "llvm-target": "armv7-unknown-linux-gnueabi",
   "max-atomic-width": 64,
+  "metadata": {
+    "description": "Armv7-A Linux (kernel 4.15, glibc 2.27)",
+    "host_tools": false,
+    "std": true,
+    "tier": 2
+  },
   "os": "linux",
   "position-independent-executables": true,
-  "pre-link-args": {
-    "gcc": [
-      "-Wl,--as-needed",
-      "-Wl,-z,noexecstack"
-    ]
-  },
   "relro-level": "full",
-  "target-family": "unix",
+  "supported-split-debuginfo": [
+    "packed",
+    "unpacked",
+    "off"
+  ],
+  "target-family": [
+    "unix"
+  ],
   "target-mcount": "\u0001__gnu_mcount_nc",
   "target-pointer-width": "32",
-  "unsupported-abis": [
-    "stdcall",
-    "stdcall-unwind",
-    "fastcall",
-    "vectorcall",
-    "thiscall",
-    "thiscall-unwind",
-    "win64",
-    "sysv64"
-  ],
-  "cc": "arm-v7a-linux-gnueabi-gcc",
-  "cxx": "arm-v7a-linux-gnueabi-g++",
-  "ar": "arm-v7a-linux-gnueabi-ar",
-  "ranlib": "arm-v7a-linux-gnueabi-ranlib",
   "linker": "arm-v7a-linux-gnueabi-gcc"
 }
