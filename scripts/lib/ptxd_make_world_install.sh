@@ -79,6 +79,9 @@ ptxd_make_world_install_pack() {
 	    if [ -d "${pkg_pkg_dir}${ptxconf_prefix}/${ptxconf_gnu_target}/lib" ]; then
 		strip_dirs[${#strip_dirs[*]}]="${pkg_pkg_dir}${ptxconf_prefix}/${ptxconf_gnu_target}/lib"
 	    fi
+	    if [ -d "${pkg_pkg_dir}${ptxconf_prefix}/${ptxconf_gnu_target}/lib64" ]; then
+		strip_dirs[${#strip_dirs[*]}]="${pkg_pkg_dir}${ptxconf_prefix}/${ptxconf_gnu_target}/lib64"
+	    fi
 	    ;;
     esac
     if [ ${#strip_dirs[*]} -gt 0 ]; then
