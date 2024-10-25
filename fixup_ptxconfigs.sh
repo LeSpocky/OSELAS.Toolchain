@@ -274,7 +274,7 @@ fixup()
     #
     # PTXCONF_GLIBC_CONFIG_EXTRA_CROSS
     #
-    PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-stack-protector=strong"
+    PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="--enable-stack-protector=strong --enable-bind-now --enable-fortify-source"
     case "${PTXCONF_GNU_TARGET}" in
 	x86_64-*-linux-gnu)
 		PTXCONF_GLIBC_CONFIG_EXTRA_CROSS="${PTXCONF_GLIBC_CONFIG_EXTRA_CROSS} --enable-mathvec"
