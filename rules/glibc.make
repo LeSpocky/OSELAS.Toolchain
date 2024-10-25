@@ -36,14 +36,18 @@ GLIBC_LICENSE_FILES	:= $(call remove_quotes,$(PTXCONF_GLIBC_LICENSE_FILES))
 # ----------------------------------------------------------------------------
 
 GLIBC_PATH := PATH=$(CROSS_PATH)
-GLIBC_ENV := \
+GLIBC_CONF_ENV := \
 	CC="$(CROSS_CC) -fuse-ld=bfd" \
 	BUILD_CC=$(HOSTCC) \
 	MAKEINFO=: \
 	\
 	ac_cv_path_BASH_SHELL=/bin/bash \
-	ac_cv_sizeof_long_double=$(PTXCONF_SIZEOF_LONG_DOUBLE)
+	ac_cv_sizeof_long_double=$(PTXCONF_SIZEOF_LONG_DOUBLE) \
+	\
+	PTXCONF_TARGET_HARDEN_STACKCLASH=$(PTXCONF_TARGET_HARDEN_STACKCLASH)
 
+GLIBC_MAKE_ENV := \
+	PTXCONF_TARGET_HARDEN_STACKCLASH=$(PTXCONF_TARGET_HARDEN_STACKCLASH)
 
 #
 # autoconf

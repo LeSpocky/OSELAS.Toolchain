@@ -75,6 +75,7 @@ source "workspace/rules/cross-clang.in"
 source "workspace/rules/cross-lld.in"
 source "workspace/rules/cross-rustc.in"
 source "workspace/rules/cross-gdb.in"
+source "workspace/rules/toolchain_hardening.in"
 source "workspace/rules/cross-toolchain.in"
 source "workspace/rules/host-fake-makeinfo.in"
 

@@ -1,0 +1,13 @@
+menu "hardening options           "
+
+config TARGET_HARDEN_STACKCLASH
+	bool
+	prompt "Stack clash protection (cc -fstack-clash-protection)"
+	help
+	  Generate code to prevent stack clash style attacks. When this
+	  option is enabled, the compiler will only allocate one page of
+	  stack space at a time and each page is accessed immediately after
+	  allocation. Thus, it prevents allocations from jumping over any
+	  stack guard page provided by the operating system.
+
+endmenu

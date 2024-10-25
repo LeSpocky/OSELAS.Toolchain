@@ -159,6 +159,7 @@ fixup()
     #
     # PTXCONF_CROSS_GCC_CONFIG_EXTRA
     # PTXCONF_GLIBC_CONFIG_EXTRA
+    # PTXCONF_TARGET_HARDEN_STACKCLASH
     #
     case "${PTXCONF_GNU_TARGET}" in
 	# softfp, vfp
@@ -214,25 +215,32 @@ fixup()
 
 	aarch64-v8a-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-abi=lp64						--with-arch=armv8-a				--with-specs='%{!pg:%{!fomit-frame-pointer:%{!fno-omit-frame-pointer:-fomit-frame-pointer}}}'"
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 
 	i486-unknown-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=i486"
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 	i586-unknown-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=i586"
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 	i686-unknown-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=i686"
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 	i686-atom-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=atom --with-fpmath=sse --with-specs='%{!mmovbe:%{!mno-movbe:-mno-movbe}}'"
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 
 	x86_64-unknown-linux-gnu)
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 	x86_64-v3-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=x86-64-v3 --with-tune=generic"
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 
 	mipsel-softfloat-linux-gnu|mips-softfloat-linux-gnu)
@@ -255,7 +263,7 @@ fixup()
 	    #FIXME
 	    ;;
 	riscv64-linux-gnu)
-	    #FIXME
+	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
 	    ;;
 	loongarch64-linux-gnu)
 	    #FIXME
