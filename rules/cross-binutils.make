@@ -56,8 +56,10 @@ CROSS_BINUTILS_CONF_OPT		:= \
 	--$(call ptx/endis,PTXCONF_CROSS_BINUTILS_GOLD)-gold \
 	--enable-ld=default \
 	--disable-gprofng \
+	--enable-default-compressed-debug-sections-algorithm=zstd \
 	--disable-werror \
-	--disable-nls \
+	--with-system-zlib \
+	--with-zstd \
 	\
 	--enable-threads \
 	--enable-plugins

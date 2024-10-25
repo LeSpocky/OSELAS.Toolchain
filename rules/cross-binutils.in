@@ -3,6 +3,7 @@
 menuconfig CROSS_BINUTILS
 	bool
 	select HOST_SYSTEM_ZLIB
+	select HOST_SYSTEM_ZSTD
 	select HOST_FAKE_MAKEINFO
 	prompt "binutils                    "
 
