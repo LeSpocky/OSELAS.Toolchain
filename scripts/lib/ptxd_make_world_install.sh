@@ -111,7 +111,7 @@ ptxd_make_world_install_pack() {
 			--strip-symbol=${PTXDIST_SYSROOT_TARGET}/usr/lib/*.o \
 			--strip-symbol=${pkg_build_dir}/*.o \
 			--strip-symbol=${pkg_build_dir}/*.os \
-			--preserve-dates --compress-debug-sections \
+			--preserve-dates --compress-debug-sections=zstd \
 			"${f}" &&
 		    if [[ "$(file "${f}")" =~ "dynamically linked" ]]; then
 			chrpath -d "${f}"
