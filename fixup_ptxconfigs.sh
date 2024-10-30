@@ -221,26 +221,32 @@ fixup()
 	i486-unknown-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=i486"
 	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
+	    PTXCONF_GLIBC_CONFIG_EXTRA="--disable-cet"
 	    ;;
 	i586-unknown-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=i586"
 	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
+	    PTXCONF_GLIBC_CONFIG_EXTRA="--disable-cet"
 	    ;;
 	i686-unknown-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=i686"
 	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
+	    PTXCONF_GLIBC_CONFIG_EXTRA="--disable-cet"
 	    ;;
 	i686-atom-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=atom --with-fpmath=sse --with-specs='%{!mmovbe:%{!mno-movbe:-mno-movbe}}'"
 	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
+	    PTXCONF_GLIBC_CONFIG_EXTRA="--disable-cet"
 	    ;;
 
 	x86_64-unknown-linux-gnu)
 	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
+	    PTXCONF_GLIBC_CONFIG_EXTRA="--enable-cet"
 	    ;;
 	x86_64-v3-linux-gnu)
 	    PTXCONF_CROSS_GCC_CONFIG_EXTRA="--with-arch=x86-64-v3 --with-tune=generic"
 	    PTXCONF_TARGET_HARDEN_STACKCLASH=y
+	    PTXCONF_GLIBC_CONFIG_EXTRA="--enable-cet"
 	    ;;
 
 	mipsel-softfloat-linux-gnu|mips-softfloat-linux-gnu)
