@@ -48,6 +48,7 @@ CROSS_GDB_CONF_OPT	:= \
 	--disable-werror \
 	--enable-tui \
 	--with-expat \
+	--without-guile \
 	--with-python=python3
 
 # vim: syntax=make
