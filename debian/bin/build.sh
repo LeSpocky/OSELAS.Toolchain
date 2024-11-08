@@ -9,6 +9,7 @@ if [ "${DIST}" = "Debian" ]; then
 elif [ "${DIST}" = "Ubuntu" ]; then
 	VERSION="$(lsb_release -r -s)"
 	PREFIX="-ubuntu"
+	export DEB_BUILD_OPTIONS=noautodbgsym
 else
 	echo "Unknown Distribution '${DIST}'"
 	exit 1
