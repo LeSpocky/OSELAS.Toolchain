@@ -61,4 +61,9 @@ override_dh_makeshlibs:
 override_dh_shlibdeps:
 	dh_shlibdeps $(EXCLUDES)
 
+# the toolchain BSP has no autotools files and this avoids scanning for and
+# replacing files during a restarted build
+override_dh_update_autotools_config:
+	:
+
 .PHONY: $(RULETARGETS)
