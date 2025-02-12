@@ -64,7 +64,8 @@ CROSS_RUSTC_CONF_ENV	:= \
 	BUILD_TRIPLE=$(GNU_BUILD) \
 	TARGET_TRIPLE=$(CROSS_RUSTC_TARGET) \
 	PREFIX=$(PTXCONF_PREFIX_CROSS) \
-	COMPILER_PREFIX=$(COMPILER_PREFIX)
+	COMPILER_PREFIX=$(COMPILER_PREFIX) \
+	LLVM_CONFIG=$(CROSS_LLVM_DIR)-build/bin/llvm-config
 
 $(STATEDIR)/cross-rustc.prepare:
 	@$(call targetinfo)
@@ -116,6 +117,10 @@ $(STATEDIR)/cross-rustc.install:
 	@cp -v $(CROSS_RUSTC_TARGET_PATH)/$(CROSS_RUSTC_TARGET).json \
 		$(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/bin/
 	@$(call ptx/cross-rustc-wrapper)
+	@ln -vsf ../../../../bin/lld $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/$(GNU_BUILD)/bin/rust-lld
+	@install -vd -m755 $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/$(GNU_BUILD)/bin/gcc-ld
+	@ln -vsf ../rust-lld $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/$(GNU_BUILD)/bin/gcc-ld/ld.lld
+	@ln -vsf ../rust-lld $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/$(GNU_BUILD)/bin/gcc-ld/ld64.lld
 	@rm -v $(CROSS_RUSTC_PKGDIR)$(PTXCONF_PREFIX_CROSS)/lib/rustlib/install.log
 ifneq ($(call remove_quotes,$(PTXDIST_SYSROOT_CROSS)),)
 	sed -i -e 's;$(PTXDIST_WORKSPACE);OSELAS.Toolchain;' \

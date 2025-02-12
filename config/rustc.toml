@@ -115,7 +115,7 @@ download-ci-llvm = false
 # Whether to build LLVM as a dynamically linked library (as opposed to statically linked).
 # Under the hood, this passes `--shared` to llvm-config.
 # NOTE: To avoid performing LTO multiple times, we suggest setting this to `true` when `thin-lto` is enabled.
-#link-shared = llvm.thin-lto
+link-shared = true
 
 # When building llvm, this configures what is being appended to the version.
 # To use LLVM version as is, provide an empty string.
@@ -345,7 +345,7 @@ verbose = 1
 #
 # Setting this to `false` generates slower code, but removes the requirement for a C toolchain in
 # order to run `x check`.
-#optimized-compiler-builtins = if rust.channel == "dev" { false } else { true }
+optimized-compiler-builtins = false
 
 # Indicates whether the native libraries linked into Cargo will be statically
 # linked or not.
@@ -784,7 +784,7 @@ linker = "gcc"
 # Path to the `llvm-config` binary of the installation of a custom LLVM to link
 # against. Note that if this is specified we don't compile LLVM at all for this
 # target.
-#llvm-config = <none> (path)
+llvm-config = "@LLVM_CONFIG@"
 
 # Override detection of whether this is a Rust-patched LLVM. This would be used
 # in conjunction with either an llvm-config or build.submodules = false.
