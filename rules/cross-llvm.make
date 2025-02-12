@@ -15,6 +15,7 @@ CROSS_PACKAGES-$(PTXCONF_CROSS_LLVM) += cross-llvm
 # Paths and names
 #
 CROSS_LLVM_VERSION		:= $(call remove_quotes,$(PTXCONF_CROSS_LLVM_VERSION))
+CROSS_LLVM_VERSION_MAJOR	:= $(firstword $(subst .,$(space),$(CROSS_LLVM_VERSION)))
 CROSS_LLVM_MD5			:= $(call remove_quotes,$(PTXCONF_CROSS_LLVM_MD5))
 CROSS_LLVM			:= llvm-$(CROSS_LLVM_VERSION)
 CROSS_LLVM_SUFFIX		:= src.tar.xz
@@ -116,6 +117,7 @@ $(STATEDIR)/cross-llvm.extract:
 
 $(STATEDIR)/cross-llvm.install:
 	@$(call targetinfo)
+	@ln -sf libLLVM.so $(CROSS_LLVM_DIR)-build/lib/libLLVM-$(CROSS_LLVM_VERSION_MAJOR).so
 	@$(call world/install, CROSS_LLVM)
 	@install -v -m644 -D -t $(CROSS_LLVM_PKGDIR)/usr/lib/cmake/llvm \
 		$(CROSS_LLVM_DIR)-build/lib/cmake/llvm/*
