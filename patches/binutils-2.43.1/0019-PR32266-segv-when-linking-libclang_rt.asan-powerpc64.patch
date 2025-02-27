@@ -1,0 +1,496 @@
+From: Alan Modra <amodra@gmail.com>
+Date: Sun, 13 Oct 2024 15:11:59 +1030
+Subject: [PATCH] PR32266, segv when linking libclang_rt.asan-powerpc64.so
+
+Change the mmap support added with commit 9ba56acee518 to always mmap
+memory with PROT_READ | PROT_WRITE.  Prior to that commit most file
+contents were read into a buffer allocated with bfd_alloc or
+bfd_malloc and thus the memory was read/write.  Even after that commit
+any section contents with relocations must be read/write to apply the
+relocs.  Making them all read/write is not a major change, and it
+should not introduce any measurable linker slowdown for contents that
+are not modified.  More importantly, it removes a BFD behaviour
+difference that only triggers when large files are involved.
+
+	PR 32266
+	PR 32109
+	* libbfd.c (bfd_mmap_local): Remove prot param.  Always mmap
+	with PROT_READ | PROT_WRITE.  Adjust all calls.
+	(_bfd_mmap_temporary): Rename from _bfd_mmap_readonly_temporary.
+	(_bfd_munmap_temporary): Rename from _bfd_munmap_readonly_temporary.
+	_bfd_mmap_persistent): Rename from _bfd_mmap_readonly_persistent.
+	(_bfd_generic_get_section_contents): Use PROT_READ | PROT_WRITE
+	regardless of relocs.
+	* libbfd-in.h: Update decls to suit.  Make non-USE_MMAP variants
+	static inline functions.
+	* elflink.c: Update all uses of _bfd_mmap functions.
+	* elf.c: Likewise.
+	(bfd_elf_get_str_section): Revert commit 656f8fbaae.
+	* libbfd.h: Regenerate.
+
+(cherry picked from commit 76eab8f47a743bde86be410bce8fd8382eaea6c2)
+---
+ bfd/elf.c       | 51 ++++++++++++++++++++++-----------------------------
+ bfd/elflink.c   |  4 ++--
+ bfd/libbfd-in.h | 42 +++++++++++++++++++++++-------------------
+ bfd/libbfd.c    | 47 ++++++++++++++++++++---------------------------
+ bfd/libbfd.h    | 42 +++++++++++++++++++++++-------------------
+ 5 files changed, 90 insertions(+), 96 deletions(-)
+
+diff --git a/bfd/elf.c b/bfd/elf.c
+index b02d95579b7d..fa7ecd3dab85 100644
+--- a/bfd/elf.c
++++ b/bfd/elf.c
+@@ -287,8 +287,7 @@ bfd_elf_get_str_section (bfd *abfd, unsigned int shindex)
+ 
+       if (shstrtabsize == 0
+ 	  || bfd_seek (abfd, offset, SEEK_SET) != 0
+-	  || (shstrtab
+-	      = _bfd_mmap_readonly_persistent (abfd, shstrtabsize)) == NULL)
++	  || (shstrtab = _bfd_mmap_persistent (abfd, shstrtabsize)) == NULL)
+ 	{
+ 	  /* Once we've failed to read it, make sure we don't keep
+ 	     trying.  Otherwise, we'll keep allocating space for
+@@ -301,8 +300,7 @@ bfd_elf_get_str_section (bfd *abfd, unsigned int shindex)
+ 	  _bfd_error_handler
+ 	    /* xgettext:c-format */
+ 	    (_("%pB: string table [%u] is corrupt"), abfd, shindex);
+-	  shstrtab = NULL;
+-	  i_shdrp[shindex]->sh_size = 0;
++	  shstrtab[shstrtabsize - 1] = 0;
+ 	}
+       i_shdrp[shindex]->contents = shstrtab;
+     }
+@@ -522,9 +520,9 @@ bfd_elf_get_elf_syms (bfd *ibfd,
+       }
+ 
+  out1:
+-  _bfd_munmap_readonly_temporary (alloc_extshndx, alloc_extshndx_size);
++  _bfd_munmap_temporary (alloc_extshndx, alloc_extshndx_size);
+  out2:
+-  _bfd_munmap_readonly_temporary (alloc_ext, alloc_ext_size);
++  _bfd_munmap_temporary (alloc_ext, alloc_ext_size);
+ 
+   return intsym_buf;
+ }
+@@ -1734,8 +1732,7 @@ get_hash_table_data (bfd *abfd, bfd_size_type number,
+       return NULL;
+     }
+ 
+-  e_data = _bfd_mmap_readonly_temporary (abfd, size, &e_data_addr,
+-					 &e_data_size);
++  e_data = _bfd_mmap_temporary (abfd, size, &e_data_addr, &e_data_size);
+   if (e_data == NULL)
+     return NULL;
+ 
+@@ -1753,7 +1750,7 @@ get_hash_table_data (bfd *abfd, bfd_size_type number,
+     while (number--)
+       i_data[number] = bfd_get_64 (abfd, e_data + number * ent_size);
+ 
+-  _bfd_munmap_readonly_temporary (e_data_addr, e_data_size);
++  _bfd_munmap_temporary (e_data_addr, e_data_size);
+   return i_data;
+ }
+ 
+@@ -1824,8 +1821,7 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+     goto error_return;
+ 
+   dynbuf_size = phdr->p_filesz;
+-  dynbuf = _bfd_mmap_readonly_temporary (abfd, dynbuf_size,
+-					 &dynbuf_addr, &dynbuf_size);
++  dynbuf = _bfd_mmap_temporary (abfd, dynbuf_size, &dynbuf_addr, &dynbuf_size);
+   if (dynbuf == NULL)
+     goto error_return;
+ 
+@@ -1903,7 +1899,7 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+     goto error_return;
+ 
+   /* Dynamic string table must be valid until ABFD is closed.  */
+-  strbuf = (char *) _bfd_mmap_readonly_persistent (abfd, dt_strsz);
++  strbuf = (char *) _bfd_mmap_persistent (abfd, dt_strsz);
+   if (strbuf == NULL)
+     goto error_return;
+   if (strbuf[dt_strsz - 1] != 0)
+@@ -2089,9 +2085,8 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+       || bfd_seek (abfd, filepos, SEEK_SET) != 0)
+     goto error_return;
+   esymbuf_size = amt;
+-  esymbuf = _bfd_mmap_readonly_temporary (abfd, esymbuf_size,
+-					  &esymbuf_addr,
+-					  &esymbuf_size);
++  esymbuf = _bfd_mmap_temporary (abfd, esymbuf_size,
++				 &esymbuf_addr, &esymbuf_size);
+   if (esymbuf == NULL)
+     goto error_return;
+ 
+@@ -2135,7 +2130,7 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+ 	goto error_return;
+ 
+       /* DT_VERSYM info must be valid until ABFD is closed.  */
+-      versym = _bfd_mmap_readonly_persistent (abfd, amt);
++      versym = _bfd_mmap_persistent (abfd, amt);
+ 
+       if (dt_verdef)
+ 	{
+@@ -2147,7 +2142,7 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+ 	    goto error_return;
+ 
+ 	  /* DT_VERDEF info must be valid until ABFD is closed.  */
+-	  verdef = _bfd_mmap_readonly_persistent (abfd, verdef_size);
++	  verdef = _bfd_mmap_persistent (abfd, verdef_size);
+ 	}
+ 
+       if (dt_verneed)
+@@ -2160,7 +2155,7 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+ 	    goto error_return;
+ 
+ 	  /* DT_VERNEED info must be valid until ABFD is closed.  */
+-	  verneed = _bfd_mmap_readonly_persistent (abfd, verneed_size);
++	  verneed = _bfd_mmap_persistent (abfd, verneed_size);
+ 	}
+     }
+ 
+@@ -2183,8 +2178,8 @@ _bfd_elf_get_dynamic_symbols (bfd *abfd, Elf_Internal_Phdr *phdr,
+   /* Restore file position for elf_object_p.  */
+   if (bfd_seek (abfd, saved_filepos, SEEK_SET) != 0)
+     res = false;
+-  _bfd_munmap_readonly_temporary (dynbuf_addr, dynbuf_size);
+-  _bfd_munmap_readonly_temporary (esymbuf_addr, esymbuf_size);
++  _bfd_munmap_temporary (dynbuf_addr, dynbuf_size);
++  _bfd_munmap_temporary (esymbuf_addr, esymbuf_size);
+   free (gnubuckets);
+   free (gnuchains);
+   free (mipsxlat);
+@@ -9286,9 +9281,8 @@ _bfd_elf_slurp_version_tables (bfd *abfd, bool default_imported_symver)
+ 	  if (bfd_seek (abfd, hdr->sh_offset, SEEK_SET) != 0)
+ 	    goto error_return_verref;
+ 	  contents_size = hdr->sh_size;
+-	  contents = _bfd_mmap_readonly_temporary (abfd, contents_size,
+-						   &contents_addr,
+-						   &contents_size);
++	  contents = _bfd_mmap_temporary (abfd, contents_size,
++					  &contents_addr, &contents_size);
+ 	  if (contents == NULL)
+ 	    goto error_return_verref;
+ 
+@@ -9421,7 +9415,7 @@ _bfd_elf_slurp_version_tables (bfd *abfd, bool default_imported_symver)
+       elf_tdata (abfd)->cverrefs = i;
+ 
+       if (contents != elf_tdata (abfd)->dt_verneed)
+-	_bfd_munmap_readonly_temporary (contents_addr, contents_size);
++	_bfd_munmap_temporary (contents_addr, contents_size);
+       contents = NULL;
+       contents_addr = NULL;
+     }
+@@ -9465,9 +9459,8 @@ _bfd_elf_slurp_version_tables (bfd *abfd, bool default_imported_symver)
+ 	  if (bfd_seek (abfd, hdr->sh_offset, SEEK_SET) != 0)
+ 	    goto error_return_verdef;
+ 	  contents_size = hdr->sh_size;
+-	  contents = _bfd_mmap_readonly_temporary (abfd, contents_size,
+-						   &contents_addr,
+-						   &contents_size);
++	  contents = _bfd_mmap_temporary (abfd, contents_size,
++					  &contents_addr, &contents_size);
+ 	  if (contents == NULL)
+ 	    goto error_return_verdef;
+ 
+@@ -9621,7 +9614,7 @@ _bfd_elf_slurp_version_tables (bfd *abfd, bool default_imported_symver)
+ 	}
+ 
+       if (contents != elf_tdata (abfd)->dt_verdef)
+-	_bfd_munmap_readonly_temporary (contents_addr, contents_size);
++	_bfd_munmap_temporary (contents_addr, contents_size);
+       contents = NULL;
+       contents_addr = NULL;
+     }
+@@ -9679,7 +9672,7 @@ _bfd_elf_slurp_version_tables (bfd *abfd, bool default_imported_symver)
+  error_return:
+   if (contents != elf_tdata (abfd)->dt_verneed
+       && contents != elf_tdata (abfd)->dt_verdef)
+-    _bfd_munmap_readonly_temporary (contents_addr, contents_size);
++    _bfd_munmap_temporary (contents_addr, contents_size);
+   return false;
+ }
+ 
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index 336bcbf4658e..faf65120a944 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -2877,7 +2877,7 @@ _bfd_elf_link_info_read_relocs (bfd *abfd,
+   if (keep_memory)
+     esdo->relocs = internal_relocs;
+ 
+-  _bfd_munmap_readonly_temporary (alloc1, alloc1_size);
++  _bfd_munmap_temporary (alloc1, alloc1_size);
+ 
+   /* Don't free alloc2, since if it was allocated we are passing it
+      back (under the name of internal_relocs).  */
+@@ -2885,7 +2885,7 @@ _bfd_elf_link_info_read_relocs (bfd *abfd,
+   return internal_relocs;
+ 
+  error_return:
+-  _bfd_munmap_readonly_temporary (alloc1, alloc1_size);
++  _bfd_munmap_temporary (alloc1, alloc1_size);
+   if (alloc2 != NULL)
+     {
+       if (keep_memory)
+diff --git a/bfd/libbfd-in.h b/bfd/libbfd-in.h
+index f7f5773510b7..950d7979a035 100644
+--- a/bfd/libbfd-in.h
++++ b/bfd/libbfd-in.h
+@@ -889,22 +889,6 @@ _bfd_alloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
+   return NULL;
+ }
+ 
+-#ifdef USE_MMAP
+-extern void *_bfd_mmap_readonly_persistent
+-  (bfd *, size_t) ATTRIBUTE_HIDDEN;
+-extern void *_bfd_mmap_readonly_temporary
+-  (bfd *, size_t, void **, size_t *) ATTRIBUTE_HIDDEN;
+-extern void _bfd_munmap_readonly_temporary
+-  (void *, size_t) ATTRIBUTE_HIDDEN;
+-#else
+-#define _bfd_mmap_readonly_persistent(abfd, rsize) \
+-  _bfd_alloc_and_read (abfd, rsize, rsize)
+-#define _bfd_munmap_readonly_temporary(ptr, rsize) free (ptr)
+-#endif
+-
+-extern bool _bfd_mmap_read_temporary
+-  (void **, size_t *, void **, bfd *, bool) ATTRIBUTE_HIDDEN;
+-
+ static inline void *
+ _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
+ {
+@@ -928,14 +912,34 @@ _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
+   return NULL;
+ }
+ 
+-#ifndef USE_MMAP
++#ifdef USE_MMAP
++extern void *_bfd_mmap_persistent
++  (bfd *, size_t) ATTRIBUTE_HIDDEN;
++extern void *_bfd_mmap_temporary
++  (bfd *, size_t, void **, size_t *) ATTRIBUTE_HIDDEN;
++extern void _bfd_munmap_temporary
++  (void *, size_t) ATTRIBUTE_HIDDEN;
++#else
++static inline void *
++_bfd_mmap_persistent (bfd *abfd, size_t rsize)
++{
++  return _bfd_alloc_and_read (abfd, rsize, rsize);
++}
+ static inline void *
+-_bfd_mmap_readonly_temporary (bfd *abfd, size_t rsize, void **map_addr,
+-			      size_t *map_size)
++_bfd_mmap_temporary (bfd *abfd, size_t rsize, void **map_addr,
++		     size_t *map_size)
+ {
+   void *mem = _bfd_malloc_and_read (abfd, rsize, rsize);
+   *map_addr = mem;
+   *map_size = rsize;
+   return mem;
+ }
++static inline void
++_bfd_munmap_temporary (void *ptr, size_t rsize ATTRIBUTE_UNUSED)
++{
++  free (ptr);
++}
+ #endif
++
++extern bool _bfd_mmap_read_temporary
++  (void **, size_t *, void **, bfd *, bool) ATTRIBUTE_HIDDEN;
+diff --git a/bfd/libbfd.c b/bfd/libbfd.c
+index 4da842ead848..4ab5bf498fdc 100644
+--- a/bfd/libbfd.c
++++ b/bfd/libbfd.c
+@@ -1064,13 +1064,12 @@ bfd_allocate_mmapped_page (bfd *abfd, struct bfd_mmapped_entry **entry)
+   return mmapped;
+ }
+ 
+-/* Mmap a memory region of RSIZE bytes with PROT at the current offset.
++/* Mmap a memory region of RSIZE bytes at the current file offset.
+    Return mmap address and size in MAP_ADDR and MAP_SIZE.  Return NULL
+    on invalid input and MAP_FAILED for mmap failure.  */
+ 
+ static void *
+-bfd_mmap_local (bfd *abfd, size_t rsize, int prot, void **map_addr,
+-		size_t *map_size)
++bfd_mmap_local (bfd *abfd, size_t rsize, void **map_addr, size_t *map_size)
+ {
+   /* We mmap on the underlying file.  In an archive it might be nice
+      to limit RSIZE to the element size, but that can be fuzzed and
+@@ -1092,18 +1091,18 @@ bfd_mmap_local (bfd *abfd, size_t rsize, int prot, void **map_addr,
+     }
+ 
+   void *mem;
+-  mem = bfd_mmap (abfd, NULL, rsize, prot, MAP_PRIVATE, offset,
+-		  map_addr, map_size);
++  mem = bfd_mmap (abfd, NULL, rsize, PROT_READ | PROT_WRITE, MAP_PRIVATE,
++		  offset, map_addr, map_size);
+   return mem;
+ }
+ 
+-/* Mmap a readonly memory region of RSIZE bytes at the current offset.
++/* Mmap a memory region of RSIZE bytes at the current offset.
+    Return mmap address and size in MAP_ADDR and MAP_SIZE.  Return NULL
+    on invalid input and MAP_FAILED for mmap failure.  */
+ 
+ void *
+-_bfd_mmap_readonly_temporary (bfd *abfd, size_t rsize, void **map_addr,
+-			      size_t *map_size)
++_bfd_mmap_temporary (bfd *abfd, size_t rsize, void **map_addr,
++		     size_t *map_size)
+ {
+   /* Use mmap only if section size >= the minimum mmap section size.  */
+   if (rsize < _bfd_minimum_mmap_size)
+@@ -1116,17 +1115,17 @@ _bfd_mmap_readonly_temporary (bfd *abfd, size_t rsize, void **map_addr,
+       return mem;
+     }
+ 
+-  return bfd_mmap_local (abfd, rsize, PROT_READ, map_addr, map_size);
++  return bfd_mmap_local (abfd, rsize, map_addr, map_size);
+ }
+ 
+ /* Munmap RSIZE bytes at PTR.  */
+ 
+ void
+-_bfd_munmap_readonly_temporary (void *ptr, size_t rsize)
++_bfd_munmap_temporary (void *ptr, size_t rsize)
+ {
+-  /* NB: Since _bfd_munmap_readonly_temporary is called like free, PTR
+-     may be NULL.  Otherwise, PTR and RSIZE must be valid.  If RSIZE is
+-     0, free is called.  */
++  /* NB: Since _bfd_munmap_temporary is called like free, PTR may be
++     NULL.  Otherwise, PTR and RSIZE must be valid.  If RSIZE is 0,
++     free is called.  */
+   if (ptr == NULL)
+     return;
+   if (rsize != 0)
+@@ -1138,11 +1137,11 @@ _bfd_munmap_readonly_temporary (void *ptr, size_t rsize)
+     free (ptr);
+ }
+ 
+-/* Mmap a readonly memory region of RSIZE bytes at the current offset.
++/* Mmap a memory region of RSIZE bytes at the current offset.
+    Return NULL on invalid input or mmap failure.  */
+ 
+ void *
+-_bfd_mmap_readonly_persistent (bfd *abfd, size_t rsize)
++_bfd_mmap_persistent (bfd *abfd, size_t rsize)
+ {
+   /* Use mmap only if section size >= the minimum mmap section size.  */
+   if (rsize < _bfd_minimum_mmap_size)
+@@ -1150,7 +1149,7 @@ _bfd_mmap_readonly_persistent (bfd *abfd, size_t rsize)
+ 
+   void *mem, *map_addr;
+   size_t map_size;
+-  mem = bfd_mmap_local (abfd, rsize, PROT_READ, &map_addr, &map_size);
++  mem = bfd_mmap_local (abfd, rsize, &map_addr, &map_size);
+   if (mem == NULL)
+     return mem;
+   if (mem == MAP_FAILED)
+@@ -1213,9 +1212,7 @@ _bfd_mmap_read_temporary (void **data_p, size_t *size_p,
+ 		 && (abfd->flags & BFD_PLUGIN) == 0);
+   if (use_mmmap)
+     {
+-      void *mmaped = _bfd_mmap_readonly_temporary (abfd, size,
+-						   mmap_base,
+-						   size_p);
++      void *mmaped = _bfd_mmap_temporary (abfd, size, mmap_base, size_p);
+       /* MAP_FAILED is returned when called from GDB on an object with
+ 	 opncls_iovec.  Use bfd_read in this case.  */
+       if (mmaped != MAP_FAILED)
+@@ -1234,8 +1231,7 @@ _bfd_mmap_read_temporary (void **data_p, size_t *size_p,
+       if (data == NULL)
+ 	return false;
+       *data_p = data;
+-      /* NB: _bfd_munmap_readonly_temporary will free *MMAP_BASE if
+-	 *SIZE_P == 0.  */
++      /* NB: _bfd_munmap_temporary will free *MMAP_BASE if *SIZE_P == 0.  */
+       *mmap_base = data;
+     }
+   else
+@@ -1302,12 +1298,9 @@ _bfd_generic_get_section_contents (bfd *abfd,
+ 	  || bfd_get_flavour (abfd) != bfd_target_elf_flavour)
+ 	abort ();
+ 
+-      int prot = ((section->reloc_count == 0)
+-		  ? PROT_READ : PROT_READ | PROT_WRITE);
+-
+-      location = bfd_mmap_local
+-	(abfd, count, prot, &elf_section_data (section)->contents_addr,
+-	 &elf_section_data (section)->contents_size);
++      location = bfd_mmap_local (abfd, count,
++				 &elf_section_data (section)->contents_addr,
++				 &elf_section_data (section)->contents_size);
+ 
+       if (location == NULL)
+ 	return false;
+diff --git a/bfd/libbfd.h b/bfd/libbfd.h
+index 5e8ed9eeefe2..5da7541e06e3 100644
+--- a/bfd/libbfd.h
++++ b/bfd/libbfd.h
+@@ -895,22 +895,6 @@ _bfd_alloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
+   return NULL;
+ }
+ 
+-#ifdef USE_MMAP
+-extern void *_bfd_mmap_readonly_persistent
+-  (bfd *, size_t) ATTRIBUTE_HIDDEN;
+-extern void *_bfd_mmap_readonly_temporary
+-  (bfd *, size_t, void **, size_t *) ATTRIBUTE_HIDDEN;
+-extern void _bfd_munmap_readonly_temporary
+-  (void *, size_t) ATTRIBUTE_HIDDEN;
+-#else
+-#define _bfd_mmap_readonly_persistent(abfd, rsize) \
+-  _bfd_alloc_and_read (abfd, rsize, rsize)
+-#define _bfd_munmap_readonly_temporary(ptr, rsize) free (ptr)
+-#endif
+-
+-extern bool _bfd_mmap_read_temporary
+-  (void **, size_t *, void **, bfd *, bool) ATTRIBUTE_HIDDEN;
+-
+ static inline void *
+ _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
+ {
+@@ -934,17 +918,37 @@ _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
+   return NULL;
+ }
+ 
+-#ifndef USE_MMAP
++#ifdef USE_MMAP
++extern void *_bfd_mmap_persistent
++  (bfd *, size_t) ATTRIBUTE_HIDDEN;
++extern void *_bfd_mmap_temporary
++  (bfd *, size_t, void **, size_t *) ATTRIBUTE_HIDDEN;
++extern void _bfd_munmap_temporary
++  (void *, size_t) ATTRIBUTE_HIDDEN;
++#else
++static inline void *
++_bfd_mmap_persistent (bfd *abfd, size_t rsize)
++{
++  return _bfd_alloc_and_read (abfd, rsize, rsize);
++}
+ static inline void *
+-_bfd_mmap_readonly_temporary (bfd *abfd, size_t rsize, void **map_addr,
+-			      size_t *map_size)
++_bfd_mmap_temporary (bfd *abfd, size_t rsize, void **map_addr,
++		     size_t *map_size)
+ {
+   void *mem = _bfd_malloc_and_read (abfd, rsize, rsize);
+   *map_addr = mem;
+   *map_size = rsize;
+   return mem;
+ }
++static inline void
++_bfd_munmap_temporary (void *ptr, size_t rsize ATTRIBUTE_UNUSED)
++{
++  free (ptr);
++}
+ #endif
++
++extern bool _bfd_mmap_read_temporary
++  (void **, size_t *, void **, bfd *, bool) ATTRIBUTE_HIDDEN;
+ /* Extracted from libbfd.c.  */
+ void *bfd_malloc (bfd_size_type /*size*/) ATTRIBUTE_HIDDEN;
+ 

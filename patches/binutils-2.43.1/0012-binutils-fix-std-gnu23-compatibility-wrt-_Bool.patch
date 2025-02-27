@@ -1,0 +1,31 @@
+From: Sam James <sam@gentoo.org>
+Date: Sat, 16 Nov 2024 05:12:51 +0000
+Subject: [PATCH] binutils: fix -std=gnu23 compatibility wrt _Bool
+
+GCC trunk now defaults to -std=gnu23. We return false in a few places
+which can't work when true/false are a proper type (_Bool). Return NULL
+where appropriate instead of false. All callers handle this appropriately.
+
+ChangeLog:
+	PR ld/32372
+
+	* prdbg.c (visibility_name): Return NULL.
+
+(cherry picked from commit eeff15bc88b89abed1cdb4d3b1b2cc7b4cec6fe7)
+---
+ binutils/prdbg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/binutils/prdbg.c b/binutils/prdbg.c
+index 3941d6e17915..d6e828ee5452 100644
+--- a/binutils/prdbg.c
++++ b/binutils/prdbg.c
+@@ -2818,7 +2818,7 @@ visibility_name (enum debug_visibility visibility)
+       break;
+     default:
+       abort ();
+-      return false;
++      return NULL;
+     }
+   return s;
+ }

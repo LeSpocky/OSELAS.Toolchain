@@ -1,0 +1,43 @@
+From: Alan Modra <amodra@gmail.com>
+Date: Tue, 26 Nov 2024 08:24:19 +1030
+Subject: [PATCH] PR32387 ppc64 TLS optimization bug with -fno-plt code
+
+The inline plt code emitted by gcc is incompatible with the
+linker/ld.so --tls-get-addr-optimize scheme.  This is the runtime
+optimisation where the first call to __tls_get_addr results in
+__tls_get_addr updating the tls_index pair, then the special linker
+stub using that to short-circuit second and subsequent calls for a
+given tls symbol.  Enabled by default when the linker sees
+__tls_get_addr_opt is preseent, and enabled in ld.so when DT_PPC64_OPT
+has PPC64_OPT_TLS set.  Note that this is distinct from link-time tls
+optimisation.
+
+	PR 32387
+	* elf64-ppc.c (ppc64_elf_check_relocs): Disable tls_get_addr_opt
+	on detecting inline plt calls to __tls_get_addr.
+
+(cherry picked from commit 1686dc7079f1c03bdaffd2f779b92aa2b7ad97b5)
+---
+ bfd/elf64-ppc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
+index 9674fcdd6be7..f7debc1edbc4 100644
+--- a/bfd/elf64-ppc.c
++++ b/bfd/elf64-ppc.c
+@@ -4915,6 +4915,15 @@ ppc64_elf_check_relocs (bfd *abfd, struct bfd_link_info *info,
+       tls_type = 0;
+       switch (r_type)
+ 	{
++	case R_PPC64_PLTSEQ:
++	case R_PPC64_PLTSEQ_NOTOC:
++	  /* Inline plt call code emitted by gcc doesn't support
++	     modifying the tls_index words to short-circuit
++	     __tls_get_addr calls.  See PR32387.  */
++	  if (h != NULL && (h == tga || h == dottga))
++	    htab->params->tls_get_addr_opt = 0;
++	  break;
++
+ 	case R_PPC64_TLSGD:
+ 	case R_PPC64_TLSLD:
+ 	  /* These special tls relocs tie a call to __tls_get_addr with

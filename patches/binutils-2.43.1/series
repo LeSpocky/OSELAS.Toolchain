@@ -10,4 +10,19 @@
 0007-segv-in-bfd_elf_get_str_section.patch
 0008-LoongArch-Add-elfNN_loongarch_mkobject-to-initialize.patch
 0009-PR32300-dependency-file-link-dependencies-are-not-al.patch
-# 5b413e00a9930a4ef4f60defe0d8dcec  - git-ptx-patches magic
+0010-bfd-fix-std-gnu23-compatibility-wrt-_Bool.patch
+0011-opcodes-fix-std-gnu23-compatibility-wrt-static_asser.patch
+0012-binutils-fix-std-gnu23-compatibility-wrt-_Bool.patch
+0013-ld-fix-std-gnu23-compatibility-wrt-_Bool.patch
+0014-PR32387-ppc64-TLS-optimization-bug-with-fno-plt-code.patch
+0015-nm-Avoid-potential-segmentation-fault-when-displayin.patch
+0016-x86-64-correct-CODE_5-relocs.patch
+0017-LoongArch-Fix-broken-DESC-IE-transition-for-2.43-bra.patch
+0018-LoongArch-Add-relaxation-support-for-call36-that-jum.patch
+0019-PR32266-segv-when-linking-libclang_rt.asan-powerpc64.patch
+0020-_bfd_write_ar_hdr.patch
+0021-aarch64-Fix-incorrect-gating-of-sme-lutv2-instructio.patch
+0022-aarch64-Fix-sve2p1-gating-and-add-missing-instructio.patch
+0023-PR32238-ld-r-slowdown-since-21401fc7bf.patch
+0024-PR-32731-ub-sanitizer-accessing-filenames_reversed.patch
+# 3bc303f951120f699db1027f7de98862  - git-ptx-patches magic

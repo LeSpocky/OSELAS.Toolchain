@@ -1,0 +1,39 @@
+From: Jan Beulich <jbeulich@suse.com>
+Date: Thu, 19 Dec 2024 10:38:47 +0100
+Subject: [PATCH] x86-64: correct CODE_5 relocs
+
+Two of them had their numbers swapped; luckily they aren't really in use
+just yet. Correct indentation as well while at it.
+---
+ include/elf/x86-64.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/elf/x86-64.h b/include/elf/x86-64.h
+index 6b5ada8e579c..4ced40c96ec0 100644
+--- a/include/elf/x86-64.h
++++ b/include/elf/x86-64.h
+@@ -96,18 +96,18 @@ START_RELOC_NUMBERS (elf_x86_64_reloc_type)
+ 	instruction starts at 5 bytes before the relocation offset,
+ 	relaxable.  */
+      RELOC_NUMBER (R_X86_64_CODE_5_GOTPCRELX, 46)
++     /* PC relative offset to IE GOT entry if the instruction starts at
++        5 bytes before the relocation offset.  */
++     RELOC_NUMBER (R_X86_64_CODE_5_GOTTPOFF, 47)
+      /* 32 bit signed pc relative offset to TLS descriptor in the GOT if
+ 	instruction starts at 5 bytes before the relocation offset.  */
+-     RELOC_NUMBER (R_X86_64_CODE_5_GOTPC32_TLSDESC, 47)
+-    /* PC relative offset to IE GOT entry if the instruction starts at
+-       5 bytes before the relocation offset.  */
+-     RELOC_NUMBER (R_X86_64_CODE_5_GOTTPOFF, 48)
++     RELOC_NUMBER (R_X86_64_CODE_5_GOTPC32_TLSDESC, 48)
+      /* Load from 32 bit signed pc relative offset to GOT entry if the
+ 	instruction starts at 6 bytes before the relocation offset,
+ 	relaxable.  */
+      RELOC_NUMBER (R_X86_64_CODE_6_GOTPCRELX, 49)
+-    /* PC relative offset to IE GOT entry if the instruction starts at
+-       6 bytes before the relocation offset.  */
++     /* PC relative offset to IE GOT entry if the instruction starts at
++        6 bytes before the relocation offset.  */
+      RELOC_NUMBER (R_X86_64_CODE_6_GOTTPOFF, 50)
+      /* 32 bit signed pc relative offset to TLS descriptor in the GOT if
+ 	instruction starts at 6 bytes before the relocation offset.  */

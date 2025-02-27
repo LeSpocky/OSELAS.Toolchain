@@ -1,0 +1,101 @@
+From: Sam James <sam@gentoo.org>
+Date: Sat, 16 Nov 2024 05:01:58 +0000
+Subject: [PATCH] bfd: fix -std=gnu23 compatibility wrt _Bool
+
+GCC trunk now defaults to -std=gnu23. We return false in a few places
+which can't work when true/false are a proper type (_Bool). Return NULL
+where appropriate instead of false. All callers handle this appropriately.
+
+ChangeLog:
+	PR ld/32372
+
+	* elf32-ppc.c (ppc_elf_tls_setup): Return NULL.
+        * elf32-xtensa.c (translate_reloc_bfd_fix): Ditto.
+        (translate_reloc): Ditto.
+        * elf64-ppc.c (update_local_sym_info): Ditto.
+        * mach-o.c (bfd_mach_o_lookup_uuid_command): Ditto.
+        * xsym.c (bfd_sym_read_name_table): Ditto.
+
+(cherry picked from commit 931e4f9b09512bb9012204bb2e4060ab6d9b9b46)
+---
+ bfd/elf32-ppc.c    | 2 +-
+ bfd/elf32-xtensa.c | 4 ++--
+ bfd/elf64-ppc.c    | 2 +-
+ bfd/mach-o.c       | 2 +-
+ bfd/xsym.c         | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/bfd/elf32-ppc.c b/bfd/elf32-ppc.c
+index a5370a0624e8..8c89ae1611fb 100644
+--- a/bfd/elf32-ppc.c
++++ b/bfd/elf32-ppc.c
+@@ -4352,7 +4352,7 @@ ppc_elf_tls_setup (bfd *obfd, struct bfd_link_info *info)
+ 		      _bfd_elf_strtab_delref (elf_hash_table (info)->dynstr,
+ 					      opt->dynstr_index);
+ 		      if (!bfd_elf_link_record_dynamic_symbol (info, opt))
+-			return false;
++			return NULL;
+ 		    }
+ 		  htab->tls_get_addr = opt;
+ 		}
+diff --git a/bfd/elf32-xtensa.c b/bfd/elf32-xtensa.c
+index eb7fef9331ec..58f79e555290 100644
+--- a/bfd/elf32-xtensa.c
++++ b/bfd/elf32-xtensa.c
+@@ -10070,7 +10070,7 @@ translate_reloc_bfd_fix (reloc_bfd_fix *fix)
+      location.  Otherwise, the relocation should move within the
+      section.  */
+ 
+-  removed = false;
++  removed = NULL;
+   if (is_operand_relocation (fix->src_type))
+     {
+       /* Check if the original relocation is against a literal being
+@@ -10141,7 +10141,7 @@ translate_reloc (const r_reloc *orig_rel, r_reloc *new_rel, asection *sec)
+ 
+   target_offset = orig_rel->target_offset;
+ 
+-  removed = false;
++  removed = NULL;
+   if (is_operand_relocation (ELF32_R_TYPE (orig_rel->rela.r_info)))
+     {
+       /* Check if the original relocation is against a literal being
+diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
+index cd3aaacaeb35..9674fcdd6be7 100644
+--- a/bfd/elf64-ppc.c
++++ b/bfd/elf64-ppc.c
+@@ -4664,7 +4664,7 @@ update_local_sym_info (bfd *abfd, Elf_Internal_Shdr *symtab_hdr,
+ 	  size_t amt = sizeof (*ent);
+ 	  ent = bfd_alloc (abfd, amt);
+ 	  if (ent == NULL)
+-	    return false;
++	    return NULL;
+ 	  ent->next = local_got_ents[r_symndx];
+ 	  ent->addend = r_addend;
+ 	  ent->owner = abfd;
+diff --git a/bfd/mach-o.c b/bfd/mach-o.c
+index 93224aaed00f..974747caadd8 100644
+--- a/bfd/mach-o.c
++++ b/bfd/mach-o.c
+@@ -6037,7 +6037,7 @@ bfd_mach_o_lookup_uuid_command (bfd *abfd)
+   bfd_mach_o_load_command *uuid_cmd = NULL;
+   int ncmd = bfd_mach_o_lookup_command (abfd, BFD_MACH_O_LC_UUID, &uuid_cmd);
+   if (ncmd != 1 || uuid_cmd == NULL)
+-    return false;
++    return NULL;
+   return &uuid_cmd->command.uuid;
+ }
+ 
+diff --git a/bfd/xsym.c b/bfd/xsym.c
+index 070ba4a23185..fe14acc121fb 100644
+--- a/bfd/xsym.c
++++ b/bfd/xsym.c
+@@ -130,7 +130,7 @@ bfd_sym_read_name_table (bfd *abfd, bfd_sym_header_block *dshb)
+   size_t table_offset = dshb->dshb_nte.dti_first_page * dshb->dshb_page_size;
+ 
+   if (bfd_seek (abfd, table_offset, SEEK_SET) != 0)
+-    return false;
++    return NULL;
+   return _bfd_alloc_and_read (abfd, table_size, table_size);
+ }
+ 

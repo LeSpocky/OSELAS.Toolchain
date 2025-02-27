@@ -1,0 +1,31 @@
+From: Sam James <sam@gentoo.org>
+Date: Sat, 16 Nov 2024 07:07:02 +0000
+Subject: [PATCH] ld: fix -std=gnu23 compatibility wrt _Bool
+
+GCC trunk now defaults to -std=gnu23. We return false in a few places
+which can't work when true/false are a proper type (_Bool). Return NULL
+where appropriate instead of false. All callers handle this appropriately.
+
+ChangeLog:
+	PR ld/32372
+
+	* pdb.c (add_stream): Return NULL.
+
+(cherry picked from commit bf447eec6d7b69cba652127e2f38f102de38de39)
+---
+ ld/pdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ld/pdb.c b/ld/pdb.c
+index 88639d539b74..ae4c614cef83 100644
+--- a/ld/pdb.c
++++ b/ld/pdb.c
+@@ -175,7 +175,7 @@ add_stream (bfd *pdb, const char *name, uint16_t *stream_num)
+   if (!bfd_make_writable (stream))
+     {
+       bfd_close (stream);
+-      return false;
++      return NULL;
+     }
+ 
+   if (!pdb->archive_head)

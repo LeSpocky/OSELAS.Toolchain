@@ -1,0 +1,142 @@
+From: Alan Modra <amodra@gmail.com>
+Date: Sat, 4 Jan 2025 11:33:27 +1030
+Subject: [PATCH] PR32238, ld -r slowdown since 21401fc7bf
+
+	PR 32238
+	* ldlang.c (struct out_section_hash_entry): Add "tail".
+	(output_section_statement_newfunc_1): New, extracted from..
+	(output_section_statement_newfunc): ..here.  Init tail.
+	(lang_output_section_statement_lookup): Use tail to avoid
+	list traversal.
+
+(cherry picked from commit a55875bd182258a917af303c653d6667593e7b3e)
+---
+ ld/ldlang.c | 66 +++++++++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 45 insertions(+), 21 deletions(-)
+
+diff --git a/ld/ldlang.c b/ld/ldlang.c
+index 9e8cc224f4d0..318e5221ec01 100644
+--- a/ld/ldlang.c
++++ b/ld/ldlang.c
+@@ -1263,6 +1263,7 @@ struct out_section_hash_entry
+ {
+   struct bfd_hash_entry root;
+   lang_statement_union_type s;
++  struct out_section_hash_entry *tail;
+ };
+ 
+ /* The hash table.  */
+@@ -1272,10 +1273,10 @@ static struct bfd_hash_table output_section_statement_table;
+ /* Support routines for the hash table used by lang_output_section_find,
+    initialize the table, fill in an entry and remove the table.  */
+ 
+-static struct bfd_hash_entry *
+-output_section_statement_newfunc (struct bfd_hash_entry *entry,
+-				  struct bfd_hash_table *table,
+-				  const char *string)
++static struct out_section_hash_entry *
++output_section_statement_newfunc_1 (struct bfd_hash_entry *entry,
++				    struct bfd_hash_table *table,
++				    const char *string)
+ {
+   lang_output_section_statement_type **nextp;
+   struct out_section_hash_entry *ret;
+@@ -1285,12 +1286,12 @@ output_section_statement_newfunc (struct bfd_hash_entry *entry,
+       entry = (struct bfd_hash_entry *) bfd_hash_allocate (table,
+ 							   sizeof (*ret));
+       if (entry == NULL)
+-	return entry;
++	return NULL;
+     }
+ 
+   entry = bfd_hash_newfunc (entry, table, string);
+   if (entry == NULL)
+-    return entry;
++    return NULL;
+ 
+   ret = (struct out_section_hash_entry *) entry;
+   memset (&ret->s, 0, sizeof (ret->s));
+@@ -1316,6 +1317,20 @@ output_section_statement_newfunc (struct bfd_hash_entry *entry,
+      instead.  */
+   nextp = &ret->s.output_section_statement.next;
+   lang_statement_append (&lang_os_list, &ret->s, nextp);
++  return ret;
++}
++
++static struct bfd_hash_entry *
++output_section_statement_newfunc (struct bfd_hash_entry *entry,
++				  struct bfd_hash_table *table,
++				  const char *string)
++{
++  struct out_section_hash_entry *ret;
++
++  ret = output_section_statement_newfunc_1 (entry, table, string);
++  if (ret == NULL)
++    return NULL;
++  ret->tail = ret;
+   return &ret->root;
+ }
+ 
+@@ -1541,31 +1556,39 @@ lang_output_section_statement_lookup (const char *name,
+     {
+       /* We have a section of this name, but it might not have the correct
+ 	 constraint.  */
++      struct out_section_hash_entry *first_ent = entry;
+       struct out_section_hash_entry *last_ent;
+ 
+       name = entry->s.output_section_statement.name;
+-      do
++      if (create != 2
++	  && !(create && constraint == SPECIAL))
+ 	{
+-	  if (create != 2
+-	      && !(create && constraint == SPECIAL)
+-	      && (constraint == entry->s.output_section_statement.constraint
++	  do
++	    {
++	      if (constraint == entry->s.output_section_statement.constraint
+ 		  || (constraint == 0
+-		      && entry->s.output_section_statement.constraint >= 0)))
+-	    return &entry->s.output_section_statement;
+-	  last_ent = entry;
+-	  entry = (struct out_section_hash_entry *) entry->root.next;
++		      && entry->s.output_section_statement.constraint >= 0))
++		return &entry->s.output_section_statement;
++	      last_ent = entry;
++	      entry = (struct out_section_hash_entry *) entry->root.next;
++	    }
++	  while (entry != NULL
++		 && name == entry->s.output_section_statement.name);
+ 	}
+-      while (entry != NULL
+-	     && name == entry->s.output_section_statement.name);
++      else
++	last_ent = first_ent->tail;
+ 
+       if (!create)
+ 	return NULL;
+ 
+-      entry
+-	= ((struct out_section_hash_entry *)
+-	   output_section_statement_newfunc (NULL,
+-					     &output_section_statement_table,
+-					     name));
++      /* Only the first entry needs the tail pointer.  */
++      entry = bfd_hash_allocate (&output_section_statement_table,
++				 offsetof (struct out_section_hash_entry, tail));
++      if (entry != NULL)
++	entry
++	  = output_section_statement_newfunc_1 (&entry->root,
++						&output_section_statement_table,
++						name);
+       if (entry == NULL)
+ 	{
+ 	  einfo (_("%F%P: failed creating section `%s': %E\n"), name);
+@@ -1573,6 +1596,7 @@ lang_output_section_statement_lookup (const char *name,
+ 	}
+       entry->root = last_ent->root;
+       last_ent->root.next = &entry->root;
++      first_ent->tail = entry;
+     }
+ 
+   entry->s.output_section_statement.name = name;

@@ -1,0 +1,43 @@
+From: Alan Modra <amodra@gmail.com>
+Date: Sat, 4 Jan 2025 16:57:48 +1030
+Subject: [PATCH] _bfd_write_ar_hdr
+
+This has been broken since commit 8f95b6e44955 in 2010, and apparently
+nobody has noticed.  How we write archive headers depends on the
+archive, not the contents.
+
+	* libbfd-in.h (_bfd_write_ar_hdr): Correct.
+	* libbfd.h: Regenerate.
+
+(cherry picked from commit c232d080c4f05b16e998bd49d6e2d92c56b6421e)
+---
+ bfd/libbfd-in.h | 2 +-
+ bfd/libbfd.h    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bfd/libbfd-in.h b/bfd/libbfd-in.h
+index 950d7979a035..1430086db732 100644
+--- a/bfd/libbfd-in.h
++++ b/bfd/libbfd-in.h
+@@ -248,7 +248,7 @@ extern int bfd_generic_stat_arch_elt
+ #define _bfd_read_ar_hdr(abfd) \
+ 	BFD_SEND (abfd, _bfd_read_ar_hdr_fn, (abfd))
+ #define _bfd_write_ar_hdr(archive, abfd)	 \
+-	BFD_SEND (abfd, _bfd_write_ar_hdr_fn, (archive, abfd))
++	BFD_SEND (archive, _bfd_write_ar_hdr_fn, (archive, abfd))
+ 
+ /* Generic routines to use for BFD_JUMP_TABLE_GENERIC.  Use
+    BFD_JUMP_TABLE_GENERIC (_bfd_generic).  */
+diff --git a/bfd/libbfd.h b/bfd/libbfd.h
+index 5da7541e06e3..10371c4ab56f 100644
+--- a/bfd/libbfd.h
++++ b/bfd/libbfd.h
+@@ -254,7 +254,7 @@ extern int bfd_generic_stat_arch_elt
+ #define _bfd_read_ar_hdr(abfd) \
+ 	BFD_SEND (abfd, _bfd_read_ar_hdr_fn, (abfd))
+ #define _bfd_write_ar_hdr(archive, abfd)	 \
+-	BFD_SEND (abfd, _bfd_write_ar_hdr_fn, (archive, abfd))
++	BFD_SEND (archive, _bfd_write_ar_hdr_fn, (archive, abfd))
+ 
+ /* Generic routines to use for BFD_JUMP_TABLE_GENERIC.  Use
+    BFD_JUMP_TABLE_GENERIC (_bfd_generic).  */
