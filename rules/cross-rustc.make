@@ -83,7 +83,10 @@ $(STATEDIR)/cross-rustc.prepare:
 # Compile
 # ----------------------------------------------------------------------------
 
+# stage1 rustc is executed in the build directory. So the default rpath
+# does not work
 CROSS_RUSTC_MAKE_ENV	:= \
+	LD_LIBRARY_PATH=$(PTXDIST_SYSROOT_CROSS)$(PTXCONF_PREFIX_CROSS)/lib \
 	RUST_TARGET_PATH=$(CROSS_RUSTC_TARGET_PATH)
 
 $(STATEDIR)/cross-rustc.compile:
