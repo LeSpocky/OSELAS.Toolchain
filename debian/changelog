@@ -1,3 +1,9 @@
+oselas.toolchain (2024.11.1-1) unstable; urgency=medium
+
+  * new bugfix version
+
+ -- Michael Olbrich <m.olbrich@pengutronix.de>  Thu, 13 Mar 2025 09:25:33 +0100
+
 oselas.toolchain (2024.11.0-1) unstable; urgency=medium
 
   * new upstream version
